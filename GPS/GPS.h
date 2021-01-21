@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include "gpsData.h"
 #include "../Positioning/Position.h"
-#include "../Time.h"
+#include "DateTime.h"
 
 using namespace std;
 
@@ -14,11 +14,12 @@ class GPS {
 
 public:
 
+
     void update(gpsData data);
 
     unsigned short getGPSQuality();
 
-    const Time &getLastTimeStamp() const;
+    const DateTime &getLastTimeStamp() const;
 
     unsigned short getAccuracy() const;
 
@@ -27,8 +28,9 @@ public:
     const Position &getCurrentPosition() const;
 
 private:
+    //    Maybe deprecated
     //    TinyGPS gps;
-    Time lastTimeStamp = Time(0, 0, 0);
+    DateTime lastTimeStamp;
     Position currentPosition = Position(LatitudeDegree(0, 0), LongitudeDegree(0, 0));
     unsigned short accuracy;
     unsigned short satellitesAvailable;

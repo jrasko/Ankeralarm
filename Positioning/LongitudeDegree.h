@@ -9,7 +9,7 @@
 
 using namespace std;
 
-class LongitudeDegree  {
+class LongitudeDegree {
 
 public:
 
@@ -17,7 +17,7 @@ public:
 
     explicit LongitudeDegree(const std::string &koordString);
 
-    explicit LongitudeDegree(const std::string& koordString, char direction);
+    explicit LongitudeDegree(const std::string &koordString, char direction);
 
     LongitudeDegree(int degrees, long double minutes);
 
@@ -25,6 +25,7 @@ public:
         degrees = d.degrees;
         minutes = d.minutes;
     }
+
     int getDegrees() const {
         return degrees;
     }
@@ -42,7 +43,6 @@ private:
     int degrees;
     long double minutes;
 };
-
 
 
 #endif //ANKERALARM_LONGITUDEDEGREE_H

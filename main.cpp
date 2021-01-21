@@ -8,10 +8,11 @@ using namespace std;
 int main() {
     GPS myGps;
 
-    Time t1(10, 52, 16);
-    Time t2(9, 56, 5);
-    Time s = t1 - t2;
-    cout << s.getHours() << ":" << s.getMinutes() << ":" << s.getSeconds() << endl;
+    DateTime t1(31, 7, 20, 0, 0, 0);
+    DateTime t2(1, 8, 20, 0, 0, 0);
+    DateTime s = t2 - t1;
+    cout << s.getDay() << "." << s.getMonth() << "." << s.getYear() << " " << s.getHours() << ":" << s.getMinutes()
+         << ":" << s.getSeconds() << endl;
     cout << myGps.getAccuracy() << endl;
 
 }

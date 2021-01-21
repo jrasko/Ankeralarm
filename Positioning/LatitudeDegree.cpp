@@ -3,7 +3,7 @@
 
 using namespace std;
 
-LatitudeDegree::LatitudeDegree(const std::string& koordString) {
+LatitudeDegree::LatitudeDegree(const std::string &koordString) {
     int deg = 0;
     long double min = 0;
     stringstream(koordString.substr(0, 2)) >> deg;

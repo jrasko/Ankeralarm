@@ -9,7 +9,8 @@
 class Position {
 public:
 
-    Position(const LatitudeDegree &latitude, const LongitudeDegree &longitude) : latitude(latitude),longitude(longitude) {}
+    Position(const LatitudeDegree &latitude, const LongitudeDegree &longitude) : latitude(latitude),
+                                                                                 longitude(longitude) {}
 
     long double distanceTo(Position &p);
 

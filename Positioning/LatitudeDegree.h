@@ -6,14 +6,14 @@
 #include <sstream>
 #include <ostream>
 
-class LatitudeDegree  {
+class LatitudeDegree {
 
 public:
     LatitudeDegree(char direction, int degrees, long double minutes);
 
-    explicit LatitudeDegree(const std::string& koordString);
+    explicit LatitudeDegree(const std::string &koordString);
 
-    explicit LatitudeDegree(const std::string& koordString, char direction);
+    explicit LatitudeDegree(const std::string &koordString, char direction);
 
     LatitudeDegree(int degrees, long double minutes);
 
@@ -21,6 +21,7 @@ public:
         degrees = d.degrees;
         minutes = d.minutes;
     }
+
     int getDegrees() const {
         return degrees;
     }
@@ -38,7 +39,6 @@ private:
     int degrees;
     long double minutes;
 };
-
 
 
 #endif //ANKERALARM_LATITUDEDEGREE_H
