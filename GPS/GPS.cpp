@@ -29,11 +29,14 @@ void GPS::update(gpsData data) {
 
 }
 /**
- * TODO
- * @return a number as an indicator for the Quality of the GPS Signal
+ * Calulates a number as indicator for the Quality of the GPS Signal
+ * @return 0 -> No GPS Data available, 1 -> No Fix, 2-5 -> Indicator for the Quality, 2 is the badest and 5 the best Quality
  */
 unsigned short GPS::getGPSQuality() {
-
+    unsigned short fixAge;
+    //Test auf eingehende Daten
+    //Test auf letzten Timestamp
+    if (accuracy <= 100 && )
     return 0;
 }
 

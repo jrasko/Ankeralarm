@@ -15,7 +15,7 @@ public:
         return data;
     }
 
-    explicit gpsData(const char *myGPSString);
+    gpsData(const char *myGPSString);
 
 };
 

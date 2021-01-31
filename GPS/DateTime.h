@@ -28,10 +28,10 @@ public:
 
     short getMinutes() const;
 
-
     double getSeconds() const;
 
     friend DateTime operator-(const DateTime &d1, const DateTime &d2);
+
 
 
 private:
@@ -42,6 +42,7 @@ private:
     short day = 0;
     short month = 0;
     short year = 0;
+
 };
 
 
