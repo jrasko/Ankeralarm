@@ -30,7 +30,7 @@ void GPS::update(gpsData data) {
 }
 /**
  * TODO
- * @return a number as indicator for the Quality of the GPS Signal
+ * @return a number as an indicator for the Quality of the GPS Signal
  */
 unsigned short GPS::getGPSQuality() {
 
