@@ -15,29 +15,25 @@ public:
 
     explicit LatitudeDegree(const std::string &koordString, char direction);
 
+    explicit LatitudeDegree(long double degrees);
+
     LatitudeDegree(int degrees, long double minutes);
 
     LatitudeDegree(const LatitudeDegree &d) {
-        degrees = d.degrees;
-        minutes = d.minutes;
+        degrees= d.degrees;
     }
 
-    int getDegrees() const {
+    long double getDegrees() const {
         return degrees;
     }
 
-    long double getMinutes() const {
-        return minutes;
-    }
-
-
     friend LatitudeDegree operator-(const LatitudeDegree &dg1, const LatitudeDegree &dg2);
+
 
     long double toMeters() const;
 
 private:
-    int degrees;
-    long double minutes;
+    long double degrees;
 };
 
 

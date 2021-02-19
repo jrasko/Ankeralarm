@@ -19,19 +19,16 @@ public:
 
     explicit LongitudeDegree(const std::string &koordString, char direction);
 
+    explicit LongitudeDegree(long double degrees);
+
     LongitudeDegree(int degrees, long double minutes);
 
     LongitudeDegree(const LongitudeDegree &d) {
         degrees = d.degrees;
-        minutes = d.minutes;
     }
 
-    int getDegrees() const {
+    long double getDegrees() const {
         return degrees;
-    }
-
-    long double getMinutes() const {
-        return minutes;
     }
 
 
@@ -40,8 +37,7 @@ public:
     long double toMeters(long double latdeg) const;
 
 private:
-    int degrees;
-    long double minutes;
+    long double degrees;
 };
 
 

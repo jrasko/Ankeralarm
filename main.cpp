@@ -1,5 +1,5 @@
-
 #include <iostream>
+#include <string>
 #include "GPS/GPS.h"
 #include "GPS/gpsData.h"
 
@@ -19,26 +19,51 @@ int main() {
 
 }
 
-void loop() {
-    //VORHER Deklarieren
-    GPS gpsData;
+GPS gpsData;
 
-    //Loopfunktion
+void updateGPSData() {
     string currentDataString;
-    //
     if (NMEA_read(currentDataString)) {
-        try{
+        try {
             gpsData.update(currentDataString.c_str());
-        } catch (exception& e){
-            //Fehler beim Parsen
+        } catch (exception &e) {
+            return;
         }
     }
+}
 
+void loop() {
+
+    updateGPSData();
+
+    if (gpsData.getGPSQuality() > 1) {
+        //LCD Outputs
+    }
+
+    //GPS angeschaltet
+    while (/* alarmmode */ false) {
+        vector<Position> posCollection;
+
+        for (int i = 0; i < 4; ++i) {
+            updateGPSData();
+            posCollection.push_back(gpsData.getCurrentPosition());
+        }
+        const Position startPosition = getMedian(posCollection);
+
+        //Radius einstellen
+        //Position ermitteln
+        //
+
+        //Abstand zur Ursprungsposition testen.
+
+
+    }
 
 
 }
 
-bool NMEA_read(string &currentString) {                      // Auslesen des "Ringspeichers" und sortieren der NMEA Sätze
+bool
+NMEA_read(string &currentString) {                      // Auslesen des "Ringspeichers" und sortieren der NMEA Sätze
     char nextChar = '\0';
     bool newDataAvailable;
     bool string_complete = false;
@@ -59,21 +84,10 @@ bool NMEA_read(string &currentString) {                      // Auslesen des "Ri
         }
         //String is finished
         if (nextChar == '\r') {
-            currentString.trim();
             currentString += '\r';
             currentString += '\n';
 
-            if (currentString.substring(1, 6) == "GPRMC") {
-                GNSS_1 = currentString;
 
-            }
-
-            if (currentString.substring(1, 6) == "GPGGA") {
-                GNSS_2 = currentString;
-            }
-
-
-            currentString = "";
             string_complete = true; // wird aktiviert wenn ein NEMA datensatz eingegenen ist
             newDataAvailable = false; // für datenverabeitug
 

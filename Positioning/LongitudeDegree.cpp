@@ -16,12 +16,11 @@ LongitudeDegree::LongitudeDegree(const std::string &koordString) {
     if ((direction != 'W' && direction != 'E') || deg < 0 || deg > 180 || min < 0 || min >= 60) {
         throw std::invalid_argument("Invalid Argument!");
     }
+    long double jdeg = deg + (min / 60);
     if (direction == 'W') {
-        deg = -deg;
-        min = -min;
+        jdeg = -jdeg;
     }
-    this->degrees = deg;
-    this->minutes = min;
+    this->degrees = jdeg;
 }
 
 LongitudeDegree::LongitudeDegree(const std::string &koordString, char direction) {
@@ -35,60 +34,43 @@ LongitudeDegree::LongitudeDegree(const std::string &koordString, char direction)
     if ((direction != 'W' && direction != 'E') || deg < 0 || deg > 180 || min < 0 || min >= 60) {
         throw std::invalid_argument("Invalid Argument!");
     }
+    long double jdeg = deg + (min / 60);
     if (direction == 'W') {
-        deg = -deg;
-        min = -min;
+        jdeg = -jdeg;
     }
-    this->degrees = deg;
-    this->minutes = min;
+    this->degrees = jdeg;
 }
 
 LongitudeDegree::LongitudeDegree(char direction, int degrees, long double minutes) {
     if (direction != 'W' && direction != 'E' || degrees < 0 ||
         degrees > 180 || minutes < 0 || minutes >= 60) {
         throw std::invalid_argument("Invalid Argument!");
-        return;
     }
+    long double deg = degrees + (minutes / 60);
     if (direction == 'W') {
-        degrees = -degrees;
-        minutes = -minutes;
+        deg = -deg;
     }
-    this->degrees = degrees;
-    this->minutes = minutes;
+    this->degrees = deg;
 }
 
 LongitudeDegree::LongitudeDegree(int degrees, long double minutes) {
     if (minutes <= -60 || minutes >= 60 || degrees < -180 || degrees > 180) {
         throw std::invalid_argument("Invalid Argument!");
     }
-    this->degrees = degrees;
-    this->minutes = minutes;
+    this->degrees = degrees + (minutes / 60);
 }
 
 LongitudeDegree operator-(const LongitudeDegree &dg1, const LongitudeDegree &dg2) {
-    int deg = 0;
-    long double min = 0;
-
-    min = dg1.minutes - dg2.minutes;
-    if (min > 60) {
-        min -= 60;
-        deg++;
-    }
-    if (min < -60) {
-        min += 60;
-        deg--;
-    }
-    deg = deg + (dg2.degrees - dg1.degrees);
-
-    if (deg > 180) {
-        deg -= 360;
-    }
-    if (deg < -180) {
-        deg += 360;
-    }
-    return LongitudeDegree(deg, min);
+    return LongitudeDegree(dg1.degrees - dg2.degrees);
 }
 
 long double LongitudeDegree::toMeters(long double latdeg = 0) const {
-    return abs(this->minutes + degrees * 60) * 1852.216 * cos(latdeg * toDEG);
+    return abs(degrees) * 60 * 1852.216 * cos(latdeg * toDEG);
+}
+
+LongitudeDegree::LongitudeDegree(long double degrees) {
+    if (degrees < -180 || degrees > 180) {
+        throw std::invalid_argument("Invalid Argument!");
+    }
+    this->degrees = degrees;
 }
