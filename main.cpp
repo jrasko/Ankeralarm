@@ -275,4 +275,5 @@ void test(){
 
 void test(){
     cout << "Hello World!" << endl;
+    cout << "5" << endl;
 }
