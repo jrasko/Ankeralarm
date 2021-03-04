@@ -267,13 +267,3 @@ ISR(TIMER1_OVF_vect){
 		break;
 	}
 }
-void test(){
-    //Nur zum test
-    cout << "3" << endl;
-}
-
-
-void test(){
-    cout << "Hello World!" << endl;
-    cout << "5" << endl;
-}
