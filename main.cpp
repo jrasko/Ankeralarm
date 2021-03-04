@@ -3,6 +3,7 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include <avr/interrupt.h>
+#include <Arduino.h>
 #include "GPS/GPS.h"
 #include "GPS/gpsData.h"
 
@@ -10,8 +11,28 @@ using namespace std;
 
 
 //---defines--------------------------------------------------
+
+//---UART-Interface (Sereielle Schnittstelle für GPS Modul)
+#define BAUD 9600UL      // Baudrate
+// Berechnungen
+#define UBRR_VAL ((F_CPU+BAUD*8)/(BAUD*16)-1)   // clever runden
+#define BAUD_REAL (F_CPU/(16*(UBRR_VAL+1)))     // Reale Baudrate
+#define BAUD_ERROR ((BAUD_REAL*1000)/BAUD) // Fehler in Promille, 1000 = kein Fehler.
 #define RX_Buffer_SIZE 128  //einstellung der Größe des emfangs Buffers
 #define TX_Buffer_SIZE 128  //einstelleng der gößes des sende Buffers;
+
+// ----IO-definition-----------------
+#define ledPin 14  					//LED pin 14
+#define debug_led 13 				// onboard Led
+#define lcd_beleuchtung 11 			// hintergundbeleuchtung des LCDs 
+#define schalter 7 					//Schalter 1
+#define summer 12 					//Summer
+#define encoder_a 2 				//encoder pin 2 (32)
+#define encoder_b 3 				//encoder pin 3
+#define encoder_button 4 			//encoder pin 4
+#define LED_rot 9  					//RG-LED pin 8
+#define LED_grun 10 				//RG-LED pin 9
+
 
 //---global variables-----------------------------------------
 char serialBuffer[TX_Buffer_SIZE]; // Buffer für UART Übertragung
@@ -21,6 +42,8 @@ uint8_t serialReadPos = 0; //variablen für den Ringbuffer
 uint8_t serialWritePos = 0; 
 uint8_t rxReadPos = 0;
 uint8_t rxWritePos = 0; 
+
+volatile int encoderWert = 0;
 
 
 bool NMEA_read(string &currentString);
@@ -46,7 +69,7 @@ void updateGPSData() {
     if (NMEA_read(currentDataString)) {
         try {
             gpsData.update(currentDataString.c_str());
-        } catch (exception &e) {
+        } catch (exception &e) { 
             return;
         }
     }
@@ -190,7 +213,6 @@ void interrupt_init(void){
     TIMSK1 |= (1 << TOIE1);                         // Timer Overflow Interrupt aktivieren  
     
     sei(); //enable Interrupts
-
 }
 //---Interruptrutine------------------------------------------
 ISR(INT0_vect){
@@ -198,10 +220,9 @@ ISR(INT0_vect){
     //---------------Encoder-------------------------------------------
     static unsigned long lastInterruptTime = 5;
     unsigned long interruptTime = millis();
-    int messungPin1 = LOW, messungPin1Alt = LOW;
+    int messungPin1 = 0, messungPin1Alt = 0;
     // If interrupts come faster than 5ms, assume it's a bounce and ignore
-    if (interruptTime - lastInterruptTime > 1) {
-        
+    if (interruptTime - lastInterruptTime > 1) {        
         messungPin1 = digitalRead(encoder_a);
         if ((messungPin1 == HIGH) && (messungPin1Alt == LOW)) {
             if (digitalRead(encoder_b) == HIGH) {
@@ -223,7 +244,7 @@ ISR(TIMER1_OVF_vect){
 	//------------------------------GPS-Status LED---------------------------
 	
 	TCNT1 = 3036;   // Timer vorbelegt so dass delta_T= 1s
-	switch(gpsData.getGPSQuality){
+	switch(gpsData.getGPSQuality()){
 		case 0:
 		digitalWrite(LED_rot, digitalRead(LED_rot) ^ 1);
 		digitalWrite(LED_grun, LOW);
@@ -246,6 +267,11 @@ ISR(TIMER1_OVF_vect){
 		break;
 	}
 }
+void test(){
+    //Nur zum test
+    cout << "3" << endl;
+}
+
 
 void test(){
     cout << "Hello World!" << endl;
