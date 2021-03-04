@@ -1,4 +1,8 @@
 #include "DateTime.h"
+#include <stdexcept>
+
+
+using namespace std;
 
 
 /**
@@ -13,7 +17,9 @@ DateTime::DateTime(const string &timeString, const string &datestring) {
 
 
     if (timeString.size() != 9 || datestring.size() != 6) {
-        throw std::invalid_argument("Invalid Argument!");
+        //throw std::invalid_argument("Invalid Argument!");
+        //throw invalid_argument("Invalid Argument!");
+        return ;
     }
 
     stringstream(timeString.substr(0, 2)) >> h;
@@ -26,7 +32,8 @@ DateTime::DateTime(const string &timeString, const string &datestring) {
 
     if (h < 0 || h > 24 || min < 0 || min >= 60 || sec < 0 || sec >= 60 ||
         d < 1 || d > 31 || m < 1 || m > 12 || y < 0 || y > 99) {
-        throw std::invalid_argument("Invalid Argument!");
+        //throw invalid_argument("Invalid Argument!"); 
+        return ;    
     }
     hours = h;
     minutes = min;
@@ -97,7 +104,9 @@ DateTime operator-(const DateTime &d1, const DateTime &d2) {
 DateTime::DateTime(short day, short month, short year, short hours, short minutes, double seconds) {
     if (hours < 0 || hours > 24 || minutes < 0 || minutes >= 60 || seconds < 0 || seconds >= 60 ||
         day < 0 || day > 31 || month < 0 || month > 12 || year < 0 || year > 99) {
-        throw std::invalid_argument("Invalid Argument!");
+        //throw std::invalid_argument("Invalid Argument!");
+        //throw invalid_argument("Invalid Argument!");
+        return ;
     }
     this->hours = hours;
     this->minutes = minutes;

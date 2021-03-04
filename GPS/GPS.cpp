@@ -7,8 +7,9 @@
 void GPS::update(gpsData data) {
     vector<string> v = data.getData();
     if (v.size() != 13 && v.size() != 15) {
-        throw invalid_argument("Invalid gpsData Object!");
-    }
+        //throw invalid_argument("Invalid gpsData Object!");
+        return ;
+    }    
     if (v[0]=="$GPGGA") {
         //GPRMC
         lastTimeStamp = DateTime(v[1], v[9]);
@@ -24,7 +25,8 @@ void GPS::update(gpsData data) {
         stringstream(v[6]) >> accuracy;
         stringstream(v[7]) >> satellitesAvailable;
     } else{
-        throw invalid_argument("Invalid gpsData Object!");
+        //throw invalid_argument("Invalid gpsData Object!");
+        return ;
     }
 
 }
@@ -36,7 +38,7 @@ unsigned short GPS::getGPSQuality() {
     unsigned short fixAge;
     //Test auf eingehende Daten
     //Test auf letzten Timestamp
-    if (accuracy <= 100 && )
+    if (accuracy <= 100 )
     return 0;
 }
 
