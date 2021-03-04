@@ -51,7 +51,6 @@ bool NMEA_read(string &currentString);
 void alarm();
 
 int main() {
-    GPS myGps;
 
     DateTime t1(31, 7, 20, 0, 0, 0);
     DateTime t2(1, 8, 20, 0, 0, 0);
@@ -60,15 +59,17 @@ int main() {
          << ":" << s.getSeconds() << endl;
     cout << myGps.getAccuracy() << endl;
 
+    myGps.update(gpsData);
+
 }
 
-GPS gpsData;
+GPS myGPS;
 
 void updateGPSData() {
     string currentDataString;
     if (NMEA_read(currentDataString)) {
         try {
-            gpsData.update(currentDataString.c_str());
+            myGPS.update(GPSData(currentDataString.c_str()));
         } catch (exception &e) { 
             return;
         }
@@ -157,35 +158,7 @@ NMEA_read(string &currentString) {                      // Auslesen des "Ringspe
         }
 
     }
-    /*                      // Ist nicht mehr notwendig! oder doch?
-    if (string_complete) {
-        //digitalWrite(debug_led, LOW);
-        //char data[Combine.length()];
-        //GNSS_3.toCharArray(data, Combine.length()+1); // umwandeln des Strings in ein char Array
-        //serialWrite(data);
-
-        for (int i = 0; i < GNSS_2.length(); i++) {
-            if (gps.encode(GNSS_2.charAt(i))) {
-                newValidNMEA = true;
-                newValidNMEA_dataTime = millis();
-            } else {
-                newValidNMEA = false;
-            }
-        }
-        for (int i = 0; i < GNSS_1.length(); i++) {
-            if (gps.encode(GNSS_1.charAt(i))) {
-                //newValidNMEA = true;
-                //newValidNMEA_dataTime = millis();
-            } else {
-                //newValidNMEA=false;
-            }
-
-        }
-        string_complete = false;
-        currentString = "";
-        return true;
-    }
-    */
+    
     return false;
 }
 

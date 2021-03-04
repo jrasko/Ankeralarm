@@ -43,6 +43,8 @@ private:
     short month = 0;
     short year = 0;
 
+    bool dirty = false;
+
 };
 
 

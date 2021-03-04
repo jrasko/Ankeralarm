@@ -4,7 +4,7 @@
  * Updates the Attributes of the GPS Object
  * @param data includes a vector of strings which is build from the raw GPS Data
  */
-void GPS::update(gpsData data) {
+void GPS::update(const gpsData &data) {
     vector<string> v = data.getData();
     if (v.size() != 13 && v.size() != 15) {
         //throw invalid_argument("Invalid gpsData Object!");
