@@ -1,9 +1,27 @@
 #include <iostream>
 #include <string>
+#include <avr/io.h>
+#include <util/delay.h>
+#include <avr/interrupt.h>
 #include "GPS/GPS.h"
 #include "GPS/gpsData.h"
 
 using namespace std;
+
+
+//---defines--------------------------------------------------
+#define RX_Buffer_SIZE 128  //einstellung der Größe des emfangs Buffers
+#define TX_Buffer_SIZE 128  //einstelleng der gößes des sende Buffers;
+
+//---global variables-----------------------------------------
+char serialBuffer[TX_Buffer_SIZE]; // Buffer für UART Übertragung
+char rxBuffer[RX_Buffer_SIZE];	 // Buffer für UART Emfang
+
+uint8_t serialReadPos = 0; //variablen für den Ringbuffer
+uint8_t serialWritePos = 0; 
+uint8_t rxReadPos = 0;
+uint8_t rxWritePos = 0; 
+
 
 bool NMEA_read(string &currentString);
 
@@ -34,10 +52,15 @@ void updateGPSData() {
 
 void loop() {
 
-    updateGPSData();
+    updateGPSData(); //Timing der updatefunktion ist wichting. entweder ausglöst durch intrupt oder ca alle 10s(update rate des gps Moduls)
 
     if (gpsData.getGPSQuality() > 1) {
         //LCD Outputs
+
+
+    }
+    else{
+        //print no GPS
     }
 
     //GPS angeschaltet
@@ -67,7 +90,7 @@ NMEA_read(string &currentString) {                      // Auslesen des "Ringspe
     char nextChar = '\0';
     bool newDataAvailable;
     bool string_complete = false;
-    newValidNMEA = false;
+    //bool newValidNMEA = false;
     //
     if (rxReadPos != rxWritePos) {
         nextChar = rxBuffer[rxReadPos];
@@ -87,10 +110,9 @@ NMEA_read(string &currentString) {                      // Auslesen des "Ringspe
             currentString += '\r';
             currentString += '\n';
 
-
             string_complete = true; // wird aktiviert wenn ein NEMA datensatz eingegenen ist
-            newDataAvailable = false; // für datenverabeitug
-
+            newDataAvailable = false; // für datenverarbeitung  
+            //hier muss ein Timer eingestezt werden der bei einem Abrruch der Verbindung newDataAvaliable auf false setzet 
         }
 
         rxReadPos++;
@@ -100,6 +122,7 @@ NMEA_read(string &currentString) {                      // Auslesen des "Ringspe
         }
 
     }
+    /*                      // Ist nicht mehr notwendig! oder doch?
     if (string_complete) {
         //digitalWrite(debug_led, LOW);
         //char data[Combine.length()];
@@ -127,5 +150,88 @@ NMEA_read(string &currentString) {                      // Auslesen des "Ringspe
         currentString = "";
         return true;
     }
+    */
     return false;
 }
+
+void interrupt_init(void){
+
+    cli(); //disable Intrrupts 
+
+    //---config des UART-Interface (Sereielle Schnittstelle für GPS Modul)------------
+    UBRR0H = UBRR_VAL >> 8;   //Festlegung der Baudrate
+    UBRR0L = UBRR_VAL & 0xFF;
+
+    UCSR0B = (1<<TXEN0)|(1<<RXEN0) | (1<<TXCIE0)|(1<<RXCIE0); // Aktivierung von Tx | Interrupt aktivierung bei RXCn flage=true 
+    UCSR0C = (1<<UCSZ01)|(1<<UCSZ00);  // Asynchron 8N
+
+    //---config des Encoders Interrupts-----------------------------------------------
+    EICRA = (1<< ISC01) | (1<< ISC00);
+
+    //---config der Timer-------------------------------------------------------------
+    
+    // Timer 1	
+    TCCR1A = 0;
+    TCCR1B = 0;
+    TCNT1 = 3036;                                  // Timer nach obiger Rechnung vorbelegen so das t=1s
+    TCCR1B |= (1 << CS12);                          // 256 als Prescale-Wert spezifizieren
+    TIMSK1 |= (1 << TOIE1);                         // Timer Overflow Interrupt aktivieren  
+    
+    sei(); //enable Interrupts
+
+}
+//---Interruptrutine------------------------------------------
+ISR(INT0_vect){
+
+    //---------------Encoder-------------------------------------------
+    static unsigned long lastInterruptTime = 5;
+    unsigned long interruptTime = millis();
+    int messungPin1 = LOW, messungPin1Alt = LOW;
+    // If interrupts come faster than 5ms, assume it's a bounce and ignore
+    if (interruptTime - lastInterruptTime > 1) {
+        
+        messungPin1 = digitalRead(encoder_a);
+        if ((messungPin1 == HIGH) && (messungPin1Alt == LOW)) {
+            if (digitalRead(encoder_b) == HIGH) {
+                encoderWert++;
+                } else {
+                encoderWert--;				
+            }			
+        }
+        messungPin1Alt = messungPin1;
+
+        //Restrict value from 0 to +200
+        //radius = min(200, max(0,radius));	
+    }
+    // Keep track of when we were here last (no more than every 5ms)
+    lastInterruptTime = interruptTime;
+}
+ISR(TIMER1_OVF_vect){
+	
+	//------------------------------GPS-Status LED---------------------------
+	
+	TCNT1 = 3036;   // Timer vorbelegt so dass delta_T= 1s
+	switch(gpsData.getGPSQuality){
+		case 0:
+		digitalWrite(LED_rot, digitalRead(LED_rot) ^ 1);
+		digitalWrite(LED_grun, LOW);
+		break;
+		case 1:
+		digitalWrite(LED_grun, LOW);
+		digitalWrite(LED_rot, HIGH);
+		break;
+		case 2:
+		digitalWrite(LED_grun, HIGH);
+		digitalWrite(LED_rot, HIGH);
+		break;
+		case 3:
+		digitalWrite(LED_grun, HIGH);
+		digitalWrite(LED_rot, LOW);		
+		break;
+		case 4:
+		digitalWrite(LED_grun, digitalRead(LED_grun) ^ 1);
+		digitalWrite(LED_rot, LOW);
+		break;
+	}
+}
+
