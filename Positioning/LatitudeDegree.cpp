@@ -13,7 +13,8 @@ LatitudeDegree::LatitudeDegree(const std::string &koordString) {
 
     if ((direction != 'N' && direction != 'S') || deg < 0 || deg > 90 || min < 0 || min >= 60) {
         //throw std::invalid_argument("Invalid Argument!");
-        return ;
+        dirty = true;
+        return;
     }
     long double jdeg = deg + (min / 60);
     if (direction == 'S') {
@@ -29,6 +30,7 @@ LatitudeDegree::LatitudeDegree(const std::string &koordString, char direction) {
     stringstream(koordString.substr(2, 10)) >> min;
     if ((direction != 'N' && direction != 'S') || deg < 0 || deg > 90 || min < 0 || min >= 60) {
         //throw std::invalid_argument("Invalid Argument!");
+        dirty = true;
         return ;
     }
     long double jdeg = deg + (min / 60);
@@ -42,7 +44,8 @@ LatitudeDegree::LatitudeDegree(char direction, int degrees, long double minutes)
     if (direction != 'N' && direction != 'S' || degrees < 0 ||
         degrees > 90 || minutes < 0 || minutes >= 60) {
         //throw std::invalid_argument("Invalid Argument!");
-        return ;
+        dirty = true;
+        return;
     }
     long double deg = degrees + (minutes / 60);
     if (direction == 'S') {
@@ -55,6 +58,7 @@ LatitudeDegree::LatitudeDegree(char direction, int degrees, long double minutes)
 LatitudeDegree::LatitudeDegree(int degrees, long double minutes) {
     if (minutes <= -60 || minutes >= 60 || degrees < -90 || degrees > 90) {
         //throw std::invalid_argument("Invalid Argument!");
+        dirty = true;
         return ;
     }
     this->degrees = degrees + (minutes / 60);

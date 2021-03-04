@@ -14,7 +14,6 @@ class GPS {
 
 public:
 
-
     void update(gpsData data);
 
     unsigned short getGPSQuality();
@@ -27,6 +26,9 @@ public:
 
     const Position &getCurrentPosition() const;
 
+    bool dirty = false;
+    
+
 private:
     //    Maybe deprecated
     //    TinyGPS gps;
@@ -35,6 +37,7 @@ private:
     unsigned short accuracy;
     unsigned short satellitesAvailable;
 };
+
 
 
 #endif //ANKERALARM_2_GPS_H

@@ -32,6 +32,8 @@ public:
 
     friend DateTime operator-(const DateTime &d1, const DateTime &d2);
 
+    bool dirty = true;
+
 
 
 private:
@@ -43,8 +45,7 @@ private:
     short month = 0;
     short year = 0;
 
-    bool dirty = false;
-
+    
 };
 
 

@@ -18,7 +18,7 @@ DateTime::DateTime(const string &timeString, const string &datestring) {
 
     if (timeString.size() != 9 || datestring.size() != 6) {
         dirty = true;
-        return ;
+        return;
     }
 
     stringstream(timeString.substr(0, 2)) >> h;
@@ -31,8 +31,8 @@ DateTime::DateTime(const string &timeString, const string &datestring) {
 
     if (h < 0 || h > 24 || min < 0 || min >= 60 || sec < 0 || sec >= 60 ||
         d < 1 || d > 31 || m < 1 || m > 12 || y < 0 || y > 99) {
-        //throw invalid_argument("Invalid Argument!"); 
-        return ;    
+        dirty = true;
+        return;    
     }
     hours = h;
     minutes = min;
@@ -104,7 +104,7 @@ DateTime::DateTime(short day, short month, short year, short hours, short minute
     if (hours < 0 || hours > 24 || minutes < 0 || minutes >= 60 || seconds < 0 || seconds >= 60 ||
         day < 0 || day > 31 || month < 0 || month > 12 || year < 0 || year > 99) {
         dirty = true;
-        return ;
+        return;
     }
     this->hours = hours;
     this->minutes = minutes;

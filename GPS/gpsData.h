@@ -17,7 +17,9 @@ public:
 
     explicit gpsData(const char *myGPSString);
 
+    bool dirty = false;
 };
+
 
 bool gpsChecksumOk(const char *gpsMessage);
 

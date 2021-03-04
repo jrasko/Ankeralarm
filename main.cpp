@@ -9,6 +9,22 @@
 
 using namespace std;
 
+#ifndef F_CPU
+/* In neueren Version der WinAVR/Mfile Makefile-Vorlage kann
+   F_CPU im Makefile definiert werden, eine nochmalige Definition
+   hier wuerde zu einer Compilerwarnung fuehren. Daher "Schutz" durch
+   #ifndef/#endif 
+
+   Dieser "Schutz" kann zu Debugsessions führen, wenn AVRStudio 
+   verwendet wird und dort eine andere, nicht zur Hardware passende 
+   Taktrate eingestellt ist: Dann wird die folgende Definition 
+   nicht verwendet, sondern stattdessen der Defaultwert (8 MHz?) 
+   von AVRStudio - daher Ausgabe einer Warnung falls F_CPU
+   noch nicht definiert: */
+#warning "F_CPU war noch nicht definiert, wird nun nachgeholt mit 16000000"
+#define F_CPU 16000000UL  // Systemtakt in Hz - Definition als unsigned long beachten 
+                         // Ohne ergeben sich unten Fehler in der Berechnung
+#endif
 
 //---defines--------------------------------------------------
 
@@ -21,7 +37,11 @@ using namespace std;
 #define RX_Buffer_SIZE 128  //einstellung der Größe des emfangs Buffers
 #define TX_Buffer_SIZE 128  //einstelleng der gößes des sende Buffers;
 
-// ----IO-definition-----------------
+#if ((BAUD_ERROR<990) || (BAUD_ERROR>1010))
+  #error Systematischer Fehler der Baudrate grösser 1% und damit zu hoch! 
+#endif
+
+// ----IO-definition-----------------------------------------
 #define ledPin 14  					//LED pin 14
 #define debug_led 13 				// onboard Led
 #define lcd_beleuchtung 11 			// hintergundbeleuchtung des LCDs 
@@ -31,7 +51,7 @@ using namespace std;
 #define encoder_b 3 				//encoder pin 3
 #define encoder_button 4 			//encoder pin 4
 #define LED_rot 9  					//RG-LED pin 8
-#define LED_grun 10 				//RG-LED pin 9
+#define LED_grun 10 				//RG-LED pin 9      
 
 
 //---global variables-----------------------------------------
@@ -44,8 +64,9 @@ uint8_t rxReadPos = 0;
 uint8_t rxWritePos = 0; 
 
 volatile int encoderWert = 0;
+GPS myGPS;
 
-
+//----Funktionsprototypen------------------------------------
 bool NMEA_read(string &currentString);
 
 void alarm();
@@ -57,22 +78,23 @@ int main() {
     DateTime s = t2 - t1;
     cout << s.getDay() << "." << s.getMonth() << "." << s.getYear() << " " << s.getHours() << ":" << s.getMinutes()
          << ":" << s.getSeconds() << endl;
-    cout << myGps.getAccuracy() << endl;
+    cout << myGPS.getAccuracy() << endl;
 
-    myGps.update(gpsData);
+   // myGPS.update(gpsData);
 
 }
 
-GPS myGPS;
+
 
 void updateGPSData() {
     string currentDataString;
     if (NMEA_read(currentDataString)) {
         try {
-            myGPS.update(GPSData(currentDataString.c_str()));
+            myGPS.update(gpsData(currentDataString.c_str()));
         } catch (exception &e) { 
             return;
         }
+        
     }
 }
 
@@ -80,7 +102,7 @@ void loop() {
 
     updateGPSData(); //Timing der updatefunktion ist wichting. entweder ausglöst durch intrupt oder ca alle 10s(update rate des gps Moduls)
 
-    if (gpsData.getGPSQuality() > 1) {
+    if (myGPS.getGPSQuality() > 1) {
         //LCD Outputs
 
 
@@ -96,7 +118,7 @@ void loop() {
 
         for (int i = 0; i < 4; ++i) {
             updateGPSData();
-            posCollection.push_back(gpsData.getCurrentPosition());
+            posCollection.push_back(myGPS.getCurrentPosition());
         }
         const Position startPosition = getMedian(posCollection);
 
@@ -106,7 +128,7 @@ void loop() {
         // Abstand zur Ursprungsposition testen.
         while (random()) {
             updateGPSData();
-            if (startPosition.distanceTo(gpsData.getCurrentPosition()) > radius) {
+            if (startPosition.distanceTo(myGPS.getCurrentPosition()) > radius) {
                 alarm();
             }
         }
@@ -217,7 +239,7 @@ ISR(TIMER1_OVF_vect){
 	//------------------------------GPS-Status LED---------------------------
 	
 	TCNT1 = 3036;   // Timer vorbelegt so dass delta_T= 1s
-	switch(gpsData.getGPSQuality()){
+	switch(myGPS.getGPSQuality()){
 		case 0:
 		digitalWrite(LED_rot, digitalRead(LED_rot) ^ 1);
 		digitalWrite(LED_grun, LOW);

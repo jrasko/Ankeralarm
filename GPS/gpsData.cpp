@@ -55,7 +55,8 @@ bool validateGPSString(const char *proofIt) {
 gpsData::gpsData(const char *myGPSString) {
     if (!validateGPSString(myGPSString)) {
         //throw invalid_argument("invalid argument");
-        return 0;
+        dirty = true;
+        return;
     }
     unsigned short k = 0;
     vector<string> v;

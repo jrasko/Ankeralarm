@@ -8,6 +8,7 @@ void GPS::update(const gpsData &data) {
     vector<string> v = data.getData();
     if (v.size() != 13 && v.size() != 15) {
         //throw invalid_argument("Invalid gpsData Object!");
+        dirty = true;
         return ;
     }    
     if (v[0]=="$GPGGA") {
@@ -26,6 +27,7 @@ void GPS::update(const gpsData &data) {
         stringstream(v[7]) >> satellitesAvailable;
     } else{
         //throw invalid_argument("Invalid gpsData Object!");
+        dirty = true;
         return ;
     }
 
