@@ -48,6 +48,8 @@ volatile int encoderWert = 0;
 
 bool NMEA_read(string &currentString);
 
+void alarm();
+
 int main() {
     GPS myGps;
 
@@ -86,8 +88,9 @@ void loop() {
         //print no GPS
     }
 
+
     //GPS angeschaltet
-    while (/* alarmmode */ false) {
+    while (/* alarmmode */ random()) {
         vector<Position> posCollection;
 
         for (int i = 0; i < 4; ++i) {
@@ -97,15 +100,24 @@ void loop() {
         const Position startPosition = getMedian(posCollection);
 
         //Radius einstellen
-        //Position ermitteln
-        //
+        unsigned int radius = 100;
 
-        //Abstand zur Ursprungsposition testen.
+        // Abstand zur Ursprungsposition testen.
+        while (random()) {
+            updateGPSData();
+            if (startPosition.distanceTo(gpsData.getCurrentPosition()) > radius) {
+                alarm();
+            }
+        }
 
 
     }
 
 
+}
+
+void alarm() {
+    // Aktiviere Alarm
 }
 
 bool
@@ -261,3 +273,6 @@ void test(){
 }
 
 
+void test(){
+    cout << "Hello World!" << endl;
+}

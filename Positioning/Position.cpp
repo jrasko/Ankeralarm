@@ -2,7 +2,7 @@
 #include "Position.h"
 
 /**
- * Calculates the distance between this Object and p
+ * Calculates the distance between this Object and p in metres
  * @param p the Positon which is compared with this pos
  * @return the distance from Position to p in meters
  */
