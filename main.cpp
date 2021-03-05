@@ -5,6 +5,7 @@
 #include <Arduino.h>
 #include "GPS/GPS.h"
 #include "GPS/gpsData.h"
+#include <LiquidCrystal.h>
 
 using namespace std;
 
@@ -67,8 +68,41 @@ GPS myGPS;
 
 //----Funktionsprototypen------------------------------------
 bool NMEA_read(string &currentString);
-
 void alarm();
+void interrupt_init(void);
+
+//---LCD init------------------------------------------------
+const int rs = 14, en = 15, d4 = 16, d5 = 17, d6 = 18, d7 = 19; // LCD pin number it is connected 
+LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+
+
+void setup(){
+
+    analogWrite(lcd_beleuchtung,150); //einschlaten der Beleuchtung
+    lcd.begin(16, 2); 
+    lcd.display();
+    lcd.write("Ankeralarm V2");
+    lcd.write("T.Zwiener");
+    delay(1000);
+    lcd.clear();    
+    void interrupt_init(void);
+
+
+    //-------------IO-config-------------------------------------------------
+    
+    pinMode(ledPin, OUTPUT);
+    pinMode(schalter, INPUT_PULLUP);
+    pinMode(summer, OUTPUT);
+    pinMode(encoder_a, INPUT);
+    pinMode(encoder_b, INPUT);
+    pinMode(encoder_button, INPUT_PULLUP);
+    pinMode(LED_rot, OUTPUT);
+    pinMode(LED_grun, OUTPUT);
+    pinMode(debug_led,OUTPUT);
+
+
+   
+}
 
 
 
@@ -249,4 +283,6 @@ ISR(TIMER1_OVF_vect){
             digitalWrite(LED_rot, LOW);
             break;
         }
+
+        digitalWrite(LED_grun, HIGH);
 }
