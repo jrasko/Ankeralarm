@@ -7,8 +7,6 @@
 void GPS::update(const gpsData &data) {
     vector<string> v = data.getData();
     if (v.size() != 13 && v.size() != 15) {
-        //throw invalid_argument("Invalid gpsData Object!");
-        dirty = true;
         return ;
     }    
     if (v[0]=="$GPGGA") {
@@ -25,18 +23,13 @@ void GPS::update(const gpsData &data) {
 
         stringstream(v[6]) >> accuracy;
         stringstream(v[7]) >> satellitesAvailable;
-    } else{
-        //throw invalid_argument("Invalid gpsData Object!");
-        dirty = true;
-        return ;
     }
-
 }
 /**
  * Calulates a number as indicator for the Quality of the GPS Signal
  * @return 0 -> No GPS Data available, 1 -> No Fix, 2-5 -> Indicator for the Quality, 2 is the badest and 5 the best Quality
  */
-unsigned short GPS::getGPSQuality() {
+unsigned short GPS::getGPSQuality() const {
     unsigned short fixAge;
     //Test auf eingehende Daten
     //Test auf letzten Timestamp

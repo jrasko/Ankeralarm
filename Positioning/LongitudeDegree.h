@@ -36,8 +36,6 @@ public:
 
     long double toMeters(long double latdeg) const;
 
-    bool dirty =false;
-
 private:
     long double degrees;
 };

@@ -11,11 +11,6 @@ LatitudeDegree::LatitudeDegree(const std::string &koordString) {
 
     char direction = koordString[11];
 
-    if ((direction != 'N' && direction != 'S') || deg < 0 || deg > 90 || min < 0 || min >= 60) {
-        //throw std::invalid_argument("Invalid Argument!");
-        dirty = true;
-        return;
-    }
     long double jdeg = deg + (min / 60);
     if (direction == 'S') {
         jdeg = -jdeg;
@@ -28,11 +23,7 @@ LatitudeDegree::LatitudeDegree(const std::string &koordString, char direction) {
     long double min = 0;
     stringstream(koordString.substr(0, 2)) >> deg;
     stringstream(koordString.substr(2, 10)) >> min;
-    if ((direction != 'N' && direction != 'S') || deg < 0 || deg > 90 || min < 0 || min >= 60) {
-        //throw std::invalid_argument("Invalid Argument!");
-        dirty = true;
-        return ;
-    }
+
     long double jdeg = deg + (min / 60);
     if (direction == 'S') {
         jdeg = -jdeg;
@@ -41,12 +32,6 @@ LatitudeDegree::LatitudeDegree(const std::string &koordString, char direction) {
 }
 
 LatitudeDegree::LatitudeDegree(char direction, int degrees, long double minutes) {
-    if (direction != 'N' && direction != 'S' || degrees < 0 ||
-        degrees > 90 || minutes < 0 || minutes >= 60) {
-        //throw std::invalid_argument("Invalid Argument!");
-        dirty = true;
-        return;
-    }
     long double deg = degrees + (minutes / 60);
     if (direction == 'S') {
         deg = -deg;
@@ -56,11 +41,6 @@ LatitudeDegree::LatitudeDegree(char direction, int degrees, long double minutes)
 
 
 LatitudeDegree::LatitudeDegree(int degrees, long double minutes) {
-    if (minutes <= -60 || minutes >= 60 || degrees < -90 || degrees > 90) {
-        //throw std::invalid_argument("Invalid Argument!");
-        dirty = true;
-        return ;
-    }
     this->degrees = degrees + (minutes / 60);
 }
 
@@ -77,7 +57,7 @@ long double LatitudeDegree::toMeters() const {
 LatitudeDegree::LatitudeDegree(long double degrees) {
     if (degrees < -90 || degrees > 90) {
         //throw std::invalid_argument("Invalid Argument!");
-        return ;
+        return;
     }
     this->degrees = degrees;
 

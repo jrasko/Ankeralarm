@@ -23,7 +23,7 @@ using namespace std;
    noch nicht definiert: */
 #warning "F_CPU war noch nicht definiert, wird nun nachgeholt mit 16000000"
 #define F_CPU 16000000UL  // Systemtakt in Hz - Definition als unsigned long beachten 
-                         // Ohne ergeben sich unten Fehler in der Berechnung
+// Ohne ergeben sich unten Fehler in der Berechnung
 #endif
 
 //---defines--------------------------------------------------
@@ -37,31 +37,31 @@ using namespace std;
 #define RX_Buffer_SIZE 128  //einstellung der Größe des emfangs Buffers
 #define TX_Buffer_SIZE 128  //einstelleng der gößes des sende Buffers;
 
-#if ((BAUD_ERROR<990) || (BAUD_ERROR>1010))
-  #error Systematischer Fehler der Baudrate grösser 1% und damit zu hoch! 
+#if ((BAUD_ERROR < 990) || (BAUD_ERROR > 1010))
+#error Systematischer Fehler der Baudrate grösser 1% und damit zu hoch! 
 #endif
 
 // ----IO-definition-----------------------------------------
-#define ledPin 14  					//LED pin 14
-#define debug_led 13 				// onboard Led
-#define lcd_beleuchtung 11 			// hintergundbeleuchtung des LCDs 
-#define schalter 7 					//Schalter 1
-#define summer 12 					//Summer
-#define encoder_a 2 				//encoder pin 2 (32)
-#define encoder_b 3 				//encoder pin 3
-#define encoder_button 4 			//encoder pin 4
-#define LED_rot 9  					//RG-LED pin 8
-#define LED_grun 10 				//RG-LED pin 9      
+#define ledPin 14                    //LED pin 14
+#define debug_led 13                // onboard Led
+#define lcd_beleuchtung 11            // hintergundbeleuchtung des LCDs 
+#define schalter 7                    //Schalter 1
+#define summer 12                    //Summer
+#define encoder_a 2                //encoder pin 2 (32)
+#define encoder_b 3                //encoder pin 3
+#define encoder_button 4            //encoder pin 4
+#define LED_rot 9                    //RG-LED pin 8
+#define LED_grun 10                //RG-LED pin 9      
 
 
 //---global variables-----------------------------------------
 char serialBuffer[TX_Buffer_SIZE]; // Buffer für UART Übertragung
-char rxBuffer[RX_Buffer_SIZE];	 // Buffer für UART Emfang
+char rxBuffer[RX_Buffer_SIZE];     // Buffer für UART Emfang
 
 uint8_t serialReadPos = 0; //variablen für den Ringbuffer
-uint8_t serialWritePos = 0; 
+uint8_t serialWritePos = 0;
 uint8_t rxReadPos = 0;
-uint8_t rxWritePos = 0; 
+uint8_t rxWritePos = 0;
 
 volatile int encoderWert = 0;
 GPS myGPS;
@@ -80,21 +80,21 @@ int main() {
          << ":" << s.getSeconds() << endl;
     cout << myGPS.getAccuracy() << endl;
 
-   // myGPS.update(gpsData);
+    // myGPS.update(gpsData);
 
 }
-
 
 
 void updateGPSData() {
     string currentDataString;
     if (NMEA_read(currentDataString)) {
-        try {
-            myGPS.update(gpsData(currentDataString.c_str()));
-        } catch (exception &e) { 
+        const gpsData &data = gpsData(currentDataString.c_str());
+        if (! data.isValid()){
+            // Ignoriere nicht valide Daten
             return;
         }
-        
+        //Update bei korrekten Daten
+        myGPS.update(data);
     }
 }
 
@@ -106,8 +106,7 @@ void loop() {
         //LCD Outputs
 
 
-    }
-    else{
+    } else {
         //print no GPS
     }
 
@@ -180,11 +179,11 @@ NMEA_read(string &currentString) {                      // Auslesen des "Ringspe
         }
 
     }
-    
+
     return false;
 }
 
-void interrupt_init(void){
+void interrupt_init(void) {
 
     cli(); //disable Intrrupts 
 
@@ -192,73 +191,75 @@ void interrupt_init(void){
     UBRR0H = UBRR_VAL >> 8;   //Festlegung der Baudrate
     UBRR0L = UBRR_VAL & 0xFF;
 
-    UCSR0B = (1<<TXEN0)|(1<<RXEN0) | (1<<TXCIE0)|(1<<RXCIE0); // Aktivierung von Tx | Interrupt aktivierung bei RXCn flage=true 
-    UCSR0C = (1<<UCSZ01)|(1<<UCSZ00);  // Asynchron 8N
+    UCSR0B = (1 << TXEN0) | (1 << RXEN0) | (1 << TXCIE0) |
+             (1 << RXCIE0); // Aktivierung von Tx | Interrupt aktivierung bei RXCn flage=true 
+    UCSR0C = (1 << UCSZ01) | (1 << UCSZ00);  // Asynchron 8N
 
     //---config des Encoders Interrupts-----------------------------------------------
-    EICRA = (1<< ISC01) | (1<< ISC00);
+    EICRA = (1 << ISC01) | (1 << ISC00);
 
     //---config der Timer-------------------------------------------------------------
-    
+
     // Timer 1	
     TCCR1A = 0;
     TCCR1B = 0;
     TCNT1 = 3036;                                  // Timer nach obiger Rechnung vorbelegen so das t=1s
     TCCR1B |= (1 << CS12);                          // 256 als Prescale-Wert spezifizieren
     TIMSK1 |= (1 << TOIE1);                         // Timer Overflow Interrupt aktivieren  
-    
+
     sei(); //enable Interrupts
 }
+
 //---Interruptrutine------------------------------------------
 ISR(INT0_vect){
 
-    //---------------Encoder-------------------------------------------
-    static unsigned long lastInterruptTime = 5;
-    unsigned long interruptTime = millis();
-    int messungPin1 = 0, messungPin1Alt = 0;
-    // If interrupts come faster than 5ms, assume it's a bounce and ignore
-    if (interruptTime - lastInterruptTime > 1) {        
-        messungPin1 = digitalRead(encoder_a);
-        if ((messungPin1 == HIGH) && (messungPin1Alt == LOW)) {
-            if (digitalRead(encoder_b) == HIGH) {
-                encoderWert++;
+        //---------------Encoder-------------------------------------------
+        static unsigned long lastInterruptTime = 5;
+        unsigned long interruptTime = millis();
+        int messungPin1 = 0, messungPin1Alt = 0;
+        // If interrupts come faster than 5ms, assume it's a bounce and ignore
+        if (interruptTime - lastInterruptTime > 1) {
+            messungPin1 = digitalRead(encoder_a);
+            if ((messungPin1 == HIGH) && (messungPin1Alt == LOW)) {
+                if (digitalRead(encoder_b) == HIGH) {
+                    encoderWert++;
                 } else {
-                encoderWert--;				
-            }			
-        }
-        messungPin1Alt = messungPin1;
+                    encoderWert--;
+                }
+            }
+            messungPin1Alt = messungPin1;
 
-        //Restrict value from 0 to +200
-        //radius = min(200, max(0,radius));	
-    }
-    // Keep track of when we were here last (no more than every 5ms)
-    lastInterruptTime = interruptTime;
+            //Restrict value from 0 to +200
+            //radius = min(200, max(0,radius));	
+        }
+        // Keep track of when we were here last (no more than every 5ms)
+        lastInterruptTime = interruptTime;
 }
 ISR(TIMER1_OVF_vect){
-	
-	//------------------------------GPS-Status LED---------------------------
-	
-	TCNT1 = 3036;   // Timer vorbelegt so dass delta_T= 1s
-	switch(myGPS.getGPSQuality()){
-		case 0:
-		digitalWrite(LED_rot, digitalRead(LED_rot) ^ 1);
-		digitalWrite(LED_grun, LOW);
-		break;
-		case 1:
-		digitalWrite(LED_grun, LOW);
-		digitalWrite(LED_rot, HIGH);
-		break;
-		case 2:
-		digitalWrite(LED_grun, HIGH);
-		digitalWrite(LED_rot, HIGH);
-		break;
-		case 3:
-		digitalWrite(LED_grun, HIGH);
-		digitalWrite(LED_rot, LOW);		
-		break;
-		case 4:
-		digitalWrite(LED_grun, digitalRead(LED_grun) ^ 1);
-		digitalWrite(LED_rot, LOW);
-		break;
-	}
+
+        //------------------------------GPS-Status LED---------------------------
+
+        TCNT1 = 3036;   // Timer vorbelegt so dass delta_T= 1s
+        switch (myGPS.getGPSQuality()){
+            case 0:
+                digitalWrite(LED_rot, digitalRead(LED_rot) ^ 1);
+            digitalWrite(LED_grun, LOW);
+            break;
+            case 1:
+                digitalWrite(LED_grun, LOW);
+            digitalWrite(LED_rot, HIGH);
+            break;
+            case 2:
+                digitalWrite(LED_grun, HIGH);
+            digitalWrite(LED_rot, HIGH);
+            break;
+            case 3:
+                digitalWrite(LED_grun, HIGH);
+            digitalWrite(LED_rot, LOW);
+            break;
+            case 4:
+                digitalWrite(LED_grun, digitalRead(LED_grun) ^ 1);
+            digitalWrite(LED_rot, LOW);
+            break;
+        }
 }

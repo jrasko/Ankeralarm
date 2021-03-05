@@ -32,8 +32,6 @@ public:
 
     long double toMeters() const;
 
-    bool dirty = false;
-
 private:
     long double degrees;
 };

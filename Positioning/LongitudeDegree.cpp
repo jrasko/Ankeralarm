@@ -13,11 +13,6 @@ LongitudeDegree::LongitudeDegree(const std::string &koordString) {
     char direction = koordString[12];
 
 
-    if ((direction != 'W' && direction != 'E') || deg < 0 || deg > 180 || min < 0 || min >= 60) {
-        //throw std::invalid_argument("Invalid Argument!");
-        dirty = true;
-        return ;
-    }
     long double jdeg = deg + (min / 60);
     if (direction == 'W') {
         jdeg = -jdeg;
@@ -33,11 +28,6 @@ LongitudeDegree::LongitudeDegree(const std::string &koordString, char direction)
     stringstream(koordString.substr(3, 10)) >> min;
 
 
-    if ((direction != 'W' && direction != 'E') || deg < 0 || deg > 180 || min < 0 || min >= 60) {
-        //throw std::invalid_argument("Invalid Argument!");
-        dirty = true;
-        return ;
-    }
     long double jdeg = deg + (min / 60);
     if (direction == 'W') {
         jdeg = -jdeg;
@@ -46,12 +36,7 @@ LongitudeDegree::LongitudeDegree(const std::string &koordString, char direction)
 }
 
 LongitudeDegree::LongitudeDegree(char direction, int degrees, long double minutes) {
-    if (direction != 'W' && direction != 'E' || degrees < 0 ||
-        degrees > 180 || minutes < 0 || minutes >= 60) {
-        //throw std::invalid_argument("Invalid Argument!");
-        dirty = true;
-        return ;
-    }
+
     long double deg = degrees + (minutes / 60);
     if (direction == 'W') {
         deg = -deg;
@@ -60,11 +45,7 @@ LongitudeDegree::LongitudeDegree(char direction, int degrees, long double minute
 }
 
 LongitudeDegree::LongitudeDegree(int degrees, long double minutes) {
-    if (minutes <= -60 || minutes >= 60 || degrees < -180 || degrees > 180) {
-        //throw std::invalid_argument("Invalid Argument!");
-        dirty = true;
-        return ;
-    }
+
     this->degrees = degrees + (minutes / 60);
 }
 
@@ -77,10 +58,5 @@ long double LongitudeDegree::toMeters(long double latdeg = 0) const {
 }
 
 LongitudeDegree::LongitudeDegree(long double degrees) {
-    if (degrees < -180 || degrees > 180) {
-        //throw std::invalid_argument("Invalid Argument!");
-        dirty = true;
-        return ;
-    }
     this->degrees = degrees;
 }

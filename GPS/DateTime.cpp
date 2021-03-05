@@ -9,17 +9,12 @@ using namespace std;
  * Constructor - Creates a DateTime Objekt from given Parameters
  * @param timeString with the format "hhmmss.ss"
  * @param datestring with the format "ddmmyy"
+ * @attention DATA IS NOT CHECKED FOR CONSISTENCY
  */
 DateTime::DateTime(const string &timeString, const string &datestring) {
 
     short min, h, d, m, y = 0;
     double sec = 0;
-
-
-    if (timeString.size() != 9 || datestring.size() != 6) {
-        dirty = true;
-        return;
-    }
 
     stringstream(timeString.substr(0, 2)) >> h;
     stringstream(timeString.substr(2, 2)) >> min;
@@ -29,11 +24,6 @@ DateTime::DateTime(const string &timeString, const string &datestring) {
     stringstream(datestring.substr(2, 2)) >> m;
     stringstream(datestring.substr(4, 2)) >> y;
 
-    if (h < 0 || h > 24 || min < 0 || min >= 60 || sec < 0 || sec >= 60 ||
-        d < 1 || d > 31 || m < 1 || m > 12 || y < 0 || y > 99) {
-        dirty = true;
-        return;    
-    }
     hours = h;
     minutes = min;
     seconds = sec;
@@ -50,6 +40,7 @@ DateTime::DateTime(const string &timeString, const string &datestring) {
  * @param d1 The first Date, where d2 gets subtracted from
  * @param d2 The Second Date, gets substracted from d1
  * @return a Date Object which has the difference of days as day, the difference of months as month and so on
+ * @attention DATA IS NOT CHECKED FOR CONSISTENCY
  */
 DateTime operator-(const DateTime &d1, const DateTime &d2) {
     short monthLength[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
@@ -98,14 +89,9 @@ DateTime operator-(const DateTime &d1, const DateTime &d2) {
 
 /**
  * Constructor which initializes all fields
- * ATTENTION!! Correct number of days is not completely checked!
+ * @attention DATA IS NOT CHECKED FOR CONSISTENCY
  */
 DateTime::DateTime(short day, short month, short year, short hours, short minutes, double seconds) {
-    if (hours < 0 || hours > 24 || minutes < 0 || minutes >= 60 || seconds < 0 || seconds >= 60 ||
-        day < 0 || day > 31 || month < 0 || month > 12 || year < 0 || year > 99) {
-        dirty = true;
-        return;
-    }
     this->hours = hours;
     this->minutes = minutes;
     this->seconds = seconds;

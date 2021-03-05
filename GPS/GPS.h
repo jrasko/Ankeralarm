@@ -14,9 +14,9 @@ class GPS {
 
 public:
 
-    void update(gpsData data);
+    void update(const gpsData &data);
 
-    unsigned short getGPSQuality();
+    unsigned short getGPSQuality() const;
 
     const DateTime &getLastTimeStamp() const;
 
@@ -26,16 +26,15 @@ public:
 
     const Position &getCurrentPosition() const;
 
-    bool dirty = false;
-    
+
 
 private:
     //    Maybe deprecated
     //    TinyGPS gps;
     DateTime lastTimeStamp;
     Position currentPosition = Position(LatitudeDegree(0, 0), LongitudeDegree(0, 0));
-    unsigned short accuracy;
-    unsigned short satellitesAvailable;
+    unsigned short accuracy = -1;
+    unsigned short satellitesAvailable = 0;
 };
 
 
