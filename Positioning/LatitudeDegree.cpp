@@ -50,7 +50,7 @@ LatitudeDegree operator-(const LatitudeDegree &dg1, const LatitudeDegree &dg2) {
 
 //Returns Distance to Point Zero
 long double LatitudeDegree::toMeters() const {
-    return abs(degrees) * 60 * 1852.216;
+    return std::abs(degrees) * 60 * 1852.216;
 }
 
 

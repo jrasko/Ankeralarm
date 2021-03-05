@@ -54,7 +54,7 @@ LongitudeDegree operator-(const LongitudeDegree &dg1, const LongitudeDegree &dg2
 }
 
 long double LongitudeDegree::toMeters(long double latdeg = 0) const {
-    return abs(degrees) * 60 * 1852.216 * cos(latdeg * toDEG);
+    return std::abs(degrees) * 60 * 1852.216 * cos(latdeg * toDEG);
 }
 
 LongitudeDegree::LongitudeDegree(long double degrees) {
