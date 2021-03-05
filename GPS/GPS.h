@@ -3,7 +3,6 @@
 #define ANKERALARM_2_GPS_H
 
 #include <vector>
-#include <stdexcept>
 #include "gpsData.h"
 #include "../Positioning/Position.h"
 #include "DateTime.h"

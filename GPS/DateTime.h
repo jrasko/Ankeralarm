@@ -4,7 +4,6 @@
 
 #include <stdexcept>
 #include <sstream>
-#include <ostream>
 #include <cmath>
 
 using namespace std;

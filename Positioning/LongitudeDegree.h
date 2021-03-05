@@ -2,9 +2,7 @@
 #ifndef ANKERALARM_LONGITUDEDEGREE_H
 #define ANKERALARM_LONGITUDEDEGREE_H
 
-#include <stdexcept>
 #include <sstream>
-#include <ostream>
 #include <cmath>
 
 using namespace std;

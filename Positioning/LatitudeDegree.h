@@ -4,7 +4,6 @@
 
 
 #include <sstream>
-#include <ostream>
 
 class LatitudeDegree {
 
