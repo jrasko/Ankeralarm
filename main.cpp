@@ -69,7 +69,10 @@ GPS myGPS;
 //----Funktionsprototypen------------------------------------
 bool NMEA_read(string &currentString);
 void alarm();
-void interrupt_init(void);
+void interrupt_init(void);  //UART init
+
+void appendSerial(char c);  //UART recive
+void serialWrite(char* c);  //UART transmit
 
 //---LCD init------------------------------------------------
 const int rs = 14, en = 15, d4 = 16, d5 = 17, d6 = 18, d7 = 19; // LCD pin number it is connected 
@@ -124,6 +127,9 @@ void loop() {
     updateGPSData(); //Timing der updatefunktion ist wichting. entweder ausglöst durch intrupt oder ca alle 10s(update rate des gps Moduls)
 
     if (myGPS.getGPSQuality() > 1) {
+
+
+        
         //LCD Outputs
 
 
@@ -203,6 +209,54 @@ NMEA_read(string &currentString) {                      // Auslesen des "Ringspe
 
     return false;
 }
+
+//----UART-Interface (Sereielle Schnittstelle für GPS Modul)------------------------
+void appendSerial( char c){         //Transmit
+  serialBuffer[serialWritePos]= c;
+  serialWritePos++;
+  
+  if(serialWritePos >= TX_Buffer_SIZE){
+    serialWritePos = 0;
+  }
+}
+void serialWrite ( char c[]){       //receive
+  for(uint8_t i = 0; i < strlen(c); i++){
+    appendSerial(c[i]);
+  }
+  if (UCSR0A & (1<<UDRE0)){
+    UDR0 = 0;
+  }  
+}
+ISR(USART_TX_vect){     //receive Ring-Buffer
+  if(serialReadPos != serialWritePos)
+  {
+   UDR0 = serialBuffer[serialReadPos];
+   
+   serialReadPos++;
+   
+   if (serialReadPos >= TX_Buffer_SIZE){
+    serialReadPos = 0;  
+   }
+  }  
+}
+char peekChar(void){    
+  char ret = 'n';
+  if(rxReadPos !=rxWritePos)
+  {
+    ret= rxBuffer[rxReadPos];
+  }
+  return ret;
+}
+ISR(USART_RX_vect){     //Transmit Ring-Buffer    
+  
+    rxBuffer[rxWritePos] = UDR0 ;
+    
+    rxWritePos++;
+    if(rxWritePos >= RX_Buffer_SIZE){
+      rxWritePos = 0;
+    }
+}
+
 
 void interrupt_init(void) {
 
