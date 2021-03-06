@@ -7,7 +7,7 @@
  */
 void GPS::update(const gpsData &data) {
     vector<string> v = data.getData();
-    if (!data.isValid() || v.size() != 13 && v.size() != 15) {
+    if (!data.isValid() ||( v.size() != 13 && v.size() != 15)) {
         return;
     }
 
