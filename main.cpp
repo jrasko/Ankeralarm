@@ -27,6 +27,7 @@ using namespace std;
 #endif
 
 //---defines--------------------------------------------------
+#define maxIncomingMessageLength 100
 
 //---UART-Interface (Sereielle Schnittstelle für GPS Modul)
 #define BAUD 9600UL      // Baudrate
@@ -68,31 +69,33 @@ GPS myGPS;
 
 //----Funktionsprototypen------------------------------------
 bool NMEA_read(string &currentString);
+
 void alarm();
+
 void interrupt_init(void);  //UART init
 
 void appendSerial(char c);  //UART recive
-void serialWrite(char* c);  //UART transmit
+void serialWrite(char *c);  //UART transmit
 
 //---LCD init------------------------------------------------
 const int rs = 14, en = 15, d4 = 16, d5 = 17, d6 = 18, d7 = 19; // LCD pin number it is connected 
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
 
-void setup(){
+void setup() {
 
-    analogWrite(lcd_beleuchtung,150); //einschlaten der Beleuchtung
-    lcd.begin(16, 2); 
+    analogWrite(lcd_beleuchtung, 150); //einschlaten der Beleuchtung
+    lcd.begin(16, 2);
     lcd.display();
     lcd.write("Ankeralarm V2");
     lcd.write("T.Zwiener");
     delay(1000);
-    lcd.clear();    
+    lcd.clear();
     void interrupt_init(void);
 
 
     //-------------IO-config-------------------------------------------------
-    
+
     pinMode(ledPin, OUTPUT);
     pinMode(schalter, INPUT_PULLUP);
     pinMode(summer, OUTPUT);
@@ -101,19 +104,17 @@ void setup(){
     pinMode(encoder_button, INPUT_PULLUP);
     pinMode(LED_rot, OUTPUT);
     pinMode(LED_grun, OUTPUT);
-    pinMode(debug_led,OUTPUT);
+    pinMode(debug_led, OUTPUT);
 
 
-   
 }
-
 
 
 void updateGPSData() {
     string currentDataString;
     if (NMEA_read(currentDataString)) {
         const gpsData &data = gpsData(currentDataString.c_str());
-        if (! data.isValid()){
+        if (!data.isValid()) {
             // Ignoriere nicht valide Daten
             return;
         }
@@ -129,7 +130,7 @@ void loop() {
     if (myGPS.getGPSQuality() > 1) {
 
 
-        
+
         //LCD Outputs
 
 
@@ -169,92 +170,96 @@ void alarm() {
     // Aktiviere Alarm
 }
 
-bool
-NMEA_read(string &currentString) {                      // Auslesen des "Ringspeichers" und sortieren der NMEA Sätze
-    char nextChar = '\0';
-    bool newDataAvailable;
-    bool string_complete = false;
-    //bool newValidNMEA = false;
-    //
-    if (rxReadPos != rxWritePos) {
-        nextChar = rxBuffer[rxReadPos];
-
-        if (nextChar == '$' && !newDataAvailable) {
-            newDataAvailable = true;
-        } else {
-            return false;
-        }
-        //Checking for new Data incoming
-        //Expanding of the CurrentDataString with the current char
-        if (newDataAvailable) {
-            currentString += nextChar; //zusammen bauen des Strings
-        }
-        //String is finished
-        if (nextChar == '\r') {
-            currentString += '\r';
-            currentString += '\n';
-
-            string_complete = true; // wird aktiviert wenn ein NEMA datensatz eingegenen ist
-            newDataAvailable = false; // für datenverarbeitung  
-            //hier muss ein Timer eingestezt werden der bei einem Abrruch der Verbindung newDataAvaliable auf false setzet 
-        }
-
+bool NMEA_read(string &currentString) {                      // Auslesen des "Ringspeichers" und sortieren der NMEA Sätze
+    char nextChar;
+    static bool newDataAvailable = false;
+    static int countIncomingChars = 0;
+    if (rxReadPos == rxWritePos) {
+        //No Data available
+        return false;
+    }
+    nextChar = rxBuffer[rxReadPos];
+    if (nextChar == '$') {
+        // Beginning of a new DataString
+        newDataAvailable = true;
+    }
+    if (!newDataAvailable) {
         rxReadPos++;
-
         if (rxReadPos >= RX_Buffer_SIZE) {
             rxReadPos = 0;
         }
-
+        return false;
     }
 
+    currentString += nextChar;
+
+    if (nextChar == '\r') {
+        //String is complete
+        newDataAvailable = false;
+        countIncomingChars = 0;
+        return true;
+    }
+    countIncomingChars++;
+    rxReadPos++;
+    if (rxReadPos >= RX_Buffer_SIZE) {
+        rxReadPos = 0;
+    }
+    if (countIncomingChars >= maxIncomingMessageLength) {
+        newDataAvailable = false;
+        countIncomingChars = 0;
+        return false;
+    }
     return false;
 }
 
 //----UART-Interface (Sereielle Schnittstelle für GPS Modul)------------------------
-void appendSerial( char c){         //Transmit
-  serialBuffer[serialWritePos]= c;
-  serialWritePos++;
-  
-  if(serialWritePos >= TX_Buffer_SIZE){
-    serialWritePos = 0;
-  }
-}
-void serialWrite ( char c[]){       //receive
-  for(uint8_t i = 0; i < strlen(c); i++){
-    appendSerial(c[i]);
-  }
-  if (UCSR0A & (1<<UDRE0)){
-    UDR0 = 0;
-  }  
-}
-ISR(USART_TX_vect){     //receive Ring-Buffer
-  if(serialReadPos != serialWritePos)
-  {
-   UDR0 = serialBuffer[serialReadPos];
-   
-   serialReadPos++;
-   
-   if (serialReadPos >= TX_Buffer_SIZE){
-    serialReadPos = 0;  
-   }
-  }  
-}
-char peekChar(void){    
-  char ret = 'n';
-  if(rxReadPos !=rxWritePos)
-  {
-    ret= rxBuffer[rxReadPos];
-  }
-  return ret;
-}
-ISR(USART_RX_vect){     //Transmit Ring-Buffer    
-  
-    rxBuffer[rxWritePos] = UDR0 ;
-    
-    rxWritePos++;
-    if(rxWritePos >= RX_Buffer_SIZE){
-      rxWritePos = 0;
+void appendSerial(char c) {         //Transmit
+    serialBuffer[serialWritePos] = c;
+    serialWritePos++;
+
+    if (serialWritePos >= TX_Buffer_SIZE) {
+        serialWritePos = 0;
     }
+}
+
+void serialWrite(char c[]) {       //receive
+    for (uint8_t i = 0; i < strlen(c); i++) {
+        appendSerial(c[i]);
+    }
+    if (UCSR0A & (1 << UDRE0)) {
+        UDR0 = 0;
+    }
+}
+
+ISR(USART_TX_vect){     //receive Ring-Buffer
+        if (serialReadPos != serialWritePos)
+        {
+            UDR0 = serialBuffer[serialReadPos];
+
+            serialReadPos++;
+
+            if (serialReadPos >= TX_Buffer_SIZE) {
+                serialReadPos = 0;
+            }
+        }
+}
+
+char peekChar(void) {
+    char ret = 'n';
+    if (rxReadPos != rxWritePos) {
+        ret = rxBuffer[rxReadPos];
+    }
+    return ret;
+}
+
+ISR(USART_RX_vect){     //Transmit Ring-Buffer
+
+        rxBuffer[rxWritePos] = UDR0 ;
+
+        rxWritePos++;
+        if (rxWritePos >= RX_Buffer_SIZE){
+            rxWritePos = 0;
+        }
 }
 
 
