@@ -2,7 +2,6 @@
 #ifndef ANKERALARM_2_DATE_H
 #define ANKERALARM_2_DATE_H
 
-#include <stdexcept>
 #include <sstream>
 #include <cmath>
 
