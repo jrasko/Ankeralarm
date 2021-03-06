@@ -20,6 +20,8 @@ public:
 
     void setPosition(LatitudeDegree &x, LongitudeDegree &y);
 
+    string toString() const;
+
 private:
     LatitudeDegree latitude;
     LongitudeDegree longitude;
