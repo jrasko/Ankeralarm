@@ -178,6 +178,7 @@ bool NMEA_read(string &currentString) {                      // Auslesen des "Ri
         //No Data available
         return false;
     }
+    // Hier ansetzen falls letzter eingehender char benötigt wird
     nextChar = rxBuffer[rxReadPos];
     if (nextChar == '$') {
         // Beginning of a new DataString
