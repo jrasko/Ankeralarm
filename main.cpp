@@ -91,7 +91,7 @@ void setup() {
     lcd.write("T.Zwiener");
     delay(1000);
     lcd.clear();
-    void interrupt_init(void);
+    interrupt_init();
 
 
     //-------------IO-config-------------------------------------------------
@@ -128,6 +128,7 @@ void loop() {
     updateGPSData(); //Timing der updatefunktion ist wichting. entweder ausglöst durch intrupt oder ca alle 10s(update rate des gps Moduls)
 
     if (myGPS.getGPSQuality() > 1) {
+        lcd.print(myGPS.getCurrentPosition().toString().c_str());
 
 
 
@@ -277,6 +278,7 @@ void interrupt_init(void) {
     UCSR0C = (1 << UCSZ01) | (1 << UCSZ00);  // Asynchron 8N
 
     //---config des Encoders Interrupts-----------------------------------------------
+    EIMSK = (1<<INT0);
     EICRA = (1 << ISC01) | (1 << ISC00);
 
     //---config der Timer-------------------------------------------------------------
@@ -344,5 +346,5 @@ ISR(TIMER1_OVF_vect){
             break;
         }
 
-        digitalWrite(LED_grun, HIGH);
+        
 }

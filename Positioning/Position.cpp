@@ -50,9 +50,9 @@ string Position::toString() const {
     lat *= 60;
     latSeconds = (int) (lat + 0.5);
     stringstream s1;
-    s1 << "lat: " << latDegree << "°" << latMinutes << "'" << latSeconds << latDir;
+    s1 << "lat: " << latDegree << "," << latMinutes << "," << latSeconds << latDir;
     output += s1.str();
-    output += '\n';
+    output += "\r\n";
 
     long double lon = this->longitude.getDegrees();
     unsigned short lonDegree, lonMinutes, lonSeconds;
@@ -67,7 +67,7 @@ string Position::toString() const {
     lon *= 60;
     lonSeconds = (int) (lon + 0.5);
     stringstream s2;
-    s2 << "lat: " << lonDegree << "°" << lonMinutes << "'" << lonSeconds << lonDir;
+    s2 << "lat: " << lonDegree << "," << lonMinutes << "," << lonSeconds << lonDir;
     output += s2.str();
 
     return output;
