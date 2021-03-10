@@ -6,6 +6,7 @@
 #include "GPS/GPS.h"
 #include "GPS/gpsData.h"
 #include <LiquidCrystal.h>
+#include <SoftwareSerial.h>
 
 using namespace std;
 
@@ -65,7 +66,10 @@ uint8_t rxReadPos = 0;
 uint8_t rxWritePos = 0;
 
 volatile int encoderWert = 0;
+string currentDataString;
+
 GPS myGPS;
+SoftwareSerial mySoftwareSerial(6,7);//Rx Tx //zur Debugging
 
 //----Funktionsprototypen------------------------------------
 bool NMEA_read(string &currentString);
@@ -89,15 +93,17 @@ void setup() {
     lcd.display();
     lcd.write("Ankeralarm V2");
     lcd.write("T.Zwiener");
+    mySoftwareSerial.begin(9600);
+    mySoftwareSerial.println("OK Setup");
     delay(1000);
-    lcd.clear();
+    lcd.clear();    
     interrupt_init();
 
 
     //-------------IO-config-------------------------------------------------
 
     pinMode(ledPin, OUTPUT);
-    pinMode(schalter, INPUT_PULLUP);
+   // pinMode(schalter, INPUT_PULLUP);
     pinMode(summer, OUTPUT);
     pinMode(encoder_a, INPUT);
     pinMode(encoder_b, INPUT);
@@ -111,7 +117,7 @@ void setup() {
 
 
 void updateGPSData() {
-    string currentDataString;
+    
     if (NMEA_read(currentDataString)) {
         const gpsData &data = gpsData(currentDataString.c_str());
         if (!data.isValid()) {
@@ -120,15 +126,25 @@ void updateGPSData() {
         }
         //Update bei korrekten Daten
         myGPS.update(data);
+
+       
     }
 }
 
 void loop() {
+    
 
     updateGPSData(); //Timing der updatefunktion ist wichting. entweder ausglöst durch intrupt oder ca alle 10s(update rate des gps Moduls)
-
+    //lcd.write(myGPS.getCurrentPosition().toString().c_str());
+    string data;
+    if(NMEA_read(data))
+    {
+        
+        mySoftwareSerial.print(data.c_str()); 
+    }
+   
     if (myGPS.getGPSQuality() > 1) {
-        lcd.print(myGPS.getCurrentPosition().toString().c_str());
+        
 
 
 
@@ -164,7 +180,7 @@ void loop() {
 
     }
 
-
+ 
 }
 
 void alarm() {
@@ -175,6 +191,7 @@ bool NMEA_read(string &currentString) {                      // Auslesen des "Ri
     char nextChar;
     static bool newDataAvailable = false;
     static int countIncomingChars = 0;
+    
     if (rxReadPos == rxWritePos) {
         //No Data available
         return false;
@@ -182,8 +199,8 @@ bool NMEA_read(string &currentString) {                      // Auslesen des "Ri
     // Hier ansetzen falls letzter eingehender char benötigt wird
     nextChar = rxBuffer[rxReadPos];
     if (nextChar == '$') {
-        // Beginning of a new DataString
-        newDataAvailable = true;
+        // Beginning of a new DataString        
+        newDataAvailable = true;        
     }
     if (!newDataAvailable) {
         rxReadPos++;
@@ -193,12 +210,16 @@ bool NMEA_read(string &currentString) {                      // Auslesen des "Ri
         return false;
     }
 
-    currentString += nextChar;
+    currentString.push_back(nextChar);
+    //mySoftwareSerial.print(nextChar); //Daten kommen in next char an. Funktioniert! 
 
     if (nextChar == '\r') {
         //String is complete
         newDataAvailable = false;
-        countIncomingChars = 0;
+        countIncomingChars = 0; 
+       // mySoftwareSerial.println("now:");
+       // mySoftwareSerial.println(currentString.c_str());       
+        currentDataString.clear();
         return true;
     }
     countIncomingChars++;
