@@ -1,4 +1,5 @@
 
+#include <iomanip>
 #include "Position.h"
 
 /**
@@ -50,7 +51,8 @@ string Position::toString() const {
     lat *= 60;
     latSeconds = (int) (lat + 0.500001);
     stringstream s1;
-    s1 << "lat: " << latDegree << "," << latMinutes << "," << latSeconds << latDir;
+    s1 << "lat: " << setfill('0') << std::setw(2) << latDegree << "," << setfill('0') << std::setw(2) << latMinutes
+       << "," << setfill('0') << std::setw(2) << latSeconds << latDir;
     output += s1.str();
     output += "\r\n";
 
@@ -67,7 +69,8 @@ string Position::toString() const {
     lon *= 60;
     lonSeconds = (int) (lon + 0.500001);
     stringstream s2;
-    s2 << "lon: " << lonDegree << "," << lonMinutes << "," << lonSeconds << lonDir;
+    s2 << "lon:" << setfill('0') << std::setw(3) << lonDegree << "," << setfill('0') << std::setw(2) << lonMinutes
+       << "," << setfill('0') << std::setw(2) << lonSeconds << lonDir;
     output += s2.str();
 
     return output;
