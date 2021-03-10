@@ -29,7 +29,6 @@ long double LatitudeDegree::toMeters() const {
 
 LatitudeDegree::LatitudeDegree(long double degrees) {
     if (degrees < -90 || degrees > 90) {
-        //throw std::invalid_argument("Invalid Argument!");
         return;
     }
     this->degrees = degrees;
