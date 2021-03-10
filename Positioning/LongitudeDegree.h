@@ -10,11 +10,6 @@ using namespace std;
 class LongitudeDegree {
 
 public:
-
-    LongitudeDegree(char direction, int degrees, long double minutes);
-
-    explicit LongitudeDegree(const std::string &koordString);
-
     explicit LongitudeDegree(const std::string &koordString, char direction);
 
     explicit LongitudeDegree(long double degrees);

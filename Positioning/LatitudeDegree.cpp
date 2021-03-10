@@ -3,21 +3,6 @@
 
 using namespace std;
 
-LatitudeDegree::LatitudeDegree(const std::string &koordString) {
-    int deg = 0;
-    long double min = 0;
-    stringstream(koordString.substr(0, 2)) >> deg;
-    stringstream(koordString.substr(2, 10)) >> min;
-
-    char direction = koordString[11];
-
-    long double jdeg = deg + (min / 60);
-    if (direction == 'S') {
-        jdeg = -jdeg;
-    }
-    this->degrees = jdeg;
-}
-
 LatitudeDegree::LatitudeDegree(const std::string &koordString, char direction) {
     int deg = 0;
     long double min = 0;
@@ -31,13 +16,6 @@ LatitudeDegree::LatitudeDegree(const std::string &koordString, char direction) {
     this->degrees = jdeg;
 }
 
-LatitudeDegree::LatitudeDegree(char direction, int degrees, long double minutes) {
-    long double deg = degrees + (minutes / 60);
-    if (direction == 'S') {
-        deg = -deg;
-    }
-    this->degrees = deg;
-}
 
 
 LatitudeDegree::LatitudeDegree(int degrees, long double minutes) {

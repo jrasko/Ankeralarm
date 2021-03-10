@@ -8,10 +8,6 @@
 class LatitudeDegree {
 
 public:
-    LatitudeDegree(char direction, int degrees, long double minutes);
-
-    explicit LatitudeDegree(const std::string &koordString);
-
     explicit LatitudeDegree(const std::string &koordString, char direction);
 
     explicit LatitudeDegree(long double degrees);
