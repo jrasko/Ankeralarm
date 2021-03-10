@@ -17,11 +17,6 @@ LatitudeDegree::LatitudeDegree(const std::string &koordString, char direction) {
 }
 
 
-
-LatitudeDegree::LatitudeDegree(int degrees, long double minutes) {
-    this->degrees = degrees + (minutes / 60);
-}
-
 LatitudeDegree operator-(const LatitudeDegree &dg1, const LatitudeDegree &dg2) {
     return LatitudeDegree(dg1.degrees - dg2.degrees);
 }

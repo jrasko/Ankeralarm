@@ -19,10 +19,6 @@ LongitudeDegree::LongitudeDegree(const std::string &koordString, char direction)
     this->degrees = jdeg;
 }
 
-LongitudeDegree::LongitudeDegree(int degrees, long double minutes) {
-    this->degrees = degrees + (minutes / 60);
-}
-
 LongitudeDegree operator-(const LongitudeDegree &dg1, const LongitudeDegree &dg2) {
     return LongitudeDegree(dg1.degrees - dg2.degrees);
 }

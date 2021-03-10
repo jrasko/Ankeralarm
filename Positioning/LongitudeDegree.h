@@ -14,8 +14,6 @@ public:
 
     explicit LongitudeDegree(long double degrees);
 
-    LongitudeDegree(int degrees, long double minutes);
-
     LongitudeDegree(const LongitudeDegree &d) {
         degrees = d.degrees;
     }
