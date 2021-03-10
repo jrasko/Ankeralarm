@@ -69,7 +69,7 @@ volatile int encoderWert = 0;
 string currentDataString;
 
 GPS myGPS;
-SoftwareSerial mySoftwareSerial(6,7);//Rx Tx //zur Debugging
+SoftwareSerial mySoftwareSerial(6, 7);//Rx Tx //zur Debugging
 
 //----Funktionsprototypen------------------------------------
 bool NMEA_read(string &currentString);
@@ -96,14 +96,14 @@ void setup() {
     mySoftwareSerial.begin(9600);
     mySoftwareSerial.println("OK Setup");
     delay(1000);
-    lcd.clear();    
+    lcd.clear();
     interrupt_init();
 
 
     //-------------IO-config-------------------------------------------------
 
     pinMode(ledPin, OUTPUT);
-   // pinMode(schalter, INPUT_PULLUP);
+    // pinMode(schalter, INPUT_PULLUP);
     pinMode(summer, OUTPUT);
     pinMode(encoder_a, INPUT);
     pinMode(encoder_b, INPUT);
@@ -117,37 +117,25 @@ void setup() {
 
 
 void updateGPSData() {
-    
+
     if (NMEA_read(currentDataString)) {
         const gpsData &data = gpsData(currentDataString.c_str());
+        currentDataString.clear();
         if (!data.isValid()) {
             // Ignoriere nicht valide Daten
             return;
         }
         //Update bei korrekten Daten
         myGPS.update(data);
-
-       
     }
 }
 
 void loop() {
-    
 
     updateGPSData(); //Timing der updatefunktion ist wichting. entweder ausglöst durch intrupt oder ca alle 10s(update rate des gps Moduls)
     //lcd.write(myGPS.getCurrentPosition().toString().c_str());
-    string data;
-    if(NMEA_read(data))
-    {
-        
-        mySoftwareSerial.print(data.c_str()); 
-    }
-   
+
     if (myGPS.getGPSQuality() > 1) {
-        
-
-
-
         //LCD Outputs
 
 
@@ -180,7 +168,7 @@ void loop() {
 
     }
 
- 
+
 }
 
 void alarm() {
@@ -191,7 +179,7 @@ bool NMEA_read(string &currentString) {                      // Auslesen des "Ri
     char nextChar;
     static bool newDataAvailable = false;
     static int countIncomingChars = 0;
-    
+
     if (rxReadPos == rxWritePos) {
         //No Data available
         return false;
@@ -200,7 +188,7 @@ bool NMEA_read(string &currentString) {                      // Auslesen des "Ri
     nextChar = rxBuffer[rxReadPos];
     if (nextChar == '$') {
         // Beginning of a new DataString        
-        newDataAvailable = true;        
+        newDataAvailable = true;
     }
     if (!newDataAvailable) {
         rxReadPos++;
@@ -211,15 +199,11 @@ bool NMEA_read(string &currentString) {                      // Auslesen des "Ri
     }
 
     currentString.push_back(nextChar);
-    //mySoftwareSerial.print(nextChar); //Daten kommen in next char an. Funktioniert! 
 
     if (nextChar == '\r') {
         //String is complete
         newDataAvailable = false;
-        countIncomingChars = 0; 
-       // mySoftwareSerial.println("now:");
-       // mySoftwareSerial.println(currentString.c_str());       
-        currentDataString.clear();
+        countIncomingChars = 0;
         return true;
     }
     countIncomingChars++;
@@ -299,7 +283,7 @@ void interrupt_init(void) {
     UCSR0C = (1 << UCSZ01) | (1 << UCSZ00);  // Asynchron 8N
 
     //---config des Encoders Interrupts-----------------------------------------------
-    EIMSK = (1<<INT0);
+    EIMSK = (1 << INT0);
     EICRA = (1 << ISC01) | (1 << ISC00);
 
     //---config der Timer-------------------------------------------------------------
@@ -367,5 +351,5 @@ ISR(TIMER1_OVF_vect){
             break;
         }
 
-        
+
 }

@@ -48,7 +48,7 @@ string Position::toString() const {
     latMinutes = (int) lat;
     lat -= latMinutes;
     lat *= 60;
-    latSeconds = (int) (lat + 0.5);
+    latSeconds = (int) (lat + 0.500001);
     stringstream s1;
     s1 << "lat: " << latDegree << "," << latMinutes << "," << latSeconds << latDir;
     output += s1.str();
@@ -65,9 +65,9 @@ string Position::toString() const {
     lonMinutes = (int) lon;
     lon -= lonMinutes;
     lon *= 60;
-    lonSeconds = (int) (lon + 0.5);
+    lonSeconds = (int) (lon + 0.500001);
     stringstream s2;
-    s2 << "lat: " << lonDegree << "," << lonMinutes << "," << lonSeconds << lonDir;
+    s2 << "lon: " << lonDegree << "," << lonMinutes << "," << lonSeconds << lonDir;
     output += s2.str();
 
     return output;

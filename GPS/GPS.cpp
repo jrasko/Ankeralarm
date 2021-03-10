@@ -11,14 +11,14 @@ void GPS::update(const gpsData &data) {
         return;
     }
 
-    if (v[0] == "$GPGGA") {
+    if (v[0] == "$GPRMC") {
         //GPRMC
         lastTimeStamp = DateTime(v[1], v[9]);
         LatitudeDegree lat(v[3], v[4][0]);
         LongitudeDegree lon(v[5], v[6][0]);
         currentPosition = Position(lat, lon);
 
-    } else if (v[0] == "$GPRMC") {
+    } else if (v[0] == "$GPGGA") {
         //GPGGA
         LatitudeDegree lat(v[2], v[3][0]);
         LongitudeDegree lon(v[4], v[5][0]);
