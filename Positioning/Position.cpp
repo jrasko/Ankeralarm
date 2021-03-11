@@ -43,34 +43,32 @@ string Position::toString() const {
     char latDir = (lat > 0) ? 'N' : 'S';
     lat = std::abs(lat);
 
-    latDegree = (int) lat;
+    latDegree = (unsigned short) lat;
     lat -= latDegree;
     lat *= 60;
-    latMinutes = (int) lat;
+    latMinutes = (unsigned short) lat;
     lat -= latMinutes;
     lat *= 60;
-    latSeconds = (int) (lat + 0.500001);
+    latSeconds = (unsigned short) (lat + 0.500001);
     stringstream s1;
-    s1 << "lat: " << setfill('0') << std::setw(2) << latDegree << "," << setfill('0') << std::setw(2) << latMinutes
-       << "," << setfill('0') << std::setw(2) << latSeconds << latDir;
+    s1 << "lat: " << latDegree << "," << latMinutes << "," << latSeconds << latDir;
     output += s1.str();
     output += "\r\n";
 
-    float lon = this->longitude.getDegrees();
+    float lon = longitude.getDegrees();
     unsigned short lonDegree, lonMinutes, lonSeconds;
     char lonDir = (lon > 0) ? 'E' : 'W';
     lon = std::abs(lon);
 
-    lonDegree = (int) lon;
-    lon -= lonDegree;
+    lonDegree = (unsigned short) lon;
+    lon -=  lonDegree;
     lon *= 60;
-    lonMinutes = (int) lon;
+    lonMinutes = (unsigned short) lon;
     lon -= lonMinutes;
     lon *= 60;
-    lonSeconds = (int) (lon + 0.500001);
+    lonSeconds = (unsigned short) (lon + 0.500001);
     stringstream s2;
-    s2 << "lon:" << setfill('0') << std::setw(3) << lonDegree << "," << setfill('0') << std::setw(2) << lonMinutes
-       << "," << setfill('0') << std::setw(2) << lonSeconds << lonDir;
+    s2 << "lon:" << lonDegree << "," << lonMinutes << "," << lonSeconds << lonDir;
     output += s2.str();
 
     return output;
