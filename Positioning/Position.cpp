@@ -58,7 +58,7 @@ string Position::toString() const {
 
     long double lon = this->longitude.getDegrees();
     unsigned short lonDegree, lonMinutes, lonSeconds;
-    char lonDir = (lon > 0) ? 'N' : 'S';
+    char lonDir = (lon > 0) ? 'E' : 'W';
     lon = std::abs(lon);
 
     lonDegree = (int) lon;
