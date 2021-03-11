@@ -7,12 +7,12 @@
  * @param p the Positon which is compared with this pos
  * @return the distance from Position to p in meters
  */
-long double Position::distanceTo(const Position &p) const {
+float Position::distanceTo(const Position &p) const {
 
     LatitudeDegree dlat = this->latitude - p.latitude;
     LongitudeDegree dlong = this->longitude - p.longitude;
 
-    long double avgDeg = (latitude.getDegrees() + p.latitude.getDegrees()) / 2;
+    float avgDeg = (latitude.getDegrees() + p.latitude.getDegrees()) / 2;
     return sqrt(dlat.toMeters() * dlat.toMeters() + dlong.toMeters(avgDeg) * dlong.toMeters(avgDeg));
 }
 
@@ -22,8 +22,8 @@ void Position::setPosition(LatitudeDegree &x, LongitudeDegree &y) {
 }
 
 Position getMedian(const vector<Position> &p) {
-    long double latDeg = 0;
-    long double lonDeg = 0;
+    float latDeg = 0;
+    float lonDeg = 0;
 
     for (const auto &i : p) {
         latDeg += i.latitude.getDegrees();
@@ -38,7 +38,7 @@ Position getMedian(const vector<Position> &p) {
 string Position::toString() const {
     string output;
 
-    long double lat = this->latitude.getDegrees();
+    float lat = latitude.getDegrees();
     unsigned short latDegree, latMinutes, latSeconds;
     char latDir = (lat > 0) ? 'N' : 'S';
     lat = std::abs(lat);
@@ -56,7 +56,7 @@ string Position::toString() const {
     output += s1.str();
     output += "\r\n";
 
-    long double lon = this->longitude.getDegrees();
+    float lon = this->longitude.getDegrees();
     unsigned short lonDegree, lonMinutes, lonSeconds;
     char lonDir = (lon > 0) ? 'E' : 'W';
     lon = std::abs(lon);

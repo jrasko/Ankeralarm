@@ -12,23 +12,23 @@ class LongitudeDegree {
 public:
     explicit LongitudeDegree(const std::string &koordString, char direction);
 
-    explicit LongitudeDegree(long double degrees);
+    explicit LongitudeDegree(float degrees);
 
     LongitudeDegree(const LongitudeDegree &d) {
         degrees = d.degrees;
     }
 
-    long double getDegrees() const {
+    float getDegrees() const {
         return degrees;
     }
 
 
     friend LongitudeDegree operator-(const LongitudeDegree &dg1, const LongitudeDegree &dg2);
 
-    long double toMeters(long double latdeg) const;
+    float toMeters(float latdeg) const;
 
 private:
-    long double degrees;
+    float degrees;
 };
 
 

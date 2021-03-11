@@ -16,7 +16,7 @@ public:
                                                                                  longitude(longitude) {}
     friend Position getMedian(const vector<Position> &p);
 
-    long double distanceTo(const Position &p) const;
+    float distanceTo(const Position &p) const;
 
     void setPosition(LatitudeDegree &x, LongitudeDegree &y);
 
