@@ -76,4 +76,12 @@ string Position::toString() const {
     return output;
 }
 
+const LatitudeDegree &Position::getLatitude() const {
+    return latitude;
+}
+
+const LongitudeDegree &Position::getLongitude() const {
+    return longitude;
+}
+
 

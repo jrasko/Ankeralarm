@@ -20,6 +20,10 @@ public:
 
     void setPosition(LatitudeDegree &x, LongitudeDegree &y);
 
+    const LatitudeDegree &getLatitude() const;
+
+    const LongitudeDegree &getLongitude() const;
+
     string toString() const;
 
 private:

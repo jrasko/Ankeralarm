@@ -7,7 +7,7 @@
  */
 void GPS::update(const gpsData &data) {
     vector<string> v = data.getData();
-    if (!data.isValid() ||( v.size() != 13 && v.size() != 15)) {
+    if (!data.isValid() || (v.size() != 13 && v.size() != 15)) {
         return;
     }
 
@@ -23,8 +23,9 @@ void GPS::update(const gpsData &data) {
         LatitudeDegree lat(v[2], v[3][0]);
         LongitudeDegree lon(v[4], v[5][0]);
         currentPosition = Position(lat, lon);
-        stringstream(v[6]) >> accuracy;
+        stringstream(v[6]) >> gpsStatus;
         stringstream(v[7]) >> satellitesAvailable;
+        stringstream(v[8]) >> accuracy;
     }
     lastInputTime = millis();
 }
@@ -85,4 +86,5 @@ unsigned short GPS::getSatellitesAvailable() const {
 const Position &GPS::getCurrentPosition() const {
     return currentPosition;
 }
+
 

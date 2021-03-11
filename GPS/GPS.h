@@ -32,6 +32,7 @@ private:
     //    TinyGPS gps;
     DateTime lastTimeStamp;
     Position currentPosition = Position(LatitudeDegree(0), LongitudeDegree(0));
+    unsigned short gpsStatus = 0;
     unsigned short accuracy = 500;
     unsigned short satellitesAvailable = 0;
     unsigned long lastInputTime = 0;
