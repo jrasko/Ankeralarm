@@ -38,10 +38,11 @@ Position getMedian(const vector<Position> &p) {
 string Position::toString() const {
     string output;
 
-    float lat = latitude.getDegrees();
+    double lat = (double) latitude.getDegrees();
     unsigned short latDegree, latMinutes, latSeconds;
     char latDir = (lat > 0) ? 'N' : 'S';
-    lat = std::abs(lat);
+    //lat = std::abs(lat);     //Ruft den Fehler: 50,00, 0, hervor
+    char buff[20];
 
     latDegree = (unsigned short) lat;
     lat -= latDegree;
@@ -50,15 +51,14 @@ string Position::toString() const {
     lat -= latMinutes;
     lat *= 60;
     latSeconds = (unsigned short) (lat + 0.500001);
-    stringstream s1;
-    s1 << "lat: " << latDegree << "," << latMinutes << "," << latSeconds << latDir;
-    output += s1.str();
-    output += "\r\n";
 
-    float lon = longitude.getDegrees();
+    sprintf(buff,"lat: %2.0d,%2.0d,%2.0d %c \r\n", latDegree, latMinutes, latSeconds, latDir);  
+    output.assign(buff);    
+
+    double lon = (double) longitude.getDegrees();
     unsigned short lonDegree, lonMinutes, lonSeconds;
     char lonDir = (lon > 0) ? 'E' : 'W';
-    lon = std::abs(lon);
+    //lon = std::abs(lon);
 
     lonDegree = (unsigned short) lon;
     lon -=  lonDegree;
@@ -67,9 +67,9 @@ string Position::toString() const {
     lon -= lonMinutes;
     lon *= 60;
     lonSeconds = (unsigned short) (lon + 0.500001);
-    stringstream s2;
-    s2 << "lon:" << lonDegree << "," << lonMinutes << "," << lonSeconds << lonDir;
-    output += s2.str();
+    
+    sprintf(buff,"lon:%3.0d,%2.0d,%2.0d %c", lonDegree,lonMinutes,lonSeconds,lonDir);    
+    output.append(buff);
 
     return output;
 }

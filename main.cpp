@@ -127,6 +127,7 @@ void updateGPSData() {
         }
         //Update bei korrekten Daten
         myGPS.update(data);
+        mySoftwareSerial.println(myGPS.getCurrentPosition().toString().c_str());       
     }
 }
 
@@ -135,9 +136,9 @@ void loop() {
     updateGPSData(); //Timing der updatefunktion ist wichting. entweder ausglöst durch intrupt oder ca alle 10s(update rate des gps Moduls)
     //lcd.write(myGPS.getCurrentPosition().toString().c_str());
 
+    
     if (myGPS.getGPSQuality() > 1) {
         //LCD Outputs
-
 
     } else {
         //print no GPS
@@ -283,8 +284,8 @@ void interrupt_init(void) {
     UCSR0C = (1 << UCSZ01) | (1 << UCSZ00);  // Asynchron 8N
 
     //---config des Encoders Interrupts-----------------------------------------------
-    EIMSK = (1 << INT0);
-    EICRA = (1 << ISC01) | (1 << ISC00);
+   // EIMSK = (1 << INT0);
+   // EICRA = (1 << ISC01) | (1 << ISC00);
 
     //---config der Timer-------------------------------------------------------------
 
