@@ -1,5 +1,4 @@
 
-#include <iomanip>
 #include "Position.h"
 
 /**
@@ -41,7 +40,7 @@ string Position::toString() const {
     double lat = latitude.getDegrees();
     unsigned short latDegree, latMinutes, latSeconds;
     char latDir = (lat > 0) ? 'N' : 'S';
-    //lat = std::abs(lat);     //Ruft den Fehler: 50,00, 0, hervor
+    lat = lat < 0 ? -lat : lat;
     char buff[20];
 
     latDegree = (unsigned short) lat;
@@ -52,23 +51,23 @@ string Position::toString() const {
     lat *= 60;
     latSeconds = (unsigned short) (lat + 0.500001);
 
-    sprintf(buff,"lat: %2.0d,%2.0d,%2.0d %c \r\n", latDegree, latMinutes, latSeconds, latDir);  
+    sprintf(buff, "lat: %2.0d,%2.0d,%2.0d %c \r\n", latDegree, latMinutes, latSeconds, latDir);
     output.assign(buff);
 
     double lon = longitude.getDegrees();
     unsigned short lonDegree, lonMinutes, lonSeconds;
     char lonDir = (lon > 0) ? 'E' : 'W';
-    //lon = std::abs(lon);
+    lon = lon < 0 ? -lon : lon;
 
     lonDegree = (unsigned short) lon;
-    lon -=  lonDegree;
+    lon -= lonDegree;
     lon *= 60;
     lonMinutes = (unsigned short) lon;
     lon -= lonMinutes;
     lon *= 60;
     lonSeconds = (unsigned short) (lon + 0.500001);
-    
-    sprintf(buff,"lon:%3.0d,%2.0d,%2.0d %c", lonDegree,lonMinutes,lonSeconds,lonDir);    
+
+    sprintf(buff, "lon:%3.0d,%2.0d,%2.0d %c", lonDegree, lonMinutes, lonSeconds, lonDir);
     output.append(buff);
 
     return output;
