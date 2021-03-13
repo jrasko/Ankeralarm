@@ -5,7 +5,6 @@
 
 #include "LatitudeDegree.h"
 #include "LongitudeDegree.h"
-#include <cmath>
 #include <vector>
 
 using namespace std;

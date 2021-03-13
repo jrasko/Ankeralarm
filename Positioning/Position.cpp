@@ -36,36 +36,34 @@ Position getMedian(const vector<Position> &p) {
 
 string Position::toString() const {
     string output;
-
     double lat = latitude.getDegrees();
-    unsigned short latDegree, latMinutes, latSeconds;
-    char latDir = (lat > 0) ? 'N' : 'S';
-    lat = lat < 0 ? -lat : lat;
+    double lon = longitude.getDegrees();
+    unsigned short latDegree, latMinutes, latSeconds, lonDegree, lonMinutes, lonSeconds;
     char buff[20];
+    char latDir = (lat > 0) ? 'N' : 'S';
+    char lonDir = (lon > 0) ? 'E' : 'W';
 
+    if (lat < 0) {
+        lat = -lat;
+    }
     latDegree = (unsigned short) lat;
-    lat -= latDegree;
-    lat *= 60;
+    lat = 60.0 * (lat - latDegree);
     latMinutes = (unsigned short) lat;
-    lat -= latMinutes;
-    lat *= 60;
-    latSeconds = (unsigned short) (lat + 0.500001);
+    lat = 60.0 * (lat - latMinutes);
+    latSeconds = (unsigned short) (0.5001 + lat);
 
     sprintf(buff, "lat: %2.0d,%2.0d,%2.0d %c \r\n", latDegree, latMinutes, latSeconds, latDir);
     output.assign(buff);
 
-    double lon = longitude.getDegrees();
-    unsigned short lonDegree, lonMinutes, lonSeconds;
-    char lonDir = (lon > 0) ? 'E' : 'W';
-    lon = lon < 0 ? -lon : lon;
 
+    if (lon < 0) {
+        lon = -lon;
+    }
     lonDegree = (unsigned short) lon;
-    lon -= lonDegree;
-    lon *= 60;
+    lon = 60.0 * (lon - lonDegree);
     lonMinutes = (unsigned short) lon;
-    lon -= lonMinutes;
-    lon *= 60;
-    lonSeconds = (unsigned short) (lon + 0.500001);
+    lon = 60.0 * (lon - lonMinutes);
+    lonSeconds = (unsigned short) (0.5001 + lon);
 
     sprintf(buff, "lon:%3.0d,%2.0d,%2.0d %c", lonDegree, lonMinutes, lonSeconds, lonDir);
     output.append(buff);
