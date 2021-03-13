@@ -24,7 +24,8 @@ LongitudeDegree operator-(const LongitudeDegree &dg1, const LongitudeDegree &dg2
 }
 
 double LongitudeDegree::toMeters(double latdeg = 0) const {
-    return std::abs(degrees) * 60 * 1852.216 * cos(latdeg * toDEG);
+    const double mile = degrees < 0 ? -1852.216 : 1852.216;
+    return degrees * 60 * mile * cos(latdeg * toDEG);
 }
 
 LongitudeDegree::LongitudeDegree(double degrees) {
