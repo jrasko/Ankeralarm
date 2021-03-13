@@ -6,13 +6,13 @@ using namespace std;
 
 LongitudeDegree::LongitudeDegree(const std::string &koordString, char direction) {
     int deg = 0;
-    float min = 0;
+    double min = 0;
 
     stringstream(koordString.substr(0, 3)) >> deg;
     stringstream(koordString.substr(3, 10)) >> min;
 
 
-    float jdeg = deg + (min / 60);
+    double jdeg = deg + (min / 60);
     if (direction == 'W') {
         jdeg = -jdeg;
     }
@@ -23,10 +23,10 @@ LongitudeDegree operator-(const LongitudeDegree &dg1, const LongitudeDegree &dg2
     return LongitudeDegree(dg1.degrees - dg2.degrees);
 }
 
-float LongitudeDegree::toMeters(float latdeg = 0) const {
+double LongitudeDegree::toMeters(double latdeg = 0) const {
     return std::abs(degrees) * 60 * 1852.216 * cos(latdeg * toDEG);
 }
 
-LongitudeDegree::LongitudeDegree(float degrees) {
+LongitudeDegree::LongitudeDegree(double degrees) {
     this->degrees = degrees;
 }

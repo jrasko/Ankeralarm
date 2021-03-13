@@ -10,23 +10,23 @@ class LatitudeDegree {
 public:
     explicit LatitudeDegree(const std::string &koordString, char direction);
 
-    explicit LatitudeDegree(float degrees);
+    explicit LatitudeDegree(double degrees);
 
     LatitudeDegree(const LatitudeDegree &d) {
         degrees= d.degrees;
     }
 
-    float getDegrees() const {
+    double getDegrees() const {
         return degrees;
     }
 
     friend LatitudeDegree operator-(const LatitudeDegree &dg1, const LatitudeDegree &dg2);
 
 
-    float toMeters() const;
+    double toMeters() const;
 
 private:
-    float degrees;
+    double degrees;
 };
 
 
