@@ -10,7 +10,6 @@ void GPS::update(const gpsData &data) {
     if (!data.isValid() || (v.size() != 13 && v.size() != 15)) {
         return;
     }
-
     if (v[0] == "$GPRMC") {
         //GPRMC
         lastTimeStamp = DateTime(v[1], v[9]);
@@ -41,11 +40,11 @@ unsigned short GPS::getGPSQuality() const {
         return 0;
     }
     unsigned long currentFixAge = millis() - lastInputTime;
-    if (currentFixAge >= maxFixAge) {
+    if (gpsStatus == 0 || currentFixAge >= maxFixAge) {
         // Seit einiger zeit keine validen Daten vorhanden, verlust des fixes
         return 1;
     }
-    if (currentFixAge >= 20 * 1000 || satellitesAvailable <= 3 || accuracy >= 500) {
+    if (currentFixAge >= 20 * 1000 || satellitesAvailable <= 3 || accuracy >= 10) {
         return 2;
     }
 
@@ -53,19 +52,19 @@ unsigned short GPS::getGPSQuality() const {
         return 3;
     }
     if (currentFixAge >= 12) {
-        if (accuracy < 100) {
+        if (accuracy < 1.0) {
             return 5;
         }
-        if (accuracy < 250) {
+        if (accuracy < 2.5) {
             return 4;
         }
         return 3;
     }
     //FixAge ist zwischen 10 und 12
-    if (accuracy < 100) {
+    if (accuracy < 1.0) {
         return 6;
     }
-    if (accuracy < 250) {
+    if (accuracy < 2.5) {
         return 5;
     }
     return 4;
