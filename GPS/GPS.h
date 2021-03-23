@@ -19,11 +19,12 @@ public:
 
     const DateTime &getLastTimeStamp() const;
 
-    unsigned short getAccuracy() const;
+    double getAccuracy() const;
 
     unsigned short getSatellitesAvailable() const;
 
     const Position &getCurrentPosition() const;
+
 
 
 

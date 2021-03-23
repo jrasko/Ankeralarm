@@ -48,10 +48,10 @@ unsigned short GPS::getGPSQuality() const {
         return 2;
     }
 
-    if (currentFixAge >= 15) {
+    if (currentFixAge >= 15*1000) {
         return 3;
     }
-    if (currentFixAge >= 12) {
+    if (currentFixAge >= 12*1000) {
         if (accuracy < 1.0) {
             return 5;
         }
@@ -74,7 +74,7 @@ const DateTime &GPS::getLastTimeStamp() const {
     return lastTimeStamp;
 }
 
-unsigned short GPS::getAccuracy() const {
+double GPS::getAccuracy() const {
     return accuracy;
 }
 
