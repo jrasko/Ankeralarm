@@ -53,7 +53,7 @@ vector<string> Position::toString() const {
     lat = 60.0 * (lat - latMinutes);
     latSeconds = (unsigned short) (0.5001 + lat);
 
-    sprintf(buff, "lat: %02d,%02d,%02.3d%c", latDegree, latMinutes, latSeconds, latDir);
+    sprintf(buff, "lat: %02d,%02d,%02d%c", latDegree, latMinutes, latSeconds, latDir);
     currentString.assign(buff);
     ary.push_back(currentString);
     currentString.clear();
@@ -67,7 +67,7 @@ vector<string> Position::toString() const {
     lon = 60.0 * (lon - lonMinutes);
     lonSeconds = (unsigned short) (0.5001 + lon);
 
-    sprintf(buff, "lon:%03d,%02d,%02.3d%c", lonDegree, lonMinutes, lonSeconds, lonDir);
+    sprintf(buff, "lon:%03d,%02d,%02d%c", lonDegree, lonMinutes, lonSeconds, lonDir);
     currentString.append(buff);
     ary.push_back(currentString);
     return ary;
