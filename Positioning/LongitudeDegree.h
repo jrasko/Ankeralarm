@@ -3,6 +3,7 @@
 #define ANKERALARM_LONGITUDEDEGREE_H
 
 #include <sstream>
+#include <cmath>
 
 using namespace std;
 

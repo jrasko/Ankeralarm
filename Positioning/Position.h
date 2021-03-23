@@ -23,7 +23,7 @@ public:
 
     const LongitudeDegree &getLongitude() const;
 
-    string toString() const;
+    vector<string> toString() const;
 
 private:
     LatitudeDegree latitude;
