@@ -8,8 +8,8 @@
  */
 double Position::distanceTo(const Position &p) const {
 
-    LatitudeDegree dlat = this->latitude - p.latitude;
-    LongitudeDegree dlong = this->longitude - p.longitude;
+    LatitudeDegree dlat = latitude - p.latitude;
+    LongitudeDegree dlong = longitude - p.longitude;
 
     double avgDeg = (latitude.getDegrees() + p.latitude.getDegrees()) / 2;
     return sqrt(dlat.toMeters() * dlat.toMeters() + dlong.toMeters(avgDeg) * dlong.toMeters(avgDeg));

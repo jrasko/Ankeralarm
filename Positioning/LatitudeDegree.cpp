@@ -6,15 +6,14 @@ using namespace std;
 LatitudeDegree::LatitudeDegree(const std::string &koordString, char direction) {
     int deg = 0;
     double min = 0;
-    // FIXME 
     stringstream(koordString.substr(0, 2)) >> deg;
     stringstream(koordString.substr(2, 10)) >> min;
 
-    double jdeg = (double) deg + (min / 60.0);
+    double jdeg = min / 60.0 + deg;
     if (direction == 'S') {
         jdeg = -jdeg;
     }
-    this->degrees = jdeg;
+    degrees = jdeg;
 }
 
 
@@ -29,12 +28,8 @@ double LatitudeDegree::toMeters() const {
 }
 
 
-LatitudeDegree::LatitudeDegree(double degrees) {
-    if (degrees < -90 || degrees > 90) {
-        return;
-    }
-    this->degrees = degrees;
-
+LatitudeDegree::LatitudeDegree(double deg) {
+    degrees = deg;
 }
 
 

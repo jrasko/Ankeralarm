@@ -11,7 +11,7 @@ class LatitudeDegree {
 public:
     explicit LatitudeDegree(const std::string &koordString, char direction);
 
-    explicit LatitudeDegree(double degrees);
+    explicit LatitudeDegree(double deg);
 
     LatitudeDegree(const LatitudeDegree &d) {
         degrees= d.degrees;

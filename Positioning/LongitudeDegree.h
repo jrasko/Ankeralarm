@@ -12,7 +12,7 @@ class LongitudeDegree {
 public:
     explicit LongitudeDegree(const std::string &koordString, char direction);
 
-    explicit LongitudeDegree(double degrees);
+    explicit LongitudeDegree(double deg);
 
     LongitudeDegree(const LongitudeDegree &d) {
         degrees = d.degrees;

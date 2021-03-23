@@ -11,12 +11,11 @@ LongitudeDegree::LongitudeDegree(const std::string &koordString, char direction)
     stringstream(koordString.substr(0, 3)) >> deg;
     stringstream(koordString.substr(3, 10)) >> min;
 
-
-    double jdeg = (double) deg + (min / 60.0);
+    double jdeg = min / 60.0 + deg;
     if (direction == 'W') {
         jdeg = -jdeg;
     }
-    this->degrees = jdeg;
+    degrees = jdeg;
 }
 
 LongitudeDegree operator-(const LongitudeDegree &dg1, const LongitudeDegree &dg2) {
@@ -28,6 +27,6 @@ double LongitudeDegree::toMeters(double latdeg = 0) const {
     return degrees * 60 * mile * cos(latdeg * toDEG);
 }
 
-LongitudeDegree::LongitudeDegree(double degrees) {
-    this->degrees = degrees;
+LongitudeDegree::LongitudeDegree(double deg) {
+    degrees = deg;
 }
