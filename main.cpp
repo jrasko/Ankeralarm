@@ -119,7 +119,6 @@ void updateGPSData() {
 
     if (NMEA_read(currentDataString)) {
         const gpsData &data = gpsData(currentDataString.c_str());
-        mySoftwareSerial.println(currentDataString.c_str());
         currentDataString.clear();
         if (!data.isValid()) {
             // Ignoriere nicht valide Daten
@@ -127,14 +126,6 @@ void updateGPSData() {
         }
         //Update bei korrekten Daten
         myGPS.update(data);
-        Position pos = myGPS.getCurrentPosition();
-        mySoftwareSerial.println(pos.getLatitude().getDegrees());
-        mySoftwareSerial.println(pos.getLongitude().getDegrees());
-        stringstream s;
-        s << "Accuracy: " << myGPS.getAccuracy() << " Sattelites: " 
-        << myGPS.getSatellitesAvailable() <<" Quality: " << myGPS.getGPSQuality();
-        mySoftwareSerial.println(s.str().c_str());
-
     }
 }
 
