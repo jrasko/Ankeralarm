@@ -3,14 +3,27 @@
 
 #include "Anzeige.h"
 
-class GPSinfo : public Zustand
-{
+class GPSinfo : public Zustand {
 private:
-    Anzeige a;
+    Anzeige anzeige;
 public:
-void encoderLeft(){
-    a.setZusatand(Alarm());
-}
+    void encoderPush() override {
+
+    }
+
+    void enocderRight() override {
+
+    }
+
+    GPSinfo(const Anzeige &anzeige) : anzeige(anzeige) {}
+
+    void buttonReturn() override {
+
+    }
+
+    void encoderLeft() {
+        anzeige.setZusatand(Alarm());
+    }
 };
 
 

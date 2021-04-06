@@ -2,30 +2,38 @@
 #define ANKERALRM_ANZEIGE_H
 
 #include "Zustand.h"
+#include "GPSinfo.h"
 
-class Anzeige{
+class Anzeige {
 private:
     Zustand zustand;
 
 public:
-    Anzeige(){
-        zustand = GPSinfo();
-    }
-    void encoderLeft(){
+    Anzeige() = default;
+
+    void encoderLeft() {
         zustand.encoderLeft();
     }
-    void encoderRight(){
+
+    void encoderRight() {
         zustand.encoderRight();
     }
-    void encoderPush(){
+
+    void encoderPush() {
         zustand.encoderPush();
     }
-    void buttonReturn(){
+
+    void buttonReturn() {
         zustand.buttonReturn();
     }
-    void setZusatand(Zustand z){
+
+    void setZusatand(const Zustand& z) {
         zusatand = z;
     }
 };
+
+Anzeige::Anzeige() {
+    zustand = GPSinfo();
+}
 
 #endif
