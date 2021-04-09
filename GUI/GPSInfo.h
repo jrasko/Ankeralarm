@@ -46,7 +46,7 @@ public:
     }
 
     void encoderRight() override {
-
+        this->anzeige->setZustand(new Satellites);
     }
 
     void buttonReturn() override {
@@ -54,6 +54,7 @@ public:
     }
 
     void encoderLeft() override {
+        this->anzeige->setZustand(new Time);
     }
 
     virtual vector<string> getLCDOutput() {
@@ -68,7 +69,7 @@ public:
     }
 
     void encoderRight() override {
-
+        this->anzeige->setZustand(new FixAge);
     }
 
 
@@ -77,7 +78,7 @@ public:
     }
 
     void encoderLeft() override {
-
+        this->anzeige->setZustand(new Koordinaten);
     }
 
     virtual vector<string> getLCDOutput() {
@@ -92,7 +93,7 @@ public:
     }
 
     void encoderRight() override {
-
+        this->anzeige->setZustand(new HDOP);
     }
 
 
@@ -101,7 +102,7 @@ public:
     }
 
     void encoderLeft() override {
-
+        this->anzeige->setZustand(new Satellites);
     }
 
     virtual vector<string> getLCDOutput() {
@@ -116,7 +117,7 @@ public:
     }
 
     void encoderRight() override {
-
+        this->anzeige->setZustand(new Time);
     }
 
 
@@ -125,7 +126,7 @@ public:
     }
 
     void encoderLeft() override {
-
+        this->anzeige->setZustand(new FixAge);
     }
 
     virtual vector<string> getLCDOutput() {
@@ -140,7 +141,7 @@ public:
     }
 
     void encoderRight() override {
-
+        this->anzeige->setZustand(new Koordinaten);
     }
 
     void buttonReturn() override {
@@ -148,7 +149,7 @@ public:
     }
 
     void encoderLeft() override {
-
+        this->anzeige->setZustand(new HDOP);
     }
 
     virtual vector<string> getLCDOutput() {
