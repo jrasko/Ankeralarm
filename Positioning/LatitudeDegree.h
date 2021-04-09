@@ -14,7 +14,7 @@ public:
     explicit LatitudeDegree(double deg);
 
     LatitudeDegree(const LatitudeDegree &d) {
-        degrees= d.degrees;
+        degrees = d.degrees;
     }
 
     double getDegrees() const {

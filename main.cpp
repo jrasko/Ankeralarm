@@ -134,7 +134,7 @@ void loop() {
     updateGPSData(); //Timing der updatefunktion ist wichting. entweder ausglöst durch intrupt oder ca alle 10s(update rate des gps Moduls)
     //lcd.write(myGPS.getCurrentPosition().toString().c_str());
 
-    
+
     if (myGPS.getGPSQuality() > 1) {
         //LCD Outputs
 
@@ -174,7 +174,8 @@ void alarm() {
     // Aktiviere Alarm
 }
 
-bool NMEA_read(string &currentString) {                      // Auslesen des "Ringspeichers" und sortieren der NMEA Sätze
+bool
+NMEA_read(string &currentString) {                      // Auslesen des "Ringspeichers" und sortieren der NMEA Sätze
     char nextChar;
     static bool newDataAvailable = false;
     static int countIncomingChars = 0;
@@ -282,8 +283,8 @@ void interrupt_init(void) {
     UCSR0C = (1 << UCSZ01) | (1 << UCSZ00);  // Asynchron 8N
 
     //---config des Encoders Interrupts-----------------------------------------------
-   // EIMSK = (1 << INT0);
-   // EICRA = (1 << ISC01) | (1 << ISC00);
+    // EIMSK = (1 << INT0);
+    // EICRA = (1 << ISC01) | (1 << ISC00);
 
     //---config der Timer-------------------------------------------------------------
 
