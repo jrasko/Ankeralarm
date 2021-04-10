@@ -1,19 +1,17 @@
 #ifndef ANKERALARM_UTILS_H
 #define ANKERALARM_UTILS_H
 
-#include <vector>
-#include <string>
-
 class Anzeige;
 
 class Zustand {
 protected:
     Anzeige *anzeige;
+    // LiquidCrystal lcd;
 public:
     virtual ~Zustand() {}
 
-    void setAnzeige(Anzeige *anzeige) {
-        this->anzeige = anzeige;
+    void setAnzeige(Anzeige *a) {
+        this->anzeige = a;
     }
 
     virtual void encoderPush() = 0;
@@ -24,7 +22,7 @@ public:
 
     virtual void buttonReturn() = 0;
 
-    virtual std::vector<std::string> getLCDOutput() = 0;
+    virtual void getLCDOutput() = 0;
 };
 
 class Anzeige {

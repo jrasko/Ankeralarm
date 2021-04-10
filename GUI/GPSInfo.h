@@ -2,159 +2,85 @@
 #define ANKERALARM_GPSINFO_H
 
 #include "Utils.h"
-#include "Alarm.h"
 #include "Settings.h"
-
-using namespace std;
-
-class GPSInfo;
-
-class Koordinaten;
-
-class Satellites;
-
-class FixAge;
-
-class HDOP;
-
-class Time;
-
+#include "Alarm.h"
 
 class GPSInfo : public Zustand {
 public:
-    void encoderPush() override {
-        this->anzeige->setZustand(new Koordinaten);
-    }
+    void encoderPush() override;
 
-    void encoderRight() override {
-        this->anzeige->setZustand(new Settings);
-    }
+    void encoderRight() override;
 
-    void buttonReturn() override {
-        // Do nothing
-    }
+    void buttonReturn() override;
 
-    void encoderLeft() override override {
-        this->anzeige->setZustand(new Alarm);
-    }
+    void encoderLeft() override;
+
+    void getLCDOutput() override;
 };
 
 class Koordinaten : public Zustand {
 public:
-    void encoderPush() override {
+    void encoderPush() override;
 
-    }
+    void encoderRight() override;
 
-    void encoderRight() override {
-        this->anzeige->setZustand(new Satellites);
-    }
+    void buttonReturn() override;
 
-    void buttonReturn() override {
-        this->anzeige->setZustand(new GPSInfo);
-    }
+    void encoderLeft() override;
 
-    void encoderLeft() override {
-        this->anzeige->setZustand(new Time);
-    }
-
-    virtual vector<string> getLCDOutput() {
-
-    }
+    void getLCDOutput() override;
 };
 
 class Satellites : public Zustand {
 public:
-    void encoderPush() override {
+    void encoderPush() override;
 
-    }
+    void encoderRight() override;
 
-    void encoderRight() override {
-        this->anzeige->setZustand(new FixAge);
-    }
+    void buttonReturn() override;
 
+    void encoderLeft() override;
 
-    void buttonReturn() override {
-        this->anzeige->setZustand(new GPSInfo);
-    }
-
-    void encoderLeft() override {
-        this->anzeige->setZustand(new Koordinaten);
-    }
-
-    virtual vector<string> getLCDOutput() {
-
-    }
+    void getLCDOutput() override;
 };
 
 class FixAge : public Zustand {
 public:
-    void encoderPush() override {
+    void encoderPush() override;
 
-    }
+    void encoderRight() override;
 
-    void encoderRight() override {
-        this->anzeige->setZustand(new HDOP);
-    }
+    void buttonReturn() override;
 
+    void encoderLeft() override;
 
-    void buttonReturn() override {
-        this->anzeige->setZustand(new GPSInfo);
-    }
-
-    void encoderLeft() override {
-        this->anzeige->setZustand(new Satellites);
-    }
-
-    virtual vector<string> getLCDOutput() {
-
-    }
+    void getLCDOutput() override;
 };
 
 class HDOP : public Zustand {
 public:
-    void encoderPush() override {
+    void encoderPush() override;
 
-    }
+    void encoderRight() override;
 
-    void encoderRight() override {
-        this->anzeige->setZustand(new Time);
-    }
+    void buttonReturn() override;
 
+    void encoderLeft() override;
 
-    void buttonReturn() override {
-        this->anzeige->setZustand(new GPSInfo);
-    }
-
-    void encoderLeft() override {
-        this->anzeige->setZustand(new FixAge);
-    }
-
-    virtual vector<string> getLCDOutput() {
-
-    }
+    void getLCDOutput() override;
 };
 
 class Time : public Zustand {
 public:
-    void encoderPush() override {
+    void encoderPush() override;
 
-    }
+    void encoderRight() override;
 
-    void encoderRight() override {
-        this->anzeige->setZustand(new Koordinaten);
-    }
+    void buttonReturn() override;
 
-    void buttonReturn() override {
-        this->anzeige->setZustand(new GPSInfo);
-    }
+    void encoderLeft() override;
 
-    void encoderLeft() override {
-        this->anzeige->setZustand(new HDOP);
-    }
-
-    virtual vector<string> getLCDOutput() {
-
-    }
+    void getLCDOutput() override;
 };
 
 
