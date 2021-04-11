@@ -1,4 +1,3 @@
-
 #include "GPSInfo.h"
 
 // GPSInfo
@@ -19,7 +18,7 @@ void GPSInfo::encoderLeft() {
 }
 
 void GPSInfo::getLCDOutput() {
-
+    anzeige->lcd.print("GPSInfo");
 }
 
 // Koordinaten
@@ -41,7 +40,7 @@ void Koordinaten::encoderLeft() {
 }
 
 void Koordinaten::getLCDOutput() {
-
+    anzeige->lcd.print("Koordniaten");
 }
 
 //Sattelites

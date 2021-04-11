@@ -5,6 +5,7 @@
 #include "Settings.h"
 #include "Alarm.h"
 
+
 class GPSInfo : public Zustand {
 public:
     void encoderPush() override;
