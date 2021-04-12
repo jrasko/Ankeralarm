@@ -9,6 +9,7 @@
 #include <SoftwareSerial.h>
 #include "GUI/Utils.h"
 #include "GUI/GPSInfo.h"
+
 using namespace std;
 
 #ifndef F_CPU
@@ -83,11 +84,10 @@ void appendSerial(char c); //UART recive
 void serialWrite(char *c); //UART transmit
 
 //---LCD init------------------------------------------------
-const int rs = 14, en = 15, d4 = 16, d5 = 17, d6 = 18, d7 = 19; // LCD pin number it is connected
-LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+LiquidCrystal lcd(14, 15, 16, 17, 18, 19);
+Anzeige a(new GPSInfo, lcd);
 
-void setup()
-{
+void setup() {
 
     analogWrite(lcd_beleuchtung, 150); //einschlaten der Beleuchtung
     lcd.begin(16, 2);
@@ -111,15 +111,12 @@ void setup()
     pinMode(debug_led, OUTPUT);
 }
 
-void updateGPSData()
-{
+void updateGPSData() {
 
-    if (NMEA_read(currentDataString))
-    {
+    if (NMEA_read(currentDataString)) {
         const gpsData &data = gpsData(currentDataString.c_str());
         currentDataString.clear();
-        if (!data.isValid())
-        {
+        if (!data.isValid()) {
             // Ignoriere nicht valide Daten
             return;
         }
@@ -128,44 +125,35 @@ void updateGPSData()
     }
 }
 
-void loop()
-{
-    Anzeige a(new GPSInfo, lcd);
+void loop() {
+
     updateGPSData(); //Timing der updatefunktion ist wichting. entweder ausglöst durch intrupt oder ca alle 10s(update rate des gps Moduls)
-                     //lcd.write(myGPS.getCurrentPosition().toString().c_str());
-    while (encoderWert > 0)
-    {
+    //lcd.write(myGPS.getCurrentPosition().toString().c_str());
+    while (encoderWert > 0) {
         a.encoderRight();
         encoderWert--;
     }
-    while (encoderWert < 0)
-    {
+    while (encoderWert < 0) {
         a.encoderLeft();
         encoderWert++;
     }
-    if (encoderPressed)
-    {
+    if (encoderPressed) {
         a.encoderPush();
         encoderPressed = false;
     }
-    
 
-    if (myGPS.getGPSQuality() > 1)
-    {
+
+    if (myGPS.getGPSQuality() > 1) {
         //LCD Outputs
-    }
-    else
-    {
+    } else {
         //print no GPS
     }
 
     //GPS angeschaltet
-    while (/* alarmmode */ random())
-    {
+    while (/* alarmmode */ random()) {
         vector<Position> posCollection;
 
-        for (int i = 0; i < 4; ++i)
-        {
+        for (int i = 0; i < 4; ++i) {
             updateGPSData();
             posCollection.push_back(myGPS.getCurrentPosition());
         }
@@ -175,45 +163,37 @@ void loop()
         unsigned int radius = 100;
 
         // Abstand zur Ursprungsposition testen.
-        while (random())
-        {
+        while (random()) {
             updateGPSData();
-            if (startPosition.distanceTo(myGPS.getCurrentPosition()) > radius)
-            {
+            if (startPosition.distanceTo(myGPS.getCurrentPosition()) > radius) {
                 alarm();
             }
         }
     }
 }
 
-void alarm()
-{
+void alarm() {
     // Aktiviere Alarm
 }
 
-bool NMEA_read(string &currentString)
-{ // Auslesen des "Ringspeichers" und sortieren der NMEA Sätze
+bool NMEA_read(string &currentString) { // Auslesen des "Ringspeichers" und sortieren der NMEA Sätze
     char nextChar;
     static bool newDataAvailable = false;
     static int countIncomingChars = 0;
 
-    if (rxReadPos == rxWritePos)
-    {
+    if (rxReadPos == rxWritePos) {
         //No Data available
         return false;
     }
     // Hier ansetzen falls letzter eingehender char benötigt wird
     nextChar = rxBuffer[rxReadPos];
-    if (nextChar == '$')
-    {
+    if (nextChar == '$') {
         // Beginning of a new DataString
         newDataAvailable = true;
     }
-    if (!newDataAvailable)
-    {
+    if (!newDataAvailable) {
         rxReadPos++;
-        if (rxReadPos >= RX_Buffer_SIZE)
-        {
+        if (rxReadPos >= RX_Buffer_SIZE) {
             rxReadPos = 0;
         }
         return false;
@@ -221,8 +201,7 @@ bool NMEA_read(string &currentString)
 
     currentString.push_back(nextChar);
 
-    if (nextChar == '\r')
-    {
+    if (nextChar == '\r') {
         //String is complete
         newDataAvailable = false;
         countIncomingChars = 0;
@@ -230,12 +209,10 @@ bool NMEA_read(string &currentString)
     }
     countIncomingChars++;
     rxReadPos++;
-    if (rxReadPos >= RX_Buffer_SIZE)
-    {
+    if (rxReadPos >= RX_Buffer_SIZE) {
         rxReadPos = 0;
     }
-    if (countIncomingChars >= maxIncomingMessageLength)
-    {
+    if (countIncomingChars >= maxIncomingMessageLength) {
         newDataAvailable = false;
         countIncomingChars = 0;
         return false;
@@ -244,68 +221,53 @@ bool NMEA_read(string &currentString)
 }
 
 //----UART-Interface (Sereielle Schnittstelle für GPS Modul)------------------------
-void appendSerial(char c)
-{ //Transmit
+void appendSerial(char c) { //Transmit
     serialBuffer[serialWritePos] = c;
     serialWritePos++;
 
-    if (serialWritePos >= TX_Buffer_SIZE)
-    {
+    if (serialWritePos >= TX_Buffer_SIZE) {
         serialWritePos = 0;
     }
 }
 
-void serialWrite(char c[])
-{ //receive
-    for (uint8_t i = 0; i < strlen(c); i++)
-    {
+void serialWrite(char c[]) { //receive
+    for (uint8_t i = 0; i < strlen(c); i++) {
         appendSerial(c[i]);
     }
-    if (UCSR0A & (1 << UDRE0))
-    {
+    if (UCSR0A & (1 << UDRE0)) {
         UDR0 = 0;
     }
 }
 
-ISR(USART_TX_vect)
-{ //receive Ring-Buffer
-    if (serialReadPos != serialWritePos)
-    {
+ISR(USART_TX_vect){
+    //receive Ring-Buffer
+    if (serialReadPos != serialWritePos){
         UDR0 = serialBuffer[serialReadPos];
-
         serialReadPos++;
-
-        if (serialReadPos >= TX_Buffer_SIZE)
-        {
+        if (serialReadPos >= TX_Buffer_SIZE) {
             serialReadPos = 0;
         }
     }
 }
 
-char peekChar(void)
-{
+char peekChar(void) {
     char ret = 'n';
-    if (rxReadPos != rxWritePos)
-    {
+    if (rxReadPos != rxWritePos) {
         ret = rxBuffer[rxReadPos];
     }
     return ret;
 }
 
-ISR(USART_RX_vect)
-{ //Transmit Ring-Buffer
-
+ISR(USART_RX_vect){
+    //Transmit Ring-Buffer
     rxBuffer[rxWritePos] = UDR0;
-
     rxWritePos++;
-    if (rxWritePos >= RX_Buffer_SIZE)
-    {
+    if (rxWritePos >= RX_Buffer_SIZE){
         rxWritePos = 0;
     }
 }
 
-void interrupt_init(void)
-{
+void interrupt_init(void) {
 
     cli(); //disable Intrrupts
 
@@ -337,9 +299,7 @@ void interrupt_init(void)
 }
 
 //---Interruptrutine------------------------------------------
-ISR(INT0_vect)
-{
-
+ISR(INT0_vect){
     //---------------Encoder-------------------------------------------
     static unsigned long lastInterruptTime = 5;
     unsigned long interruptTime = millis();
@@ -348,14 +308,10 @@ ISR(INT0_vect)
     if (interruptTime - lastInterruptTime > 1)
     {
         messungPin1 = digitalRead(encoder_a);
-        if ((messungPin1 == HIGH) && (messungPin1Alt == LOW))
-        {
-            if (digitalRead(encoder_b) == HIGH)
-            {
+        if ((messungPin1 == HIGH) && (messungPin1Alt == LOW)) {
+            if (digitalRead(encoder_b) == HIGH) {
                 encoderWert++;
-            }
-            else
-            {
+            } else {
                 encoderWert--;
             }
         }
@@ -367,37 +323,34 @@ ISR(INT0_vect)
     // Keep track of when we were here last (no more than every 5ms)
     lastInterruptTime = interruptTime;
 }
-ISR(PCINT2_vect)
-{
+ISR(PCINT2_vect){
     encoderPressed = true;
-    digitalWrite(LED_grun,HIGH);
+    digitalWrite(LED_grun, HIGH);
 }
-ISR(TIMER1_OVF_vect)
-{
+ISR(TIMER1_OVF_vect){
 
     //------------------------------GPS-Status LED---------------------------
 
     TCNT1 = 3036; // Timer vorbelegt so dass delta_T= 1s
-    switch (myGPS.getGPSQuality())
-    {
-    case 0:
-        digitalWrite(LED_rot, digitalRead(LED_rot) ^ 1);
+    switch (myGPS.getGPSQuality()){
+        case 0:
+            digitalWrite(LED_rot, digitalRead(LED_rot) ^ 1);
         digitalWrite(LED_grun, LOW);
         break;
-    case 1:
-        digitalWrite(LED_grun, LOW);
+        case 1:
+            digitalWrite(LED_grun, LOW);
         digitalWrite(LED_rot, HIGH);
         break;
-    case 2:
-        digitalWrite(LED_grun, HIGH);
+        case 2:
+            digitalWrite(LED_grun, HIGH);
         digitalWrite(LED_rot, HIGH);
         break;
-    case 3:
-        digitalWrite(LED_grun, HIGH);
+        case 3:
+            digitalWrite(LED_grun, HIGH);
         digitalWrite(LED_rot, LOW);
         break;
-    case 4:
-        digitalWrite(LED_grun, digitalRead(LED_grun) ^ 1);
+        case 4:
+            digitalWrite(LED_grun, digitalRead(LED_grun) ^ 1);
         digitalWrite(LED_rot, LOW);
         break;
     }
