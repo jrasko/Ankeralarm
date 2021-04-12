@@ -18,6 +18,6 @@ void Alarm::buttonReturn() {
 }
 
 void Alarm::getLCDOutput() {
-
+    anzeige->lcd.print("Alarm");
 }
 

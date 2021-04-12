@@ -16,5 +16,5 @@ void Settings::encoderRight() {
 void Settings::buttonReturn() {}
 
 void Settings::getLCDOutput() {
-
+    anzeige->lcd.print("Settings");
 }

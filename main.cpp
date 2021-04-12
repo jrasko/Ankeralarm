@@ -66,8 +66,6 @@ uint8_t serialWritePos = 0;
 uint8_t rxReadPos = 0;
 uint8_t rxWritePos = 0;
 
-volatile int encoderWert = 0;
-volatile bool encoderPressed = false;
 string currentDataString;
 
 GPS myGPS;
@@ -78,14 +76,14 @@ bool NMEA_read(string &currentString);
 
 void alarm();
 
-void interrupt_init(void); //UART init
+void interrupt_init(); //UART init
 
 void appendSerial(char c); //UART recive
 void serialWrite(char *c); //UART transmit
 
 //---LCD init------------------------------------------------
 LiquidCrystal lcd(14, 15, 16, 17, 18, 19);
-Anzeige a(new GPSInfo, lcd);
+Anzeige a(lcd);
 
 void setup() {
 
@@ -95,7 +93,6 @@ void setup() {
     lcd.write("Ankeralarm V2");
     lcd.write("T.Zwiener");
     delay(1000);
-    lcd.clear();
     interrupt_init();
 
     //-------------IO-config-------------------------------------------------
@@ -109,6 +106,8 @@ void setup() {
     pinMode(LED_rot, OUTPUT);
     pinMode(LED_grun, OUTPUT);
     pinMode(debug_led, OUTPUT);
+    
+    a.activate(new GPSInfo);
 }
 
 void updateGPSData() {
@@ -129,20 +128,7 @@ void loop() {
 
     updateGPSData(); //Timing der updatefunktion ist wichting. entweder ausglöst durch intrupt oder ca alle 10s(update rate des gps Moduls)
     //lcd.write(myGPS.getCurrentPosition().toString().c_str());
-    while (encoderWert > 0) {
-        a.encoderRight();
-        encoderWert--;
-    }
-    while (encoderWert < 0) {
-        a.encoderLeft();
-        encoderWert++;
-    }
-    if (encoderPressed) {
-        a.encoderPush();
-        encoderPressed = false;
-    }
-
-
+   
     if (myGPS.getGPSQuality() > 1) {
         //LCD Outputs
     } else {
@@ -310,9 +296,9 @@ ISR(INT0_vect){
         messungPin1 = digitalRead(encoder_a);
         if ((messungPin1 == HIGH) && (messungPin1Alt == LOW)) {
             if (digitalRead(encoder_b) == HIGH) {
-                encoderWert++;
+                a.encoderLeft();
             } else {
-                encoderWert--;
+                a.encoderRight();
             }
         }
         messungPin1Alt = messungPin1;
@@ -324,8 +310,8 @@ ISR(INT0_vect){
     lastInterruptTime = interruptTime;
 }
 ISR(PCINT2_vect){
-    encoderPressed = true;
-    digitalWrite(LED_grun, HIGH);
+    a.encoderPush();
+    
 }
 ISR(TIMER1_OVF_vect){
 

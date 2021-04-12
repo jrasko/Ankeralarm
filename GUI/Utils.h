@@ -29,16 +29,17 @@ public:
 class Anzeige {
 private:
     Zustand *zustand;
-
 public:
     LiquidCrystal &lcd;
 
-    explicit Anzeige(Zustand *z, LiquidCrystal &l) : zustand(nullptr), lcd(l) {
-        this->setZustand(z);
-    }
+    explicit Anzeige(LiquidCrystal &l) : zustand(nullptr), lcd(l) {}
 
     ~Anzeige() {
         delete zustand;
+    }
+
+    void activate(Zustand *z){
+        this->setZustand(z);
     }
 
     void encoderLeft() {
@@ -61,9 +62,9 @@ public:
         delete this->zustand;
         this->zustand = z;
         this->zustand->setAnzeige(this);
-        
         lcd.clear();
         this->zustand->getLCDOutput();
+        
     }
 };
 

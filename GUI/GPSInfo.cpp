@@ -23,7 +23,7 @@ void GPSInfo::getLCDOutput() {
 
 // Koordinaten
 void Koordinaten::encoderPush() {
-
+    this->anzeige->setZustand(new GPSInfo);
 }
 
 void Koordinaten::encoderRight() {
@@ -40,7 +40,7 @@ void Koordinaten::encoderLeft() {
 }
 
 void Koordinaten::getLCDOutput() {
-    anzeige->lcd.print("Koordniaten");
+    anzeige->lcd.print("Koordinaten");
 }
 
 //Sattelites
@@ -62,7 +62,7 @@ void Satellites::encoderLeft() {
 }
 
 void Satellites::getLCDOutput() {
-
+     anzeige->lcd.print("Satelliten");
 }
 
 //FixAge
@@ -84,7 +84,7 @@ void FixAge::encoderLeft() {
 }
 
 void FixAge::getLCDOutput() {
-
+ anzeige->lcd.print("FixAge");
 }
 //HDOP
 
@@ -107,7 +107,7 @@ void HDOP::encoderLeft() {
 }
 
 void HDOP::getLCDOutput() {
-
+    this->anzeige->lcd.print("HDOP");
 }
 
 // Time
@@ -128,5 +128,5 @@ void Time::encoderLeft() {
 }
 
 void Time::getLCDOutput() {
-
+ anzeige->lcd.print("Time");
 }
