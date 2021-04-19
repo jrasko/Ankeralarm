@@ -1,17 +1,3 @@
-#include <string>
-#include <avr/io.h>
-#include <util/delay.h>
-#include <avr/interrupt.h>
-#include <Arduino.h>
-#include "GPS/GPS.h"
-#include "GPS/gpsData.h"
-#include <LiquidCrystal.h>
-#include <SoftwareSerial.h>
-#include "GUI/Utils.h"
-#include "GUI/GPSInfo.h"
-
-using namespace std;
-
 #ifndef F_CPU
 /* In neueren Version der WinAVR/Mfile Makefile-Vorlage kann
    F_CPU im Makefile definiert werden, eine nochmalige Definition
@@ -29,7 +15,23 @@ using namespace std;
 // Ohne ergeben sich unten Fehler in der Berechnung
 #endif
 
+#include <string>
+#include <avr/io.h>
+#include <util/delay.h>
+#include <avr/interrupt.h>
+#include <Arduino.h>
+#include "GPS/GPS.h"
+#include "GPS/gpsData.h"
+#include <LiquidCrystal.h>
+#include <SoftwareSerial.h>
+#include "GUI/Utils.h"
+#include "GUI/GPSInfo.h"
+
+using namespace std;
+
 //---defines--------------------------------------------------
+
+#define buttonDebounceTime 10 //in ms
 #define maxIncomingMessageLength 100
 
 //---UART-Interface (Sereielle Schnittstelle für GPS Modul)
@@ -65,6 +67,10 @@ uint8_t serialReadPos = 0; //variablen für den Ringbuffer
 uint8_t serialWritePos = 0;
 uint8_t rxReadPos = 0;
 uint8_t rxWritePos = 0;
+
+volatile char EncoderButtonFlag = 0;
+volatile bool EncoderRight = false;
+volatile bool EncoderLeft = 1;
 
 string currentDataString;
 
@@ -106,7 +112,7 @@ void setup() {
     pinMode(LED_rot, OUTPUT);
     pinMode(LED_grun, OUTPUT);
     pinMode(debug_led, OUTPUT);
-    
+
     a.activate(new GPSInfo);
 }
 
@@ -128,13 +134,20 @@ void loop() {
 
     updateGPSData(); //Timing der updatefunktion ist wichting. entweder ausglöst durch intrupt oder ca alle 10s(update rate des gps Moduls)
     //lcd.write(myGPS.getCurrentPosition().toString().c_str());
+
+
+    if (EncoderButtonFlag) {
+        a.encoderPush();
+        digitalWrite(LED_grun, digitalRead(LED_grun)^1);
+        EncoderButtonFlag = false;
+    }
    
     if (myGPS.getGPSQuality() > 1) {
         //LCD Outputs
     } else {
         //print no GPS
     }
-
+   
     //GPS angeschaltet
     while (/* alarmmode */ random()) {
         vector<Position> posCollection;
@@ -269,8 +282,8 @@ void interrupt_init(void) {
     EIMSK = (1 << INT0);
     EICRA = (1 << ISC01) | (1 << ISC00);
 
-    PCICR |= (1 << PCIE2);
-    PCMSK2 |= (1 << PCINT20);
+    PCICR |= (1 << PCIE2);      //Pin change Interrupt aktiviern 
+    PCMSK2 |= (1 << PCINT20);   //Pin change Interrupt Maskieren für Pin 4 (PCINT 20)
 
     //---config der Timer-------------------------------------------------------------
 
@@ -287,7 +300,7 @@ void interrupt_init(void) {
 //---Interruptrutine------------------------------------------
 ISR(INT0_vect){
     //---------------Encoder-------------------------------------------
-    static unsigned long lastInterruptTime = 5;
+    static unsigned long lastInterruptTime = buttonDebounceTime;
     unsigned long interruptTime = millis();
     int messungPin1 = 0, messungPin1Alt = 0;
     // If interrupts come faster than 5ms, assume it's a bounce and ignore
@@ -309,15 +322,27 @@ ISR(INT0_vect){
     // Keep track of when we were here last (no more than every 5ms)
     lastInterruptTime = interruptTime;
 }
+
 ISR(PCINT2_vect){
-    a.encoderPush();
+    //a.encoderPush();
+    
+    static unsigned long lastInterruptTime = buttonDebounceTime;
+    unsigned long interruptTime = millis();
+    if(interruptTime - lastInterruptTime > 1)
+    {
+        EncoderButtonFlag = true;
+        
+    }
+    lastInterruptTime = interruptTime;
     
 }
+
 ISR(TIMER1_OVF_vect){
 
     //------------------------------GPS-Status LED---------------------------
 
     TCNT1 = 3036; // Timer vorbelegt so dass delta_T= 1s
+    /*
     switch (myGPS.getGPSQuality()){
         case 0:
             digitalWrite(LED_rot, digitalRead(LED_rot) ^ 1);
@@ -340,4 +365,5 @@ ISR(TIMER1_OVF_vect){
         digitalWrite(LED_rot, LOW);
         break;
     }
+    */
 }
