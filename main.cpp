@@ -51,7 +51,7 @@ using namespace std;
 #define ledPin 14          //LED pin 14
 #define debug_led 13       // onboard Led
 #define lcd_beleuchtung 11 // hintergundbeleuchtung des LCDs
-#define schalter 7         //Schalter 1
+#define returnButton 7         //Schalter 1 PD7  PCINT 23
 #define summer 12          //Summer
 #define encoder_a 2        //encoder pin 2 (32)
 #define encoder_b 3        //encoder pin 3
@@ -68,9 +68,9 @@ uint8_t serialWritePos = 0;
 uint8_t rxReadPos = 0;
 uint8_t rxWritePos = 0;
 
-volatile char EncoderButtonFlag = 0;
-volatile bool EncoderRight = false;
-volatile bool EncoderLeft = 1;
+volatile bool encoderButtonFlag = 0;
+volatile bool returnButtonFlag = 0;
+volatile int encoderSpinFlag = 0;
 
 string currentDataString;
 
@@ -91,7 +91,8 @@ void serialWrite(char *c); //UART transmit
 LiquidCrystal lcd(14, 15, 16, 17, 18, 19);
 Anzeige a(lcd);
 
-void setup() {
+void setup()
+{
 
     analogWrite(lcd_beleuchtung, 150); //einschlaten der Beleuchtung
     lcd.begin(16, 2);
@@ -112,16 +113,20 @@ void setup() {
     pinMode(LED_rot, OUTPUT);
     pinMode(LED_grun, OUTPUT);
     pinMode(debug_led, OUTPUT);
+    pinMode(returnButton, INPUT_PULLUP);
 
     a.activate(new GPSInfo);
 }
 
-void updateGPSData() {
+void updateGPSData()
+{
 
-    if (NMEA_read(currentDataString)) {
+    if (NMEA_read(currentDataString))
+    {
         const gpsData &data = gpsData(currentDataString.c_str());
         currentDataString.clear();
-        if (!data.isValid()) {
+        if (!data.isValid())
+        {
             // Ignoriere nicht valide Daten
             return;
         }
@@ -130,69 +135,91 @@ void updateGPSData() {
     }
 }
 
-void loop() {
+void loop()
+{
 
     updateGPSData(); //Timing der updatefunktion ist wichting. entweder ausglöst durch intrupt oder ca alle 10s(update rate des gps Moduls)
     //lcd.write(myGPS.getCurrentPosition().toString().c_str());
 
-
-    if (EncoderButtonFlag) {
-        a.encoderPush();
-        digitalWrite(LED_grun, digitalRead(LED_grun)^1);
-        EncoderButtonFlag = false;
+    while (encoderSpinFlag > 0)
+    {
+        a.encoderRight();
+        encoderSpinFlag--;
     }
-   
-    if (myGPS.getGPSQuality() > 1) {
+    while (encoderSpinFlag < 0)
+    {
+        a.encoderLeft();
+        encoderSpinFlag++;
+    }
+
+    if (returnButtonFlag && digitalRead(returnButton))
+    {
+        a.buttonReturn();
+        returnButtonFlag = false;
+    }
+
+    if (encoderButtonFlag && digitalRead(encoder_button))
+    { //falling edge detection
+        a.encoderPush();
+        digitalWrite(LED_grun, digitalRead(LED_grun) ^ 1);
+        encoderButtonFlag = false;
+    }
+
+    if (myGPS.getGPSQuality() > 1)
+    {
         //LCD Outputs
-    } else {
+    }
+    else
+    {
         //print no GPS
     }
-   
+
     //GPS angeschaltet
-    while (/* alarmmode */ random()) {
-        vector<Position> posCollection;
+    // while (/* alarmmode */ random() < 0.5) {
+    //     vector<Position> posCollection;
 
-        for (int i = 0; i < 4; ++i) {
-            updateGPSData();
-            posCollection.push_back(myGPS.getCurrentPosition());
-        }
-        const Position startPosition = getMedian(posCollection);
+    //     for (int i = 0; i < 4; ++i) {
+    //         updateGPSData();
+    //         posCollection.push_back(myGPS.getCurrentPosition());
+    //     }
+    //     const Position startPosition = getMedian(posCollection);
 
-        //Radius einstellen
-        unsigned int radius = 100;
+    //     //Radius einstellen
+    //     unsigned int radius = 100;
 
-        // Abstand zur Ursprungsposition testen.
-        while (random()) {
-            updateGPSData();
-            if (startPosition.distanceTo(myGPS.getCurrentPosition()) > radius) {
-                alarm();
-            }
-        }
-    }
+    //     // Abstand zur Ursprungsposition testen.
+    //     while (random() < 0.5) {
+    //         updateGPSData();
+    //         if (startPosition.distanceTo(myGPS.getCurrentPosition()) > radius) {
+    //             alarm();
+    //         }
+    //     }
+// }
 }
 
-void alarm() {
-    // Aktiviere Alarm
-}
-
-bool NMEA_read(string &currentString) { // Auslesen des "Ringspeichers" und sortieren der NMEA Sätze
+bool NMEA_read(string &currentString)
+{ // Auslesen des "Ringspeichers" und sortieren der NMEA Sätze
     char nextChar;
     static bool newDataAvailable = false;
     static int countIncomingChars = 0;
 
-    if (rxReadPos == rxWritePos) {
+    if (rxReadPos == rxWritePos)
+    {
         //No Data available
         return false;
     }
     // Hier ansetzen falls letzter eingehender char benötigt wird
     nextChar = rxBuffer[rxReadPos];
-    if (nextChar == '$') {
+    if (nextChar == '$')
+    {
         // Beginning of a new DataString
         newDataAvailable = true;
     }
-    if (!newDataAvailable) {
+    if (!newDataAvailable)
+    {
         rxReadPos++;
-        if (rxReadPos >= RX_Buffer_SIZE) {
+        if (rxReadPos >= RX_Buffer_SIZE)
+        {
             rxReadPos = 0;
         }
         return false;
@@ -200,7 +227,8 @@ bool NMEA_read(string &currentString) { // Auslesen des "Ringspeichers" und sort
 
     currentString.push_back(nextChar);
 
-    if (nextChar == '\r') {
+    if (nextChar == '\r')
+    {
         //String is complete
         newDataAvailable = false;
         countIncomingChars = 0;
@@ -208,10 +236,12 @@ bool NMEA_read(string &currentString) { // Auslesen des "Ringspeichers" und sort
     }
     countIncomingChars++;
     rxReadPos++;
-    if (rxReadPos >= RX_Buffer_SIZE) {
+    if (rxReadPos >= RX_Buffer_SIZE)
+    {
         rxReadPos = 0;
     }
-    if (countIncomingChars >= maxIncomingMessageLength) {
+    if (countIncomingChars >= maxIncomingMessageLength)
+    {
         newDataAvailable = false;
         countIncomingChars = 0;
         return false;
@@ -220,53 +250,66 @@ bool NMEA_read(string &currentString) { // Auslesen des "Ringspeichers" und sort
 }
 
 //----UART-Interface (Sereielle Schnittstelle für GPS Modul)------------------------
-void appendSerial(char c) { //Transmit
+void appendSerial(char c)
+{ //Transmit
     serialBuffer[serialWritePos] = c;
     serialWritePos++;
 
-    if (serialWritePos >= TX_Buffer_SIZE) {
+    if (serialWritePos >= TX_Buffer_SIZE)
+    {
         serialWritePos = 0;
     }
 }
 
-void serialWrite(char c[]) { //receive
-    for (uint8_t i = 0; i < strlen(c); i++) {
+void serialWrite(char c[])
+{ //receive
+    for (uint8_t i = 0; i < strlen(c); i++)
+    {
         appendSerial(c[i]);
     }
-    if (UCSR0A & (1 << UDRE0)) {
+    if (UCSR0A & (1 << UDRE0))
+    {
         UDR0 = 0;
     }
 }
 
-ISR(USART_TX_vect){
+ISR(USART_TX_vect)
+{
     //receive Ring-Buffer
-    if (serialReadPos != serialWritePos){
+    if (serialReadPos != serialWritePos)
+    {
         UDR0 = serialBuffer[serialReadPos];
         serialReadPos++;
-        if (serialReadPos >= TX_Buffer_SIZE) {
+        if (serialReadPos >= TX_Buffer_SIZE)
+        {
             serialReadPos = 0;
         }
     }
 }
 
-char peekChar(void) {
+char peekChar(void)
+{
     char ret = 'n';
-    if (rxReadPos != rxWritePos) {
+    if (rxReadPos != rxWritePos)
+    {
         ret = rxBuffer[rxReadPos];
     }
     return ret;
 }
 
-ISR(USART_RX_vect){
+ISR(USART_RX_vect)
+{
     //Transmit Ring-Buffer
     rxBuffer[rxWritePos] = UDR0;
     rxWritePos++;
-    if (rxWritePos >= RX_Buffer_SIZE){
+    if (rxWritePos >= RX_Buffer_SIZE)
+    {
         rxWritePos = 0;
     }
 }
 
-void interrupt_init(void) {
+void interrupt_init(void)
+{
 
     cli(); //disable Intrrupts
 
@@ -282,8 +325,8 @@ void interrupt_init(void) {
     EIMSK = (1 << INT0);
     EICRA = (1 << ISC01) | (1 << ISC00);
 
-    PCICR |= (1 << PCIE2);      //Pin change Interrupt aktiviern 
-    PCMSK2 |= (1 << PCINT20);   //Pin change Interrupt Maskieren für Pin 4 (PCINT 20)
+    PCICR |= (1 << PCIE2);    //Pin change Interrupt aktiviern
+    PCMSK2 |= (1 << PCINT20) | (1 << PCINT23); //Pin change Interrupt Maskieren für Pin 4 (PCINT 20)
 
     //---config der Timer-------------------------------------------------------------
 
@@ -298,7 +341,8 @@ void interrupt_init(void) {
 }
 
 //---Interruptrutine------------------------------------------
-ISR(INT0_vect){
+ISR(INT0_vect)
+{
     //---------------Encoder-------------------------------------------
     static unsigned long lastInterruptTime = buttonDebounceTime;
     unsigned long interruptTime = millis();
@@ -307,11 +351,15 @@ ISR(INT0_vect){
     if (interruptTime - lastInterruptTime > 1)
     {
         messungPin1 = digitalRead(encoder_a);
-        if ((messungPin1 == HIGH) && (messungPin1Alt == LOW)) {
-            if (digitalRead(encoder_b) == HIGH) {
-                a.encoderLeft();
-            } else {
-                a.encoderRight();
+        if ((messungPin1 == HIGH) && (messungPin1Alt == LOW))
+        {
+            if (digitalRead(encoder_b) == HIGH)
+            {
+                encoderSpinFlag--;
+            }
+            else
+            {
+                encoderSpinFlag++;
             }
         }
         messungPin1Alt = messungPin1;
@@ -323,21 +371,28 @@ ISR(INT0_vect){
     lastInterruptTime = interruptTime;
 }
 
-ISR(PCINT2_vect){
-    //a.encoderPush();
-    
-    static unsigned long lastInterruptTime = buttonDebounceTime;
+ISR(PCINT2_vect)
+{
+    static unsigned long lastInterruptTime = 100;
     unsigned long interruptTime = millis();
-    if(interruptTime - lastInterruptTime > 1)
+    if (interruptTime - lastInterruptTime > 1)
     {
-        EncoderButtonFlag = true;
+        if (digitalRead(encoder_button) == 0)
+        {
+            encoderButtonFlag = true;
+        }
+        if (digitalRead(returnButton) == 0)
+        {
+            returnButtonFlag = true;
+            digitalWrite(LED_rot, HIGH);
+        }
         
     }
     lastInterruptTime = interruptTime;
-    
 }
 
-ISR(TIMER1_OVF_vect){
+ISR(TIMER1_OVF_vect)
+{
 
     //------------------------------GPS-Status LED---------------------------
 
