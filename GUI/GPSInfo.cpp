@@ -40,7 +40,11 @@ void Koordinaten::encoderLeft() {
 }
 
 void Koordinaten::getLCDOutput() {
-    anzeige->lcd.print("Koordinaten");
+    vector<string> lines = anzeige->props.myGPS.getCurrentPosition().toString();
+    anzeige->lcd.setCursor(0,0);
+    anzeige->lcd.write(lines[0].c_str());
+    anzeige->lcd.setCursor(0,1);
+    anzeige->lcd.write(lines[1].c_str());
 }
 
 //Sattelites

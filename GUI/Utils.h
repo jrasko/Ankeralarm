@@ -2,14 +2,16 @@
 #define ANKERALARM_UTILS_H
 
 #include "LiquidCrystal.h"
+#include "../Properties.h"
+
 class Anzeige;
 
 class Zustand {
 protected:
     Anzeige *anzeige;
-    
+
 public:
-    virtual ~Zustand() {}
+    virtual ~Zustand() = default;
 
     void setAnzeige(Anzeige *a) {
         this->anzeige = a;
@@ -30,6 +32,8 @@ class Anzeige {
 private:
     Zustand *zustand;
 public:
+    Properties props;
+public:
     LiquidCrystal &lcd;
 
     explicit Anzeige(LiquidCrystal &l) : zustand(nullptr), lcd(l) {}
@@ -38,7 +42,7 @@ public:
         delete zustand;
     }
 
-    void activate(Zustand *z){
+    void activate(Zustand *z) {
         this->setZustand(z);
     }
 
@@ -64,7 +68,7 @@ public:
         this->zustand->setAnzeige(this);
         lcd.clear();
         this->zustand->getLCDOutput();
-        
+
     }
 };
 
