@@ -1,7 +1,6 @@
-
 #include "LatitudeDegree.h"
 
-using namespace std;
+
 
 LatitudeDegree::LatitudeDegree(const std::string &koordString, char direction) {
     int deg = 0;

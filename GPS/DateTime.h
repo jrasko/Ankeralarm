@@ -12,23 +12,12 @@ class DateTime {
 public:
     DateTime() = default;
 
-    DateTime(const string &timeString, const string &datestring);
+    void updateDate(const string &dateString);
 
-    DateTime(short day, short month, short year, short hours, short minutes, double seconds);
+    void updateTime(const string &timeString);
 
-    short getDay() const;
-
-    short getMonth() const;
-
-    short getYear() const;
-
-    short getHours() const;
-
-    short getMinutes() const;
-
-    double getSeconds() const;
-
-    friend DateTime operator-(const DateTime &d1, const DateTime &d2);
+    void toString();
+//    friend DateTime operator-(const DateTime &d1, const DateTime &d2);
 
 
 private:

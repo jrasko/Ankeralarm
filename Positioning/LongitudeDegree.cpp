@@ -1,8 +1,6 @@
-
 #include "LongitudeDegree.h"
 
 #define toDEG 3.14159265/180
-using namespace std;
 
 LongitudeDegree::LongitudeDegree(const std::string &koordString, char direction) {
     int deg = 0;

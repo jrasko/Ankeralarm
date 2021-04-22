@@ -1,10 +1,10 @@
-
 #ifndef ANKERALARM_LATITUDEDEGREE_H
 #define ANKERALARM_LATITUDEDEGREE_H
 
-
 #include <sstream>
 #include <cmath>
+
+using namespace std;
 
 class LatitudeDegree {
 

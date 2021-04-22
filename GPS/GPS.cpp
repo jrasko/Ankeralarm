@@ -12,13 +12,14 @@ void GPS::update(const gpsData &data) {
     }
     if (v[0] == "$GPRMC") {
         //GPRMC
-        lastTimeStamp = DateTime(v[1], v[9]);
+        lastTimeStamp.updateTime(v[1]);
+        lastTimeStamp.updateDate(v[9]);
         LatitudeDegree lat(v[3], v[4][0]);
         LongitudeDegree lon(v[5], v[6][0]);
         currentPosition = Position(lat, lon);
-
     } else if (v[0] == "$GPGGA") {
         //GPGGA
+        lastTimeStamp.updateTime(v[1]);
         LatitudeDegree lat(v[2], v[3][0]);
         LongitudeDegree lon(v[4], v[5][0]);
         currentPosition = Position(lat, lon);
@@ -85,5 +86,4 @@ unsigned short GPS::getSatellitesAvailable() const {
 const Position &GPS::getCurrentPosition() const {
     return currentPosition;
 }
-
 

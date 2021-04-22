@@ -1,17 +1,3 @@
-#include <string>
-#include <avr/io.h>
-#include <util/delay.h>
-#include <avr/interrupt.h>
-#include <Arduino.h>
-#include "GPS/GPS.h"
-#include "GPS/gpsData.h"
-#include <LiquidCrystal.h>
-#include <SoftwareSerial.h>
-#include "GUI/Utils.h"
-#include "GUI/GPSInfo.h"
-
-using namespace std;
-
 #ifndef F_CPU
 /* In neueren Version der WinAVR/Mfile Makefile-Vorlage kann
    F_CPU im Makefile definiert werden, eine nochmalige Definition
