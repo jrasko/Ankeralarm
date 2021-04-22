@@ -4,6 +4,7 @@
 
 #include <sstream>
 #include <cmath>
+#include <vector>
 
 using namespace std;
 
@@ -16,8 +17,7 @@ public:
 
     void updateTime(const string &timeString);
 
-    void toString();
-//    friend DateTime operator-(const DateTime &d1, const DateTime &d2);
+    vector<string> toString() const;
 
 
 private:

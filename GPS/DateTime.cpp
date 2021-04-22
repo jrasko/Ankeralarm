@@ -31,7 +31,7 @@ void DateTime::updateTime(const string &timeString) {
     seconds = sec;
 }
 
-void DateTime::toString() {
-
+vector<string> DateTime::toString() const {
+    vector<string> ary;
+    return ary;
 }
-
