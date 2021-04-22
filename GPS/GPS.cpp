@@ -25,7 +25,7 @@ void GPS::update(const gpsData &data) {
         currentPosition = Position(lat, lon);
         stringstream(v[6]) >> gpsStatus;
         stringstream(v[7]) >> satellitesAvailable;
-        stringstream(v[8]) >> accuracy;
+        stringstream(v[8]) >> HDOP;
     }
     lastInputTime = millis();
 }
@@ -45,7 +45,7 @@ unsigned short GPS::getGPSQuality() const {
         // Seit einiger zeit keine validen Daten vorhanden, verlust des fixes
         return 1;
     }
-    if (currentFixAge >= 20 * 1000 || satellitesAvailable <= 3 || accuracy >= 10) {
+    if (currentFixAge >= 20 * 1000 || satellitesAvailable <= 3 || HDOP >= 10) {
         return 2;
     }
 
@@ -53,19 +53,19 @@ unsigned short GPS::getGPSQuality() const {
         return 3;
     }
     if (currentFixAge >= 12 * 1000) {
-        if (accuracy < 1.0) {
+        if (HDOP < 1.0) {
             return 5;
         }
-        if (accuracy < 2.5) {
+        if (HDOP < 2.5) {
             return 4;
         }
         return 3;
     }
     //FixAge ist zwischen 10 und 12
-    if (accuracy < 1.0) {
+    if (HDOP < 1.0) {
         return 6;
     }
-    if (accuracy < 2.5) {
+    if (HDOP < 2.5) {
         return 5;
     }
     return 4;
@@ -75,8 +75,8 @@ const DateTime &GPS::getLastTimeStamp() const {
     return lastTimeStamp;
 }
 
-double GPS::getAccuracy() const {
-    return accuracy;
+double GPS::getHDOP() const {
+    return HDOP;
 }
 
 unsigned short GPS::getSatellitesAvailable() const {
@@ -85,5 +85,9 @@ unsigned short GPS::getSatellitesAvailable() const {
 
 const Position &GPS::getCurrentPosition() const {
     return currentPosition;
+}
+
+unsigned long GPS::getFixAge() const {
+    return millis()-lastInputTime;
 }
 
