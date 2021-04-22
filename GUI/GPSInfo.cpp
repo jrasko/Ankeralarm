@@ -41,9 +41,9 @@ void Koordinaten::encoderLeft() {
 
 void Koordinaten::getLCDOutput() {
     vector<string> lines = anzeige->props.myGPS.getCurrentPosition().toString();
-    anzeige->lcd.setCursor(0,0);
+    anzeige->lcd.setCursor(0, 0);
     anzeige->lcd.write(lines[0].c_str());
-    anzeige->lcd.setCursor(0,1);
+    anzeige->lcd.setCursor(0, 1);
     anzeige->lcd.write(lines[1].c_str());
 }
 
@@ -66,7 +66,7 @@ void Satellites::encoderLeft() {
 }
 
 void Satellites::getLCDOutput() {
-     anzeige->lcd.print("Satelliten");
+    anzeige->lcd.print("Satelliten");
 }
 
 //FixAge
@@ -88,7 +88,7 @@ void FixAge::encoderLeft() {
 }
 
 void FixAge::getLCDOutput() {
- anzeige->lcd.print("FixAge");
+    anzeige->lcd.print("FixAge");
 }
 //HDOP
 
@@ -132,5 +132,5 @@ void Time::encoderLeft() {
 }
 
 void Time::getLCDOutput() {
- anzeige->lcd.print("Time");
+    anzeige->lcd.print("Time");
 }

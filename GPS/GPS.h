@@ -26,8 +26,6 @@ public:
     const Position &getCurrentPosition() const;
 
 
-
-
 private:
     //    Maybe deprecated
     //    TinyGPS gps;
@@ -38,7 +36,6 @@ private:
     unsigned short satellitesAvailable = 0;
     unsigned long lastInputTime = 0;
 };
-
 
 
 #endif //ANKERALARM_2_GPS_H

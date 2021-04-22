@@ -10,7 +10,7 @@ using namespace std;
 class DateTime {
 
 public:
-    DateTime()= default;
+    DateTime() = default;
 
     DateTime(const string &timeString, const string &datestring);
 
@@ -29,8 +29,6 @@ public:
     double getSeconds() const;
 
     friend DateTime operator-(const DateTime &d1, const DateTime &d2);
-
-
 
 
 private:

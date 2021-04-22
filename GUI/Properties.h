@@ -4,9 +4,11 @@
 
 #include "../GPS/GPS.h"
 
-class Properties{
+class Properties {
 public:
     GPS myGPS;
+    bool alarmActive;
 
 };
+
 #endif //ANKERALARM_PROPERTIES_H
