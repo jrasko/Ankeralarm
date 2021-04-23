@@ -17,6 +17,7 @@ public:
         this->anzeige = a;
     }
 
+    //TODO leere Methode geben damit im Code nix implementiert werden muss
     virtual void encoderPush() = 0;
 
     virtual void encoderLeft() = 0;

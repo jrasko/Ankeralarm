@@ -161,26 +161,26 @@ void loop() {
     }
 
     //GPS angeschaltet
-    // while (/* alarmmode */ random() < 0.5) {
-    //     vector<Position> posCollection;
-
-    //     for (int i = 0; i < 4; ++i) {
-    //         updateGPSData();
-    //         posCollection.push_back(a.props.myGPS.getCurrentPosition());
-    //     }
-    //     const Position startPosition = getMedian(posCollection);
-
-    //     //Radius einstellen
-    //     unsigned int radius = 100;
-
-    //     // Abstand zur Ursprungsposition testen.
-    //     while (random() < 0.5) {
-    //         updateGPSData();
-    //         if (startPosition.distanceTo(a.props.myGPS.getCurrentPosition()) > radius) {
-    //             alarm();
-    //         }
-    //     }
-// }
+//    while (/* alarmmode */ random() < 0.5) {
+//        vector<Position> posCollection;
+//
+//        for (int i = 0; i < 4; ++i) {
+//            updateGPSData();
+//            posCollection.push_back(a.props.myGPS.getCurrentPosition());
+//        }
+//        const Position startPosition = getMedian(posCollection);
+//
+//        //Radius einstellen
+//        unsigned int radius = 100;
+//
+//        // Abstand zur Ursprungsposition testen.
+//        while (random() < 0.5) {
+//            updateGPSData();
+//            if (startPosition.distanceTo(a.props.myGPS.getCurrentPosition()) > radius) {
+//                alarm();
+//            }
+//        }
+//    }
 }
 
 bool NMEA_read(string &currentString) { // Auslesen des "Ringspeichers" und sortieren der NMEA Sätze
