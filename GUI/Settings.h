@@ -5,6 +5,10 @@
 #include "Alarm.h"
 #include "GPSInfo.h"
 
+/*
+ * TODO
+ *  Handling der Buttons bei Einstellungen überlegen, evtl. Push zum speichern und Return zum abbrechen
+ */
 class Settings : public Zustand {
 public:
     void encoderPush() override;
