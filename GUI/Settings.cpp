@@ -41,6 +41,7 @@ void DisplayBrightness::buttonReturn() {
     this->anzeige->setZustand(new Settings);
 }
 
+//Change Brightness
 void ChangeDisplayBrightness::encoderPush() {
 
 }
@@ -82,6 +83,7 @@ void Timeout::buttonReturn() {
     this->anzeige->setZustand(new Settings);
 }
 
+// ChangeTimeout
 void ChangeTimeout::encoderPush() {
 
 }
@@ -104,7 +106,7 @@ void ChangeTimeout::buttonReturn() {
 
 // UTC/Local Time
 void UTCLocal::encoderPush() {
-    // TODO Switch
+    // TODO Switch between UTC/Local Time
 }
 
 void UTCLocal::getLCDOutput() {
