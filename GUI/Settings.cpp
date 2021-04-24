@@ -47,18 +47,24 @@ void ChangeDisplayBrightness::encoderPush() {
 }
 
 void ChangeDisplayBrightness::getLCDOutput() {
-    anzeige->lcd.print("ChangeBrightness");
+    anzeige->print2Lines("ChangeBrightness", to_string(brightness));
 }
 
 void ChangeDisplayBrightness::encoderLeft() {
     brightness--;
+    anzeige->lcd.clear();
+    this->getLCDOutput();
 }
 
 void ChangeDisplayBrightness::encoderRight() {
     brightness++;
+    anzeige->lcd.clear();
+    this->getLCDOutput();
 }
 
 void ChangeDisplayBrightness::buttonReturn() {
+    // TODO Reset brightness
+    this->anzeige->setZustand(new DisplayBrightness);
 
 }
 
@@ -93,19 +99,24 @@ void ChangeTimeout::encoderPush() {
 }
 
 void ChangeTimeout::getLCDOutput() {
-    anzeige->lcd.print("ChangeTimeout");
+    anzeige->print2Lines("ChangeTimeout", to_string(timeout));
 }
 
 void ChangeTimeout::encoderLeft() {
-
+    timeout--;
+    anzeige->lcd.clear();
+    this->getLCDOutput();
 }
 
 void ChangeTimeout::encoderRight() {
-
+    timeout++;
+    anzeige->lcd.clear();
+    this->getLCDOutput();
 }
 
 void ChangeTimeout::buttonReturn() {
-
+    // TODO Reset brightness
+    this->anzeige->setZustand(new Timeout);
 }
 
 ChangeTimeout::ChangeTimeout() {
