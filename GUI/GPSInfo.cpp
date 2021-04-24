@@ -1,5 +1,6 @@
 #include "GPSInfo.h"
 
+
 // GPSInfo
 void GPSInfo::encoderPush() {
     this->anzeige->setZustand(new Koordinaten);
@@ -63,7 +64,9 @@ void Satellites::encoderLeft() {
 }
 
 void Satellites::getLCDOutput() {
-    anzeige->print2Lines("Satteliten", to_string(anzeige->props.myGPS.getSatellitesAvailable()));
+    char buf[16];
+    sprintf(buf, "%c" , anzeige->props.myGPS.getSatellitesAvailable());
+    anzeige->print2Lines("Satteliten", buff);
 }
 
 //FixAge
@@ -85,7 +88,9 @@ void FixAge::encoderLeft() {
 }
 
 void FixAge::getLCDOutput() {
-    anzeige->print2Lines("Fix Age:", to_string(anzeige->props.myGPS.getFixAge()));
+    char buf[16];
+    sprintf(buf,"%c",anzeige->props.myGPS.getFixAge());
+    anzeige->print2Lines("Fix Age:", buf);
 }
 //HDOP
 
@@ -108,7 +113,7 @@ void HDOP::encoderLeft() {
 }
 
 void HDOP::getLCDOutput() {
-    anzeige->print2Lines("HDOP", to_string(anzeige->props.myGPS.getHDOP()));
+    anzeige->print2Lines("HDOP", );
 }
 
 // Time

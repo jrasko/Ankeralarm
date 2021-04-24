@@ -4,6 +4,8 @@
 #include "Utils.h"
 #include "Settings.h"
 #include "Alarm.h"
+#include <bitset>
+
 
 
 class GPSInfo : public Zustand {

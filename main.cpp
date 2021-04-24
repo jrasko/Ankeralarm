@@ -19,6 +19,7 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include <avr/interrupt.h>
+#include <avr/eeprom.h>
 #include <Arduino.h>
 #include "GPS/GPS.h"
 #include "GPS/gpsData.h"
@@ -47,6 +48,8 @@ using namespace std;
 #error Systematischer Fehler der Baudrate grösser 1% und damit zu hoch!
 #endif
 
+#define EEPROM_DEF 0xFF //EEPORM 
+
 // ----IO-definition-----------------------------------------
 #define ledPin 14          //LED pin 14
 #define debug_led 13       // onboard Led
@@ -72,6 +75,14 @@ volatile bool encoderButtonFlag = 0;
 volatile bool returnButtonFlag = 0;
 volatile int encoderSpinFlag = 0;
 
+uint8_t brightness EEMEM = 150; //EEPROM variable
+
+/*
+EEPROM Schreiben 
+
+eeprom_write_byte(&brightness, Wert);
+*/
+ 
 string currentDataString;
 
 // SoftwareSerial mySoftwareSerial(6, 7); //Rx Tx //zur Debugging
@@ -92,7 +103,7 @@ Anzeige a(lcd);
 
 void setup() {
 
-    analogWrite(lcd_beleuchtung, 150); //einschlaten der Beleuchtung
+    analogWrite(lcd_beleuchtung, eeprom_read_byte(&brightness)); //einschlaten der Beleuchtung
     lcd.begin(16, 2);
     lcd.display();
     lcd.write("Ankeralarm V2");
