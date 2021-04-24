@@ -47,7 +47,7 @@ void ChangeDisplayBrightness::encoderPush() {
 }
 
 void ChangeDisplayBrightness::getLCDOutput() {
-    anzeige->print2Lines("ChangeBrightness", to_string(brightness));
+    anzeige->print2Lines("ChangeBrightness", brightness);
 }
 
 void ChangeDisplayBrightness::encoderLeft() {
