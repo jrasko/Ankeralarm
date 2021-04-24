@@ -43,7 +43,9 @@ void DisplayBrightness::buttonReturn() {
 
 //Change Brightness
 void ChangeDisplayBrightness::encoderPush() {
-
+    // Save Brightness
+    this->anzeige->props.writeEEPROM(brightness);
+    this->anzeige->props.displayBrighness = brightness;
 }
 
 void ChangeDisplayBrightness::getLCDOutput() {
@@ -65,7 +67,8 @@ void ChangeDisplayBrightness::encoderRight() {
 }
 
 void ChangeDisplayBrightness::buttonReturn() {
-    // TODO Reset brightness
+    // Reset Brightness
+    this->anzeige->props.setDisplayBrightness(this->anzeige->props.displayBrighness);
     this->anzeige->setZustand(new DisplayBrightness);
 
 }
@@ -95,9 +98,10 @@ void Timeout::buttonReturn() {
     this->anzeige->setZustand(new Settings);
 }
 
-// ChangeTimeout
 void ChangeTimeout::encoderPush() {
-
+    // Save Timeout
+    this->anzeige->props.writeEEPROM(timeout);
+    this->anzeige->props.displayBrighness = timeout;
 }
 
 void ChangeTimeout::getLCDOutput() {
@@ -119,7 +123,8 @@ void ChangeTimeout::encoderRight() {
 }
 
 void ChangeTimeout::buttonReturn() {
-    // TODO Reset brightness
+    // Reset Brightness
+    this->anzeige->props.setDisplayTimeout(this->anzeige->props.displayTimeout);
     this->anzeige->setZustand(new Timeout);
 }
 
