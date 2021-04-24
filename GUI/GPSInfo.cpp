@@ -65,8 +65,8 @@ void Satellites::encoderLeft() {
 
 void Satellites::getLCDOutput() {
     char buf[16];
-    sprintf(buf, "%c" , anzeige->props.myGPS.getSatellitesAvailable());
-    anzeige->print2Lines("Satteliten", buff);
+    sprintf(buf, "%u" , anzeige->props.myGPS.getSatellitesAvailable());
+    anzeige->print2Lines("Satteliten", buf);
 }
 
 //FixAge
@@ -89,7 +89,7 @@ void FixAge::encoderLeft() {
 
 void FixAge::getLCDOutput() {
     char buf[16];
-    sprintf(buf,"%c",anzeige->props.myGPS.getFixAge());
+    sprintf(buf,"%lu",anzeige->props.myGPS.getFixAge());
     anzeige->print2Lines("Fix Age:", buf);
 }
 //HDOP
@@ -113,11 +113,13 @@ void HDOP::encoderLeft() {
 }
 
 void HDOP::getLCDOutput() {
-    anzeige->print2Lines("HDOP", );
+    char buf[16];
+    sprintf(buf,"%f",anzeige->props.myGPS.getHDOP());
+    anzeige->print2Lines("HDOP", buf );
 }
 
 // Time
-void Time::encoderPush() {
+void Time::encoderPush() {                             
 
 }
 

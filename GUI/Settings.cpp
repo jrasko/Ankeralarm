@@ -47,7 +47,9 @@ void ChangeDisplayBrightness::encoderPush() {
 }
 
 void ChangeDisplayBrightness::getLCDOutput() {
-    anzeige->print2Lines("ChangeBrightness", brightness);
+    char buf[16];
+    sprintf(buf,"%u",brightness);
+    anzeige->print2Lines("ChangeBrightness", buf);
 }
 
 void ChangeDisplayBrightness::encoderLeft() {
@@ -99,7 +101,9 @@ void ChangeTimeout::encoderPush() {
 }
 
 void ChangeTimeout::getLCDOutput() {
-    anzeige->print2Lines("ChangeTimeout", to_string(timeout));
+    char buf[16];
+    sprintf(buf,"%u",timeout);
+    anzeige->print2Lines("ChangeTimeout", buf);
 }
 
 void ChangeTimeout::encoderLeft() {

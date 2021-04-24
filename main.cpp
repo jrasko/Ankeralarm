@@ -161,7 +161,6 @@ void loop() {
 
     if (encoderButtonFlag && digitalRead(encoder_button)) { //falling edge detection
         a.encoderPush();
-        digitalWrite(LED_grun, digitalRead(LED_grun) ^ 1);
         encoderButtonFlag = false;
     }
 
