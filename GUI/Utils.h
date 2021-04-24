@@ -63,11 +63,11 @@ public:
         this->zustand->buttonReturn();
     }
 
-    void print2Lines(const string &l1, const string &l2){
+    void print2Lines(const char *  &l1, const char * &l2){
         lcd.setCursor(0, 0);
-        lcd.write(l1.c_str());
+        lcd.write(l1);
         lcd.setCursor(0, 1);
-        lcd.write(l2.c_str());
+        lcd.write(l2);
     }
     void setZustand(Zustand *z) {
         delete this->zustand;
