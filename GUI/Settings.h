@@ -37,8 +37,10 @@ public:
 
 class ChangeDisplayBrightness : public Zustand {
 private:
-    short brightness;
+    unsigned char brightness;
 public:
+    ChangeDisplayBrightness();
+
     void encoderPush() override;
 
     void encoderLeft() override;
@@ -64,7 +66,11 @@ public:
 };
 
 class ChangeTimeout : public Zustand {
+private:
+    unsigned char timeout;
 public:
+    ChangeTimeout() override;
+
     void encoderPush() override;
 
     void encoderLeft() override;

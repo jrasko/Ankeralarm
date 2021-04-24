@@ -62,6 +62,10 @@ void ChangeDisplayBrightness::buttonReturn() {
 
 }
 
+ChangeDisplayBrightness::ChangeDisplayBrightness() {
+    brightness = anzeige->props.displayBrighness;
+}
+
 // Timeout
 void Timeout::encoderPush() {
     this->anzeige->setZustand(new ChangeTimeout);
@@ -103,6 +107,11 @@ void ChangeTimeout::encoderRight() {
 void ChangeTimeout::buttonReturn() {
 
 }
+
+ChangeTimeout::ChangeTimeout() {
+    timeout = anzeige->props.displayTimeout;
+}
+
 
 // UTC/Local Time
 void UTCLocal::encoderPush() {
