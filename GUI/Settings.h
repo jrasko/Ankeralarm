@@ -39,7 +39,7 @@ class ChangeDisplayBrightness : public Zustand {
 private:
     unsigned char brightness;
 public:
-    ChangeDisplayBrightness();
+    ChangeDisplayBrightness() : Zustand();
 
     void encoderPush() override;
 
@@ -69,7 +69,7 @@ class ChangeTimeout : public Zustand {
 private:
     unsigned char timeout;
 public:
-    ChangeTimeout() override;
+    ChangeTimeout() : Zustand();
 
     void encoderPush() override;
 

@@ -8,6 +8,7 @@ class Properties {
 public:
     GPS myGPS;
     bool alarmActive;
+
     unsigned char displayBrighness = 0;
     unsigned char displayTimeout = 0;
 
