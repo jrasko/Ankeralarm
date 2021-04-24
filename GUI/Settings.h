@@ -36,6 +36,8 @@ public:
 };
 
 class ChangeDisplayBrightness : public Zustand {
+private:
+    short brightness;
 public:
     void encoderPush() override;
 

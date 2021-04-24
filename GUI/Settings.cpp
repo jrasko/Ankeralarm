@@ -51,11 +51,11 @@ void ChangeDisplayBrightness::getLCDOutput() {
 }
 
 void ChangeDisplayBrightness::encoderLeft() {
-
+    brightness--;
 }
 
 void ChangeDisplayBrightness::encoderRight() {
-
+    brightness++;
 }
 
 void ChangeDisplayBrightness::buttonReturn() {
