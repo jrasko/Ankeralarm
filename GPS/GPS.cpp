@@ -23,9 +23,15 @@ void GPS::update(const gpsData &data) {
         LatitudeDegree lat(v[2], v[3][0]);
         LongitudeDegree lon(v[4], v[5][0]);
         currentPosition = Position(lat, lon);
+<<<<<<< HEAD
         // stringstream(v[6]) >> gpsStatus;
         // stringstream(v[7]) >> satellitesAvailable;
         // stringstream(v[8]) >> HDOP;
+=======
+        gpsStatus = String(v[6])).toInt();
+        satellitesAvailable = String(v[7]).toInt();
+        HDOP = String(v[8]).toDouble();
+>>>>>>> 2755c616ea1deecbb088914d26cadff7d041adcf
     }
     lastInputTime = millis(); 
 }
