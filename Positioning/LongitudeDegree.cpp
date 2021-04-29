@@ -6,8 +6,8 @@ LongitudeDegree::LongitudeDegree(const std::string &koordString, char direction)
     int deg = 0;
     double min = 0;
 
-    stringstream(koordString.substr(0, 3)) >> deg;
-    stringstream(koordString.substr(3, 10)) >> min;
+    deg = koordString.substr(0, 3).toInt();
+    min = koordString.substr(3, 10).toDouble();
 
     double jdeg = min / 60.0 + deg;
     if (direction == 'W') {
