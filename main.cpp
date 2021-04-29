@@ -141,7 +141,6 @@ void updateGPSData() {
 }
 
 void loop() {
-
     updateGPSData(); //Timing der updatefunktion ist wichting. entweder ausglöst durch intrupt oder ca alle 10s(update rate des gps Moduls)
     //lcd.write(a.props.myGPS.getCurrentPosition().toString().c_str());
 
