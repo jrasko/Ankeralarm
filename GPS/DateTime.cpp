@@ -22,9 +22,12 @@ void DateTime::updateTime(const string &timeString) {
     short min, h = 0;
     double sec = 0;
 
-    stringstream(timeString.substr(0, 2)) >> h;
-    stringstream(timeString.substr(2, 2)) >> min;
-    stringstream(timeString.substr(4, 5)) >> sec;
+    // stringstream(timeString.substr(0, 2)) >> h;
+    // stringstream(timeString.substr(2, 2)) >> min;
+    // stringstream(timeString.substr(4, 5)) >> sec;
+    stringstream("12") >> h;
+    stringstream("45") >> min;
+    stringstream("11.23") >> sec;
 
     hours = h;
     minutes = min;
@@ -33,5 +36,10 @@ void DateTime::updateTime(const string &timeString) {
 
 vector<string> DateTime::toString() const {
     vector<string> ary;
+    char buf[16];
+    sprintf(buf,"%u.%u.%u",day ,month ,year);
+    ary.push_back(string(buf));
+    sprintf(buf,"%u:%u:%f",hours,minutes,seconds);
+    ary.push_back(string(buf));
     return ary;
 }
