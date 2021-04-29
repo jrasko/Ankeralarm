@@ -6,28 +6,28 @@
  * @param data includes a vector of strings which is build from the raw GPS Data
  */
 void GPS::update(const gpsData &data) {
-    vector<string> v = data.getData();
+     vector<string> v = data.getData();
     if (!data.isValid() || (v.size() != 13 && v.size() != 15)) {
         return;
     }
     if (v[0] == "$GPRMC") {
         //GPRMC
-        lastTimeStamp.updateTime(v[1]);
-        lastTimeStamp.updateDate(v[9]);
+        // lastTimeStamp.updateTime(v[1]);
+        // lastTimeStamp.updateDate(v[9]);
         LatitudeDegree lat(v[3], v[4][0]);
         LongitudeDegree lon(v[5], v[6][0]);
         currentPosition = Position(lat, lon);
     } else if (v[0] == "$GPGGA") {
         //GPGGA
-        lastTimeStamp.updateTime(v[1]);
+        // lastTimeStamp.updateTime(v[1]);
         LatitudeDegree lat(v[2], v[3][0]);
         LongitudeDegree lon(v[4], v[5][0]);
         currentPosition = Position(lat, lon);
-        stringstream(v[6]) >> gpsStatus;
-        stringstream(v[7]) >> satellitesAvailable;
-        stringstream(v[8]) >> HDOP;
+        // stringstream(v[6]) >> gpsStatus;
+        // stringstream(v[7]) >> satellitesAvailable;
+        // stringstream(v[8]) >> HDOP;
     }
-    lastInputTime = millis();
+    lastInputTime = millis(); 
 }
 
 /**
