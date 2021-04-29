@@ -36,6 +36,7 @@ public:
     Properties props;
 public:
     LiquidCrystal &lcd;
+    
 
     explicit Anzeige(LiquidCrystal &l) : zustand(nullptr), lcd(l) {}
 

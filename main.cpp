@@ -77,12 +77,6 @@ volatile bool returnButtonFlag = 0;
 volatile int encoderSpinFlag = 0;
 
 uint8_t brightness EEMEM = 150; //EEPROM variable
-
-/*
-EEPROM Schreiben 
-
-eeprom_write_byte(&brightness, Wert);
-*/
  
 string currentDataString;
 
@@ -102,9 +96,11 @@ void serialWrite(char *c); //UART transmit
 LiquidCrystal lcd(14, 15, 16, 17, 18, 19);
 Anzeige a(lcd);
 
+
 unsigned char debug = 0;  
 void setup() {
-    
+    a.props.eepromBrightnes = &brightness;
+    a.props.readEEPROM();
     //analogWrite(lcd_beleuchtung, eeprom_read_byte(&brightness)); //einschlaten der Beleuchtung
     lcd.begin(16, 2);
     lcd.display();
@@ -112,6 +108,7 @@ void setup() {
     lcd.write("T.Zwiener");
     _delay_ms(1000);
     interrupt_init();
+    
 
     //-------------IO-config-------------------------------------------------
 
@@ -127,7 +124,7 @@ void setup() {
     pinMode(returnButton, INPUT_PULLUP);
 
     a.activate(new GPSInfo);
-    debug = (MCUCR & (1<<WDRF));
+    
 }
 
 void updateGPSData() {
@@ -143,11 +140,7 @@ void updateGPSData() {
     }
 }
 
-void loop() {
-    char buff[7];
-    lcd.setCursor(0,0); 
-    sprintf(buff,"%i", debug);    
-    lcd.write(buff);
+void loop() {   
 
     updateGPSData(); //Timing der updatefunktion ist wichting. entweder ausglöst durch intrupt oder ca alle 10s(update rate des gps Moduls)
     //lcd.write(a.props.myGPS.getCurrentPosition().toString().c_str());
@@ -314,92 +307,96 @@ void interrupt_init(void) {
 
     //---config der Timer-------------------------------------------------------------
 
-    // Timer 1
+    // Timer 1 //Status LEDs
     TCCR1A = 0;
     TCCR1B = 0;
     TCNT1 = 3036;           // Timer nach obiger Rechnung vorbelegen so das t=1s
     TCCR1B |= (1 << CS12);  // 256 als Prescale-Wert spezifizieren
     TIMSK1 |= (1 << TOIE1); // Timer Overflow Interrupt aktivieren
 
+    // Timer 2 //Dispaly Timeout
+
+
+
     //--Watchdog Timer------------------------------
 
-    WDTCSR |= (1<<WDCE) | (1<<WDE);
-    WDTCSR = (1<<WDIE)|(1<<WDE) | (1<<WDP3); // 4s / no interrupt, system reset
+    // WDTCSR |= (1<<WDCE) | (1<<WDE);
+    // WDTCSR = (1<<WDIE)|(1<<WDE) | (1<<WDP3); // 4s / no interrupt, system reset
 
     sei(); //enable Interrupts
 }
 
 //---Interruptrutine------------------------------------------
 ISR(INT0_vect){
-        //---------------Encoder-------------------------------------------
-        static unsigned long lastInterruptTime = buttonDebounceTime;
-        unsigned long interruptTime = millis();
-        int messungPin1 = 0, messungPin1Alt = 0;
-        // If interrupts come faster than 5ms, assume it's a bounce and ignore
-        if (interruptTime - lastInterruptTime > 1)
-        {
-            messungPin1 = digitalRead(encoder_a);
-            if ((messungPin1 == HIGH) && (messungPin1Alt == LOW)) {
-                if (digitalRead(encoder_b) == HIGH) {
-                    encoderSpinFlag--;
-                } else {
-                    encoderSpinFlag++;
-                }
+    //---------------Encoder-------------------------------------------
+    static unsigned long lastInterruptTime = buttonDebounceTime;
+    unsigned long interruptTime = millis();
+    int messungPin1 = 0, messungPin1Alt = 0;
+    // If interrupts come faster than 5ms, assume it's a bounce and ignore
+    if (interruptTime - lastInterruptTime > 1)
+    {
+        messungPin1 = digitalRead(encoder_a);
+        if ((messungPin1 == HIGH) && (messungPin1Alt == LOW)) {
+            if (digitalRead(encoder_b) == HIGH) {
+                encoderSpinFlag--;
+            } else {
+                encoderSpinFlag++;
             }
-            messungPin1Alt = messungPin1;
-
-            //Restrict value from 0 to +200
-            //radius = min(200, max(0,radius));
         }
-        // Keep track of when we were here last (no more than every 5ms)
-        lastInterruptTime = interruptTime;
+        messungPin1Alt = messungPin1;
+
+        //Restrict value from 0 to +200
+        //radius = min(200, max(0,radius));
+    }
+    // Keep track of when we were here last (no more than every 5ms)
+    lastInterruptTime = interruptTime;
 }
 
 ISR(PCINT2_vect)
+{
+        static unsigned long lastInterruptTime = 100;
+        unsigned long interruptTime = millis();
+        if (interruptTime - lastInterruptTime > 1)
         {
-                static unsigned long lastInterruptTime = 100;
-                unsigned long interruptTime = millis();
-                if (interruptTime - lastInterruptTime > 1)
-                {
-                    if (digitalRead(encoder_button) == 0) {
-                        encoderButtonFlag = true;
-                    }
-                    if (digitalRead(returnButton) == 0) {
-                        returnButtonFlag = true;                        
-                    }
+            if (digitalRead(encoder_button) == 0) {
+                encoderButtonFlag = true;
+            }
+            if (digitalRead(returnButton) == 0) {
+                returnButtonFlag = true;                        
+            }
 
-                }
-                lastInterruptTime = interruptTime;
         }
+        lastInterruptTime = interruptTime;
+}
 
 ISR(TIMER1_OVF_vect)
-        {
+{
 
-                //------------------------------GPS-Status LED---------------------------
+        //------------------------------GPS-Status LED---------------------------
 
-                TCNT1 = 3036; // Timer vorbelegt so dass delta_T= 1s
-                /*
-                switch (a.props.myGPS.getGPSQuality()){
-                    case 0:
-                        digitalWrite(LED_rot, digitalRead(LED_rot) ^ 1);
-                    digitalWrite(LED_grun, LOW);
-                    break;
-                    case 1:
-                        digitalWrite(LED_grun, LOW);
-                    digitalWrite(LED_rot, HIGH);
-                    break;
-                    case 2:
-                        digitalWrite(LED_grun, HIGH);
-                    digitalWrite(LED_rot, HIGH);
-                    break;
-                    case 3:
-                        digitalWrite(LED_grun, HIGH);
-                    digitalWrite(LED_rot, LOW);
-                    break;
-                    case 4:
-                        digitalWrite(LED_grun, digitalRead(LED_grun) ^ 1);
-                    digitalWrite(LED_rot, LOW);
-                    break;
-                }
-                */
+        TCNT1 = 3036; // Timer vorbelegt so dass delta_T= 1s
+        
+        switch (a.props.myGPS.getGPSQuality()){
+            case 0:
+                digitalWrite(LED_rot, digitalRead(LED_rot) ^ 1);
+            digitalWrite(LED_grun, LOW);
+            break;
+            case 1:
+                digitalWrite(LED_grun, LOW);
+            digitalWrite(LED_rot, HIGH);
+            break;
+            case 2:
+                digitalWrite(LED_grun, HIGH);
+            digitalWrite(LED_rot, HIGH);
+            break;
+            case 3:
+                digitalWrite(LED_grun, HIGH);
+            digitalWrite(LED_rot, LOW);
+            break;
+            case 4:
+                digitalWrite(LED_grun, digitalRead(LED_grun) ^ 1);
+            digitalWrite(LED_rot, LOW);
+            break;
         }
+        
+}

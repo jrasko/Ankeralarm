@@ -9,9 +9,9 @@
 void DateTime::updateDate(const string &dateString) {
     short d, m, y = 0;
 
-    d = String(dateString.substr(0, 2)).toInt();
-    m = String(dateString.substr(2, 2)).toInt();
-    y = String(dateString.substr(4, 2)).toInt();
+    d = String(dateString.substr(0, 2).c_str()).toInt();
+    m = String(dateString.substr(2, 2).c_str()).toInt();
+    y = String(dateString.substr(4, 2).c_str()).toInt();
 
     day = d;
     month = m;
@@ -22,18 +22,10 @@ void DateTime::updateTime(const string &timeString) {
     short min, h = 0;
     double sec = 0;
 
-<<<<<<< HEAD
-    // stringstream(timeString.substr(0, 2)) >> h;
-    // stringstream(timeString.substr(2, 2)) >> min;
-    // stringstream(timeString.substr(4, 5)) >> sec;
-    stringstream("12") >> h;
-    stringstream("45") >> min;
-    stringstream("11.23") >> sec;
-=======
-    h = String(timeString.substr(0, 2)).toInt();
-    min = String(timeString.substr(2, 2)).toInt();
-    sec = String(timeString.substr(4, 5)).toDouble;
->>>>>>> 2755c616ea1deecbb088914d26cadff7d041adcf
+
+    h = String(timeString.substr(0, 2).c_str()).toInt();
+    min = String(timeString.substr(2, 2).c_str()).toInt();
+    sec = String(timeString.substr(4, 5).c_str()).toDouble();
 
     hours = h;
     minutes = min;

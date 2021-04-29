@@ -3,6 +3,7 @@
 #define ANKERALARM_2_GPS_H
 
 #include <vector>
+#include <Arduino.h>
 #include "gpsData.h"
 #include "../Positioning/Position.h"
 #include "DateTime.h"
@@ -34,7 +35,7 @@ private:
     DateTime lastTimeStamp;
     Position currentPosition = Position(LatitudeDegree(0), LongitudeDegree(0));
     unsigned short gpsStatus = 0;
-    double HDOP = 50;
+    double HDOP = 50.0;
     unsigned short satellitesAvailable = 0;
     unsigned long lastInputTime = 0;
 };

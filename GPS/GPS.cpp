@@ -12,26 +12,21 @@ void GPS::update(const gpsData &data) {
     }
     if (v[0] == "$GPRMC") {
         //GPRMC
-        // lastTimeStamp.updateTime(v[1]);
-        // lastTimeStamp.updateDate(v[9]);
+        lastTimeStamp.updateTime(v[1]);
+        lastTimeStamp.updateDate(v[9]);
         LatitudeDegree lat(v[3], v[4][0]);
         LongitudeDegree lon(v[5], v[6][0]);
         currentPosition = Position(lat, lon);
     } else if (v[0] == "$GPGGA") {
         //GPGGA
-        // lastTimeStamp.updateTime(v[1]);
+        lastTimeStamp.updateTime(v[1]);
         LatitudeDegree lat(v[2], v[3][0]);
         LongitudeDegree lon(v[4], v[5][0]);
         currentPosition = Position(lat, lon);
-<<<<<<< HEAD
-        // stringstream(v[6]) >> gpsStatus;
-        // stringstream(v[7]) >> satellitesAvailable;
-        // stringstream(v[8]) >> HDOP;
-=======
-        gpsStatus = String(v[6])).toInt();
-        satellitesAvailable = String(v[7]).toInt();
-        HDOP = String(v[8]).toDouble();
->>>>>>> 2755c616ea1deecbb088914d26cadff7d041adcf
+
+        gpsStatus = String(v[6].c_str()).toInt();
+        satellitesAvailable = String(v[7].c_str()).toInt();
+        HDOP = String(v[8].c_str()).toDouble();
     }
     lastInputTime = millis(); 
 }

@@ -23,7 +23,8 @@ public:
     }
 
     void setDisplayTimeout(unsigned char timeout){
-        // TODO
+        // TODO     //Nicht mit Timer möglich, da Timer 2 fürs Display Benötigt wird!
+        
     }
 
     void writeEEPROM(unsigned char value){

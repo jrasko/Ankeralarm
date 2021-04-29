@@ -1,12 +1,12 @@
 #include "LatitudeDegree.h"
-
+# include <Arduino.h>
 
 
 LatitudeDegree::LatitudeDegree(const std::string &koordString, char direction) {
     int deg = 0;
     double min = 0;
-    deg = koordString.substr(0, 2).toInt();
-    min = koordString.substr(2, 10).toDouble();
+    deg = String(koordString.substr(0, 2).c_str()).toInt();
+    min = String(koordString.substr(2, 10).c_str()).toDouble();
 
     double jdeg = min / 60.0 + deg;
     if (direction == 'S') {

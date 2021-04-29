@@ -46,6 +46,7 @@ void ChangeDisplayBrightness::encoderPush() {
     // Save Brightness
     this->anzeige->props.writeEEPROM(brightness);
     this->anzeige->props.displayBrighness = brightness;
+    this->anzeige->setZustand(new DisplayBrightness);
 }
 
 void ChangeDisplayBrightness::getLCDOutput() {
@@ -55,13 +56,15 @@ void ChangeDisplayBrightness::getLCDOutput() {
 }
 
 void ChangeDisplayBrightness::encoderLeft() {
-    brightness--;
+    brightness-=16;
+    this->anzeige->props.setDisplayBrightness(brightness);
     anzeige->lcd.clear();
     this->getLCDOutput();
 }
 
 void ChangeDisplayBrightness::encoderRight() {
-    brightness++;
+    brightness+=16;
+    this->anzeige->props.setDisplayBrightness(brightness);
     anzeige->lcd.clear();
     this->getLCDOutput();
 }
