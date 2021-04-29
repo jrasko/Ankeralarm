@@ -4,28 +4,36 @@
 
 #include "../GPS/GPS.h"
 
+#define lcd_beleuchtung 11 // hintergundbeleuchtung des LCDs
+
+
+
 class Properties {
 public:
     GPS myGPS;
-    bool alarmActive;
+    bool alarmActive;    
     // TODO init with EPROM, set Display in setup
+    uint8_t *eepromBrightnes;
     unsigned char displayBrighness = 0;
     unsigned char displayTimeout = 0;
 
     void setDisplayBrightness(unsigned char brightness){
-
+        // TODO
+        analogWrite(lcd_beleuchtung, brightness);
     }
 
-    void setDisplayTimeout(unsigned char brightness){
-
+    void setDisplayTimeout(unsigned char timeout){
+        // TODO
     }
 
     void writeEEPROM(unsigned char value){
+        eeprom_write_byte(eepromBrightnes, value);
+    }    
 
-    }
-
-    unsigned char readEEPROM(){
-        return 0;
+    void readEEPROM(){
+        unsigned char brigh; 
+        brigh = eeprom_read_byte(eepromBrightnes);
+        setDisplayBrightness(brigh);
     }
 
 };
