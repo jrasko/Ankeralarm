@@ -27,6 +27,7 @@
 #include <SoftwareSerial.h>
 #include "GUI/Utils.h"
 #include "GUI/GPSInfo.h"
+#include <avr/wdt.h>
 
 using namespace std;
 
@@ -101,14 +102,15 @@ void serialWrite(char *c); //UART transmit
 LiquidCrystal lcd(14, 15, 16, 17, 18, 19);
 Anzeige a(lcd);
 
+unsigned char debug = 0;  
 void setup() {
-
-    analogWrite(lcd_beleuchtung, eeprom_read_byte(&brightness)); //einschlaten der Beleuchtung
+    
+    //analogWrite(lcd_beleuchtung, eeprom_read_byte(&brightness)); //einschlaten der Beleuchtung
     lcd.begin(16, 2);
     lcd.display();
     lcd.write("Ankeralarm V2");
     lcd.write("T.Zwiener");
-    delay(1000);
+    _delay_ms(1000);
     interrupt_init();
 
     //-------------IO-config-------------------------------------------------
@@ -125,6 +127,7 @@ void setup() {
     pinMode(returnButton, INPUT_PULLUP);
 
     a.activate(new GPSInfo);
+    debug = (MCUCR & (1<<WDRF));
 }
 
 void updateGPSData() {
@@ -141,9 +144,15 @@ void updateGPSData() {
 }
 
 void loop() {
+    char buff[7];
+    lcd.setCursor(0,0); 
+    sprintf(buff,"%i", debug);    
+    lcd.write(buff);
 
     updateGPSData(); //Timing der updatefunktion ist wichting. entweder ausglöst durch intrupt oder ca alle 10s(update rate des gps Moduls)
     //lcd.write(a.props.myGPS.getCurrentPosition().toString().c_str());
+    
+    
 
     while (encoderSpinFlag > 0) {
         a.encoderRight();
@@ -312,6 +321,11 @@ void interrupt_init(void) {
     TCCR1B |= (1 << CS12);  // 256 als Prescale-Wert spezifizieren
     TIMSK1 |= (1 << TOIE1); // Timer Overflow Interrupt aktivieren
 
+    //--Watchdog Timer------------------------------
+
+    WDTCSR |= (1<<WDCE) | (1<<WDE);
+    WDTCSR = (1<<WDIE)|(1<<WDE) | (1<<WDP3); // 4s / no interrupt, system reset
+
     sei(); //enable Interrupts
 }
 
@@ -351,8 +365,7 @@ ISR(PCINT2_vect)
                         encoderButtonFlag = true;
                     }
                     if (digitalRead(returnButton) == 0) {
-                        returnButtonFlag = true;
-                        digitalWrite(LED_rot, HIGH);
+                        returnButtonFlag = true;                        
                     }
 
                 }
