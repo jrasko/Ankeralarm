@@ -1,15 +1,13 @@
 
 #ifndef ANKERALARM_PROPERTIES_H
 #define ANKERALARM_PROPERTIES_H
+
+#define lcd_beleuchtung 11 // hintergundbeleuchtung des LCDs
 #define RX_Buffer_SIZE 128  //einstellung der Größe des emfangs Buffers
 #define TX_Buffer_SIZE 128  //einstelleng der gößes des sende Buffers;
 #define maxIncomingMessageLength 100
 
 #include "../GPS/GPS.h"
-
-#define lcd_beleuchtung 11 // hintergundbeleuchtung des LCDs
-
-
 
 
 class Properties {
@@ -17,21 +15,17 @@ private:
     string currentDataString;
     char serialBuffer[TX_Buffer_SIZE]; // Buffer für UART Übertragung
     char rxBuffer[RX_Buffer_SIZE];     // Buffer für UART Emfang
-
     uint8_t serialReadPos = 0; //variablen für den Ringbuffer
     uint8_t serialWritePos = 0;
     uint8_t rxReadPos = 0;
     uint8_t rxWritePos = 0;
+
 public:
     GPS myGPS;
     bool alarmActive = false;
     Position centralPosition;
-    // TODO init with EPROM, set Display in setup
     unsigned char displayBrighness = 0;
-
     unsigned char displayTimeout = 0;
-
-    // TODO init with EPROM, set Display in setup
     uint8_t *eepromBrightnes;
 
     static void setDisplayBrightness(unsigned char brightness){
@@ -40,7 +34,6 @@ public:
 
     void setDisplayTimeout(unsigned char timeout){
         // Nicht mit Timer möglich, da Timer 2 fürs Display Benötigt wird!
-
     }
 
     void readEEPROM(){

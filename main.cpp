@@ -16,17 +16,18 @@
 #endif
 
 #include <string>
+#include <Arduino.h>
 #include <avr/io.h>
 #include <util/delay.h>
+#include "GPS/GPS.h"
 #include <avr/interrupt.h>
 #include <avr/eeprom.h>
-#include <Arduino.h>
-#include "GPS/GPS.h"
 #include "GPS/gpsData.h"
 #include <LiquidCrystal.h>
 #include <SoftwareSerial.h>
 #include "GUI/Utils.h"
 #include "GUI/GPSInfo.h"
+
 #include <avr/wdt.h>
 
 using namespace std;
@@ -69,7 +70,8 @@ volatile bool encoderButtonFlag = 0;
 volatile bool returnButtonFlag = 0;
 volatile int encoderSpinFlag = 0;
 
-uint8_t brightness EEMEM = 150; //EEPROM variable
+uint8_t brightness
+EEMEM = 150; //EEPROM variable
 
 // SoftwareSerial mySoftwareSerial(6, 7); //Rx Tx //zur Debugging
 
@@ -89,6 +91,7 @@ Anzeige a(lcd);
 
 
 unsigned char debug = 0;
+
 void setup() {
     a.props.eepromBrightnes = &brightness;
     a.props.readEEPROM();
@@ -116,7 +119,6 @@ void setup() {
 
     a.activate(new GPSInfo);
 }
-
 
 
 void loop() {
