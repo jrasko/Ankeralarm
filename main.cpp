@@ -16,17 +16,20 @@
 #endif
 
 #include <string>
-#include <avr/io.h>
 #include <util/delay.h>
-#include <avr/interrupt.h>
-#include <avr/eeprom.h>
+
 #include <Arduino.h>
-#include "GPS/GPS.h"
-#include "GPS/gpsData.h"
 #include <LiquidCrystal.h>
 #include <SoftwareSerial.h>
+
+#include "GPS/GPS.h"
+#include "GPS/gpsData.h"
 #include "GUI/Utils.h"
 #include "GUI/GPSInfo.h"
+
+#include <avr/interrupt.h>
+#include <avr/eeprom.h>
+#include <avr/io.h>
 #include <avr/wdt.h>
 
 using namespace std;
