@@ -1,5 +1,5 @@
 #include "LongitudeDegree.h"
-#include <Arduino.h>
+
 #define toDEG 3.14159265/180
 
 LongitudeDegree::LongitudeDegree(const std::string &koordString, char direction) {

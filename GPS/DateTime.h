@@ -6,6 +6,7 @@
 #include <string>
 #include <cmath>
 #include <vector>
+#include <Arduino.h>
 
 using namespace std;
 

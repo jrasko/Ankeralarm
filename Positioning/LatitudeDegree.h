@@ -3,6 +3,7 @@
 
 #include <sstream>
 #include <cmath>
+#include <Arduino.h>
 
 using namespace std;
 

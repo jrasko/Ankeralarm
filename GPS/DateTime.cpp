@@ -1,5 +1,5 @@
 #include "DateTime.h"
-#include <Arduino.h>
+
 /**
  * Constructor - Creates a DateTime Objekt from given Parameters
  * @param timeString with the format "hhmmss.ss"

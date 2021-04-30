@@ -1,5 +1,4 @@
 #include "LatitudeDegree.h"
-# include <Arduino.h>
 
 
 LatitudeDegree::LatitudeDegree(const std::string &koordString, char direction) {

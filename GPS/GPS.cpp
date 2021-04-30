@@ -1,5 +1,4 @@
 #include "GPS.h"
-#include <Arduino.h>
 
 /**
  * Updates the Attributes of the GPS Object
