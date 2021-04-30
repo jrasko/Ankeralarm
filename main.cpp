@@ -55,16 +55,16 @@ using namespace std;
 #define EEPROM_DEF 0xFF //EEPORM 
 
 // ----IO-definition-----------------------------------------
-#define ledPin 14          //LED pin 14
-#define debug_led 13       // onboard Led
-#define lcd_beleuchtung 11 // hintergundbeleuchtung des LCDs
-#define returnButton 7         //Schalter 1 PD7  PCINT 23
-#define summer 12          //Summer
 #define encoder_a 2        //encoder pin 2 (32)
 #define encoder_b 3        //encoder pin 3
 #define encoder_button 4   //encoder pin 4
+#define returnButton 7         //Schalter 1 PD7  PCINT 23
 #define LED_rot 9          //RG-LED pin 8
 #define LED_grun 10        //RG-LED pin 9
+#define lcd_beleuchtung 11 // hintergundbeleuchtung des LCDs
+#define summer 12          //Summer
+#define debug_led 13       // onboard Led
+#define ledPin 14          //LED pin 14
 
 //---global variables-----------------------------------------
 char serialBuffer[TX_Buffer_SIZE]; // Buffer für UART Übertragung
@@ -87,11 +87,8 @@ string currentDataString;
 
 //----Funktionsprototypen------------------------------------
 bool NMEA_read(string &currentString);
-
 void alarm();
-
 void interrupt_init(); //UART init
-
 void appendSerial(char c); //UART recive
 void serialWrite(char *c); //UART transmit
 
@@ -143,12 +140,8 @@ void updateGPSData() {
     }
 }
 
-void loop() {   
-
+void loop() {
     updateGPSData(); //Timing der updatefunktion ist wichting. entweder ausglöst durch intrupt oder ca alle 10s(update rate des gps Moduls)
-    //lcd.write(a.props.myGPS.getCurrentPosition().toString().c_str());
-    
-    
 
     while (encoderSpinFlag > 0) {
         a.encoderRight();
