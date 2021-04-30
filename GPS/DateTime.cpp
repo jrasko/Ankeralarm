@@ -35,9 +35,9 @@ void DateTime::updateTime(const string &timeString) {
 vector<string> DateTime::toString() const {
     vector<string> ary;
     char buf[16];
-    sprintf(buf,"%u.%u.%u",day ,month ,year);
+    sprintf(buf,"%02u.%02u.%02u",day ,month ,year);
     ary.push_back(string(buf));
-    sprintf(buf,"%u:%u:%f",hours,minutes,seconds);
+    sprintf(buf,"%02u:%02u:%f",hours,minutes,seconds);
     ary.push_back(string(buf));
     return ary;
 }
