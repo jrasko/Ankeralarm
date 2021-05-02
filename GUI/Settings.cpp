@@ -56,14 +56,20 @@ void ChangeDisplayBrightness::getLCDOutput() {
 }
 
 void ChangeDisplayBrightness::encoderLeft() {
-    brightness-=16;
+	if (brightness < 5>){
+		brightness = 5;
+	}
+	brightness-=5;
     Properties::setDisplayBrightness(brightness);
     anzeige->lcd.clear();
     this->getLCDOutput();
 }
 
 void ChangeDisplayBrightness::encoderRight() {
-    brightness+=16;
+	if (brightness > 250){
+		brightness = 250;
+	}
+	brightness+=5;
     Properties::setDisplayBrightness(brightness);
     anzeige->lcd.clear();
     this->getLCDOutput();
@@ -71,7 +77,8 @@ void ChangeDisplayBrightness::encoderRight() {
 
 void ChangeDisplayBrightness::buttonReturn() {
     // Reset Brightness
-    Properties::setDisplayBrightness(this->anzeige->props.displayBrighness);
+	brightness = anzeige->props.displayBrighness;
+    Properties::setDisplayBrightness(brightness);
     this->anzeige->setZustand(new DisplayBrightness);
 
 }
