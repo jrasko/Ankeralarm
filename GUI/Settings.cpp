@@ -56,7 +56,7 @@ void ChangeDisplayBrightness::getLCDOutput() {
 }
 
 void ChangeDisplayBrightness::encoderLeft() {
-	if (brightness < 5>){
+	if (brightness < 5){
 		brightness = 5;
 	}
 	brightness-=5;
