@@ -8,11 +8,13 @@
 #include <vector>
 
 using namespace std;
+
 class Position {
 public:
 
     Position(const LatitudeDegree &latitude, const LongitudeDegree &longitude) : latitude(latitude),
                                                                                  longitude(longitude) {}
+
     friend Position getMedian(const vector<Position> &p);
 
     double distanceTo(const Position &p) const;

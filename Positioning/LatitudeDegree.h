@@ -1,10 +1,11 @@
-
 #ifndef ANKERALARM_LATITUDEDEGREE_H
 #define ANKERALARM_LATITUDEDEGREE_H
 
-
 #include <sstream>
 #include <cmath>
+#include <Arduino.h>
+
+using namespace std;
 
 class LatitudeDegree {
 
@@ -14,7 +15,7 @@ public:
     explicit LatitudeDegree(double deg);
 
     LatitudeDegree(const LatitudeDegree &d) {
-        degrees= d.degrees;
+        degrees = d.degrees;
     }
 
     double getDegrees() const {

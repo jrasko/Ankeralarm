@@ -3,44 +3,43 @@
 #define ANKERALARM_2_DATE_H
 
 #include <sstream>
+#include <string>
 #include <cmath>
+#include <vector>
+#include <Arduino.h>
 
 using namespace std;
 
 class DateTime {
 
 public:
-    DateTime()= default;
+	void updateDate(const string &dateString);
 
-    DateTime(const string &timeString, const string &datestring);
+	void updateTime(const string &timeString);
 
-    DateTime(short day, short month, short year, short hours, short minutes, double seconds);
+	vector<string> toString() const;
 
-    short getDay() const;
+	void setUTCFactor(unsigned char factor);
 
-    short getMonth() const;
-
-    short getYear() const;
-
-    short getHours() const;
-
-    short getMinutes() const;
-
-    double getSeconds() const;
-
-    friend DateTime operator-(const DateTime &d1, const DateTime &d2);
-
-
-
+	unsigned char getUTCFactor() const;
 
 private:
-    double seconds = 0;
-    short minutes = 0;
-    short hours = 0;
+	void adjustTime();
 
-    short day = 0;
-    short month = 0;
-    short year = 0;
+	static inline bool isLeapYear(unsigned short y) {
+		return (y % 4 == 0 && y % 100 != 0) || (y % 400 != 0);
+	}
+
+	const unsigned char monthLength[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+	double seconds = 0.0;
+	unsigned char minutes = 0;
+	unsigned char hours = 0;
+
+	unsigned char day = 0;
+	unsigned char month = 0;
+	unsigned short year = 0;
+
+	unsigned char UTCFactor = 0;
 
 };
 

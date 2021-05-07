@@ -1,9 +1,6 @@
 
 #include "gpsData.h"
 
-
-using namespace std;
-
 bool gpsChecksumOk(const char *gpsMessage) {
     const char hex[] = "0123456789ABCDEF";
     if (*gpsMessage != '$') return false;
@@ -24,10 +21,10 @@ bool gpsChecksumOk(const char *gpsMessage) {
 }
 
 bool validateGPSString(const char *proofIt) {
-    vector<string> v;
+    std::vector<std::string> v;
     int k = 0;
     while (true) {
-        string currentString;
+        std::string currentString;
         while (proofIt[k] != ',' && proofIt[k] != '\0') {
             currentString.push_back(proofIt[k]);
             k++;
@@ -58,9 +55,9 @@ gpsData::gpsData(const char *myGPSString) {
         return;
     }
     unsigned short k = 0;
-    vector<string> v;
+    std::vector<std::string> v;
     for (int i = 0; i < 15; ++i) {
-        string currentString;
+        std::string currentString;
         while (myGPSString[k] != ',' && myGPSString[k] != '\0') {
             currentString.push_back(myGPSString[k]);
             k++;

@@ -3,6 +3,7 @@
 #define ANKERALARM_2_GPS_H
 
 #include <vector>
+#include <Arduino.h>
 #include "gpsData.h"
 #include "../Positioning/Position.h"
 #include "DateTime.h"
@@ -19,13 +20,13 @@ public:
 
     const DateTime &getLastTimeStamp() const;
 
-    double getAccuracy() const;
+    double getHDOP() const;
+
+    unsigned long getFixAge() const;
 
     unsigned short getSatellitesAvailable() const;
 
     const Position &getCurrentPosition() const;
-
-
 
 
 private:
@@ -34,11 +35,10 @@ private:
     DateTime lastTimeStamp;
     Position currentPosition = Position(LatitudeDegree(0), LongitudeDegree(0));
     unsigned short gpsStatus = 0;
-    double accuracy = 50;
+    double HDOP = 50.0;
     unsigned short satellitesAvailable = 0;
     unsigned long lastInputTime = 0;
 };
-
 
 
 #endif //ANKERALARM_2_GPS_H

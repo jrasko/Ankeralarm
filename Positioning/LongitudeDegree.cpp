@@ -1,15 +1,13 @@
-
 #include "LongitudeDegree.h"
 
 #define toDEG 3.14159265/180
-using namespace std;
 
 LongitudeDegree::LongitudeDegree(const std::string &koordString, char direction) {
     int deg = 0;
     double min = 0;
 
-    stringstream(koordString.substr(0, 3)) >> deg;
-    stringstream(koordString.substr(3, 10)) >> min;
+    deg = String(koordString.substr(0, 3).c_str()).toInt();
+    min = String(koordString.substr(3, 10).c_str()).toDouble();
 
     double jdeg = min / 60.0 + deg;
     if (direction == 'W') {

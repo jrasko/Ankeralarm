@@ -1,126 +1,73 @@
 #include "DateTime.h"
 
-
-using namespace std;
-
-
 /**
  * Constructor - Creates a DateTime Objekt from given Parameters
  * @param timeString with the format "hhmmss.ss"
- * @param datestring with the format "ddmmyy"
+ * @param dateString with the format "ddmmyy"
  * @attention DATA IS NOT CHECKED FOR CONSISTENCY
  */
-DateTime::DateTime(const string &timeString, const string &datestring) {
+void DateTime::updateDate(const string &dateString) {
+	unsigned char d, m = 0;
+	unsigned short y = 0;
+	d = String(dateString.substr(0, 2).c_str()).toInt();
+	m = String(dateString.substr(2, 2).c_str()).toInt();
+	y = String(dateString.substr(4, 2).c_str()).toInt();
 
-    short min, h, d, m, y = 0;
-    double sec = 0;
+	day = d;
+	month = m;
+	year = y;
+}
 
-    stringstream(timeString.substr(0, 2)) >> h;
-    stringstream(timeString.substr(2, 2)) >> min;
-    stringstream(timeString.substr(4, 5)) >> sec;
+void DateTime::updateTime(const string &timeString) {
+	unsigned char min, h = 0;
+	double sec = 0;
 
-    stringstream(datestring.substr(0, 2)) >> d;
-    stringstream(datestring.substr(2, 2)) >> m;
-    stringstream(datestring.substr(4, 2)) >> y;
 
-    hours = h;
-    minutes = min;
-    seconds = sec;
+	h = String(timeString.substr(0, 2).c_str()).toInt();
+	min = String(timeString.substr(2, 2).c_str()).toInt();
+	sec = String(timeString.substr(4, 5).c_str()).toDouble();
 
-    day = d;
-    month = m;
-    year = y;
+	hours = h;
+	minutes = min;
+	seconds = sec;
+}
 
+vector<string> DateTime::toString() const {
+	vector<string> ary;
+	char buff1[16];
+	char buff2[5];
+	unsigned char h = UTCFactor;
+	unsigned char d = day;
+	unsigned char m = month;
+	unsigned short y = year;
+
+	h += UTCFactor;
+	if (h >= 24) {
+		h -= 24;
+		d++;
+		if (d > monthLength[m - 1] || !(d == 29 && m == 2 && isLeapYear(y))) {
+			m++;
+			if (m > 12) {
+				m -= 12;
+				y++;
+			}
+		}
+	}
+
+	sprintf(buff1, "%02u.%02u.%02u", d, m, y);
+	ary.push_back(buff1);
+	sprintf(buff1, "%02u:%02u:%s", h, minutes, dtostrf(seconds, 5, 2, buff2));
+	ary.push_back(buff1);
+	return ary;
+}
+
+void DateTime::setUTCFactor(unsigned char factor) {
+	UTCFactor = factor;
+}
+
+unsigned char DateTime::getUTCFactor() const {
+	return UTCFactor;
 }
 
 
-/**
- * Calculates the Difference between the 2 parameters
- * @param d1 The first Date, where d2 gets subtracted from
- * @param d2 The Second Date, gets substracted from d1
- * @return a Date Object which has the difference of days as day, the difference of months as month and so on
- * @attention DATA IS NOT CHECKED FOR CONSISTENCY
- */
-DateTime operator-(const DateTime &d1, const DateTime &d2) {
-    short monthLength[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-    //Prüfe auf Schaltjahr
-    if ((d1.year % 4 == 0 && d1.year % 100 != 0) || d1.year % 400 == 0) {
-        monthLength[1] = 29;
-    }
-    double sec = 0;
-    short min = d1.minutes - d2.minutes;
-    short h = d1.hours - d2.hours;
-
-    short d = d1.getDay() - d2.getDay();
-    short m = d1.getMonth() - d2.getMonth();
-    short y = d1.getYear() - d2.getYear();
-
-    if (sec < 0) {
-        sec += 60;
-        min--;
-    }
-    if (min < 0) {
-        min += 60;
-        h--;
-    }
-    if (h < 0) {
-        h += 24;
-        d--;
-    }
-    if (d < 0) {
-        m--;
-        if (d2.month <= 1) {
-            d += 32;
-        } else {
-            d += monthLength[d2.month - 1];
-        }
-    }
-    if (m < 0) {
-        y--;
-        m += 13;
-    }
-    if (y < 0) {
-        y += 100;
-    }
-
-    return {d, m, y, h, min, sec};
-}
-
-/**
- * Constructor which initializes all fields
- * @attention DATA IS NOT CHECKED FOR CONSISTENCY
- */
-DateTime::DateTime(short day, short month, short year, short hours, short minutes, double seconds) {
-    this->hours = hours;
-    this->minutes = minutes;
-    this->seconds = seconds;
-
-    this->day = day;
-    this->month = month;
-    this->year = year;
-}
-
-short DateTime::getHours() const {
-    return hours;
-}
-
-short DateTime::getMinutes() const {
-    return minutes;
-}
-
-double DateTime::getSeconds() const {
-    return seconds;
-}
-
-short DateTime::getDay() const {
-    return day;
-}
-
-short DateTime::getMonth() const {
-    return month;
-}
-
-short DateTime::getYear() const {
-    return year;
-}
 

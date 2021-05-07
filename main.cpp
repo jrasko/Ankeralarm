@@ -1,15 +1,3 @@
-#include <string>
-#include <avr/io.h>
-#include <util/delay.h>
-#include <avr/interrupt.h>
-#include <Arduino.h>
-#include "GPS/GPS.h"
-#include "GPS/gpsData.h"
-#include <LiquidCrystal.h>
-#include <SoftwareSerial.h>
-
-using namespace std;
-
 #ifndef F_CPU
 /* In neueren Version der WinAVR/Mfile Makefile-Vorlage kann
    F_CPU im Makefile definiert werden, eine nochmalige Definition
@@ -23,38 +11,61 @@ using namespace std;
    von AVRStudio - daher Ausgabe einer Warnung falls F_CPU
    noch nicht definiert: */
 #warning "F_CPU war noch nicht definiert, wird nun nachgeholt mit 16000000"
-#define F_CPU 16000000UL  // Systemtakt in Hz - Definition als unsigned long beachten 
+#define F_CPU 16000000UL // Systemtakt in Hz - Definition als unsigned long beachten
 // Ohne ergeben sich unten Fehler in der Berechnung
 #endif
 
+#include <string>
+#include <util/delay.h>
+
+#include <Arduino.h>
+#include <LiquidCrystal.h>
+#include <SoftwareSerial.h>
+
+#include "GPS/GPS.h"
+#include "GPS/gpsData.h"
+#include "GUI/Utils.h"
+#include "GUI/GPSInfo.h"
+
+#include <avr/interrupt.h>
+#include <avr/eeprom.h>
+#include <avr/io.h>
+#include <avr/wdt.h>
+
+using namespace std;
+
 //---defines--------------------------------------------------
+
+#define buttonDebounceTime 10 //in ms
 #define maxIncomingMessageLength 100
 
 //---UART-Interface (Sereielle Schnittstelle für GPS Modul)
-#define BAUD 9600UL      // Baudrate
+#define BAUD 9600UL // Baudrate
 // Berechnungen
-#define UBRR_VAL ((F_CPU+BAUD*8)/(BAUD*16)-1)   // clever runden
-#define BAUD_REAL (F_CPU/(16*(UBRR_VAL+1)))     // Reale Baudrate
-#define BAUD_ERROR ((BAUD_REAL*1000)/BAUD) // Fehler in Promille, 1000 = kein Fehler.
-#define RX_Buffer_SIZE 128  //einstellung der Größe des emfangs Buffers
-#define TX_Buffer_SIZE 128  //einstelleng der gößes des sende Buffers;
+#define UBRR_VAL ((F_CPU + BAUD * 8) / (BAUD * 16) - 1) // clever runden
+#define BAUD_REAL (F_CPU / (16 * (UBRR_VAL + 1)))       // Reale Baudrate
+#define BAUD_ERROR ((BAUD_REAL * 1000) / BAUD)          // Fehler in Promille, 1000 = kein Fehler.
+#define RX_Buffer_SIZE 128                              //einstellung der Größe des emfangs Buffers
+#define TX_Buffer_SIZE 128                              //einstelleng der gößes des sende Buffers;
 
 #if ((BAUD_ERROR < 990) || (BAUD_ERROR > 1010))
-#error Systematischer Fehler der Baudrate grösser 1% und damit zu hoch! 
+#error Systematischer Fehler der Baudrate grösser 1% und damit zu hoch!
 #endif
 
-// ----IO-definition-----------------------------------------
-#define ledPin 14                    //LED pin 14
-#define debug_led 13                // onboard Led
-#define lcd_beleuchtung 11            // hintergundbeleuchtung des LCDs 
-#define schalter 7                    //Schalter 1
-#define summer 12                    //Summer
-#define encoder_a 2                //encoder pin 2 (32)
-#define encoder_b 3                //encoder pin 3
-#define encoder_button 4            //encoder pin 4
-#define LED_rot 9                    //RG-LED pin 8
-#define LED_grun 10                //RG-LED pin 9      
+#define EEPROM_DEF 0xFF //EEPORM 
 
+// ----IO-definition-----------------------------------------
+
+#define ledPin 0         //LED pin 14                       PC0
+#define debug_led 5       //onboard Led                     PB5
+//#define lcd_beleuchtung 3 //backlight LCD                   PB3
+#define returnButton 7         //Schalter 1                 PD7  PCINT 23
+#define summer 4          //Summer                          PB4
+#define encoder_a 2       //encoder pin 2 (32)              PD2                     
+#define encoder_b 3        //encoder pin 3                  PD3
+#define encoder_button 4   //encoder pin 4                  PD4
+#define LED_RED 0          //RG-LED pin 8                   PB0
+#define LED_GREEN 1  //RG-LED pin 9                         PB1
 
 //---global variables-----------------------------------------
 char serialBuffer[TX_Buffer_SIZE]; // Buffer für UART Übertragung
@@ -65,58 +76,58 @@ uint8_t serialWritePos = 0;
 uint8_t rxReadPos = 0;
 uint8_t rxWritePos = 0;
 
-volatile int encoderWert = 0;
+volatile bool encoderButtonFlag = 0;
+volatile bool returnButtonFlag = 0;
+volatile int encoderSpinFlag = 0;
+
+uint8_t brightness EEMEM = 150; //EEPROM variable
+ 
 string currentDataString;
 
-GPS myGPS;
-SoftwareSerial mySoftwareSerial(6, 7);//Rx Tx //zur Debugging
+// SoftwareSerial mySoftwareSerial(6, 7); //Rx Tx //zur Debugging
 
 //----Funktionsprototypen------------------------------------
 bool NMEA_read(string &currentString);
-
 void alarm();
-
-void interrupt_init(void);  //UART init
-
-void appendSerial(char c);  //UART recive
-void serialWrite(char *c);  //UART transmit
+void interrupt_init(); //UART init
+void appendSerial(char c); //UART recive
+void serialWrite(char *c); //UART transmit
 
 //---LCD init------------------------------------------------
-const int rs = 14, en = 15, d4 = 16, d5 = 17, d6 = 18, d7 = 19; // LCD pin number it is connected 
-LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+LiquidCrystal lcd(14, 15, 16, 17, 18, 19);
+Anzeige a(lcd);
 
 
+unsigned char debug = 0;  
 void setup() {
-
-    analogWrite(lcd_beleuchtung, 150); //einschlaten der Beleuchtung
+    a.props.eepromBrightnes = &brightness;
+    a.props.readEEPROM();
+    //analogWrite(lcd_beleuchtung, eeprom_read_byte(&brightness)); //einschlaten der Beleuchtung
     lcd.begin(16, 2);
     lcd.display();
     lcd.write("Ankeralarm V2");
     lcd.write("T.Zwiener");
-    mySoftwareSerial.begin(9600);
-    mySoftwareSerial.println("OK Setup");
-    delay(1000);
-    lcd.clear();
+    _delay_ms(1000);
     interrupt_init();
-
+    
 
     //-------------IO-config-------------------------------------------------
+    //Output Config
+    DDRB |= (1<<DDB0) | (1<<DDB1) | (1<<DDB3) | (1<<DDB5);  //LED_RED  LED_GREEN  LCD Bachklight  Onbord LED  
+    DDRC |= (1<<DDC0); // LED pin14
 
-    pinMode(ledPin, OUTPUT);
-    // pinMode(schalter, INPUT_PULLUP);
-    pinMode(summer, OUTPUT);
-    pinMode(encoder_a, INPUT);
-    pinMode(encoder_b, INPUT);
-    pinMode(encoder_button, INPUT_PULLUP);
-    pinMode(LED_rot, OUTPUT);
-    pinMode(LED_grun, OUTPUT);
-    pinMode(debug_led, OUTPUT);
+    //Input Config
+    DDRB &= ~(1<<DDB4);
+    DDRD &= ~((1<<DDD2)| (1<<DDD3) | (1<<DDD4) | (1<<DDD7));//Input PD2 PD3 PD4 PD7
+    PORTD |= (1<<PORTB4) | (1<<PORT7); //Kofiguration encoderButton  returnButton PullUp 
 
+    pinMode( 11 ,OUTPUT);
 
+    a.activate(new GPSInfo);
+    
 }
 
 void updateGPSData() {
-
     if (NMEA_read(currentDataString)) {
         const gpsData &data = gpsData(currentDataString.c_str());
         currentDataString.clear();
@@ -125,56 +136,62 @@ void updateGPSData() {
             return;
         }
         //Update bei korrekten Daten
-        myGPS.update(data);
+        a.props.myGPS.update(data);
     }
 }
 
 void loop() {
-
     updateGPSData(); //Timing der updatefunktion ist wichting. entweder ausglöst durch intrupt oder ca alle 10s(update rate des gps Moduls)
-    //lcd.write(myGPS.getCurrentPosition().toString().c_str());
 
-    
-    if (myGPS.getGPSQuality() > 1) {
+    while (encoderSpinFlag > 0) {
+        a.encoderRight();
+        encoderSpinFlag--;
+    }
+    while (encoderSpinFlag < 0) {
+        a.encoderLeft();
+        encoderSpinFlag++;
+    }
+
+    if (returnButtonFlag && (PIND &(1<<PIND7))!=0) { //falling edge detection
+        a.buttonReturn();
+        returnButtonFlag = false;
+    }
+
+    if (encoderButtonFlag && (PIND &(1<<PIND4))!=0) { //falling edge detection
+        a.encoderPush();
+        encoderButtonFlag = false;
+    }
+
+    if (a.props.myGPS.getGPSQuality() > 1) {
         //LCD Outputs
-
     } else {
         //print no GPS
     }
 
-
     //GPS angeschaltet
-    while (/* alarmmode */ random()) {
-        vector<Position> posCollection;
-
-        for (int i = 0; i < 4; ++i) {
-            updateGPSData();
-            posCollection.push_back(myGPS.getCurrentPosition());
-        }
-        const Position startPosition = getMedian(posCollection);
-
-        //Radius einstellen
-        unsigned int radius = 100;
-
-        // Abstand zur Ursprungsposition testen.
-        while (random()) {
-            updateGPSData();
-            if (startPosition.distanceTo(myGPS.getCurrentPosition()) > radius) {
-                alarm();
-            }
-        }
-
-
-    }
-
-
+//    while (/* alarmmode */ random() < 0.5) {
+//        vector<Position> posCollection;
+//
+//        for (int i = 0; i < 4; ++i) {
+//            updateGPSData();
+//            posCollection.push_back(a.props.myGPS.getCurrentPosition());
+//        }
+//        const Position startPosition = getMedian(posCollection);
+//
+//        //Radius einstellen
+//        unsigned int radius = 100;
+//
+//        // Abstand zur Ursprungsposition testen.
+//        while (random() < 0.5) {
+//            updateGPSData();
+//            if (startPosition.distanceTo(a.props.myGPS.getCurrentPosition()) > radius) {
+//                alarm();
+//            }
+//        }
+//    }
 }
 
-void alarm() {
-    // Aktiviere Alarm
-}
-
-bool NMEA_read(string &currentString) {                      // Auslesen des "Ringspeichers" und sortieren der NMEA Sätze
+bool NMEA_read(string &currentString) { // Auslesen des "Ringspeichers" und sortieren der NMEA Sätze
     char nextChar;
     static bool newDataAvailable = false;
     static int countIncomingChars = 0;
@@ -186,7 +203,7 @@ bool NMEA_read(string &currentString) {                      // Auslesen des "Ri
     // Hier ansetzen falls letzter eingehender char benötigt wird
     nextChar = rxBuffer[rxReadPos];
     if (nextChar == '$') {
-        // Beginning of a new DataString        
+        // Beginning of a new DataString
         newDataAvailable = true;
     }
     if (!newDataAvailable) {
@@ -219,7 +236,7 @@ bool NMEA_read(string &currentString) {                      // Auslesen des "Ri
 }
 
 //----UART-Interface (Sereielle Schnittstelle für GPS Modul)------------------------
-void appendSerial(char c) {         //Transmit
+void appendSerial(char c) { //Transmit
     serialBuffer[serialWritePos] = c;
     serialWritePos++;
 
@@ -228,7 +245,7 @@ void appendSerial(char c) {         //Transmit
     }
 }
 
-void serialWrite(char c[]) {       //receive
+void serialWrite(char c[]) { //receive
     for (uint8_t i = 0; i < strlen(c); i++) {
         appendSerial(c[i]);
     }
@@ -237,13 +254,11 @@ void serialWrite(char c[]) {       //receive
     }
 }
 
-ISR(USART_TX_vect){     //receive Ring-Buffer
-        if (serialReadPos != serialWritePos)
-        {
+ISR(USART_TX_vect){
+        //receive Ring-Buffer
+        if (serialReadPos != serialWritePos){
             UDR0 = serialBuffer[serialReadPos];
-
             serialReadPos++;
-
             if (serialReadPos >= TX_Buffer_SIZE) {
                 serialReadPos = 0;
             }
@@ -258,97 +273,130 @@ char peekChar(void) {
     return ret;
 }
 
-ISR(USART_RX_vect){     //Transmit Ring-Buffer
-
-        rxBuffer[rxWritePos] = UDR0 ;
-
+ISR(USART_RX_vect){
+        //Transmit Ring-Buffer
+        rxBuffer[rxWritePos] = UDR0;
         rxWritePos++;
         if (rxWritePos >= RX_Buffer_SIZE){
             rxWritePos = 0;
         }
 }
 
-
 void interrupt_init(void) {
 
-    cli(); //disable Intrrupts 
+    cli(); //disable Intrrupts
 
     //---config des UART-Interface (Sereielle Schnittstelle für GPS Modul)------------
-    UBRR0H = UBRR_VAL >> 8;   //Festlegung der Baudrate
+    UBRR0H = UBRR_VAL >> 8; //Festlegung der Baudrate
     UBRR0L = UBRR_VAL & 0xFF;
 
     UCSR0B = (1 << TXEN0) | (1 << RXEN0) | (1 << TXCIE0) |
-             (1 << RXCIE0); // Aktivierung von Tx | Interrupt aktivierung bei RXCn flage=true 
-    UCSR0C = (1 << UCSZ01) | (1 << UCSZ00);  // Asynchron 8N
+             (1 << RXCIE0);                 // Aktivierung von Tx | Interrupt aktivierung bei RXCn flage=true
+    UCSR0C = (1 << UCSZ01) | (1 << UCSZ00); // Asynchron 8N
 
     //---config des Encoders Interrupts-----------------------------------------------
-   // EIMSK = (1 << INT0);
-   // EICRA = (1 << ISC01) | (1 << ISC00);
+    EIMSK = (1 << INT0);
+    EICRA = (1 << ISC01) | (1 << ISC00);
+
+    PCICR |= (1 << PCIE2);    //Pin change Interrupt aktiviern
+    PCMSK2 |= (1 << PCINT20) | (1 << PCINT23); //Pin change Interrupt Maskieren für Pin 4 (PCINT 20)
 
     //---config der Timer-------------------------------------------------------------
 
-    // Timer 1	
+    // Timer 1 //Status LEDs
     TCCR1A = 0;
     TCCR1B = 0;
-    TCNT1 = 3036;                                  // Timer nach obiger Rechnung vorbelegen so das t=1s
-    TCCR1B |= (1 << CS12);                          // 256 als Prescale-Wert spezifizieren
-    TIMSK1 |= (1 << TOIE1);                         // Timer Overflow Interrupt aktivieren  
+    TCNT1 = 3036;           // Timer nach obiger Rechnung vorbelegen so das t=1s
+    TCCR1B |= (1 << CS12);  // 256 als Prescale-Wert spezifizieren
+    TIMSK1 |= (1 << TOIE1); // Timer Overflow Interrupt aktivieren
+
+    // Timer 2 //Dispaly Timeout
+
+
+
+    //--Watchdog Timer------------------------------
+
+    // WDTCSR |= (1<<WDCE) | (1<<WDE);
+    // WDTCSR = (1<<WDIE)|(1<<WDE) | (1<<WDP3); // 4s / no interrupt, system reset
 
     sei(); //enable Interrupts
 }
 
 //---Interruptrutine------------------------------------------
 ISR(INT0_vect){
-
-        //---------------Encoder-------------------------------------------
-        static unsigned long lastInterruptTime = 5;
-        unsigned long interruptTime = millis();
-        int messungPin1 = 0, messungPin1Alt = 0;
-        // If interrupts come faster than 5ms, assume it's a bounce and ignore
-        if (interruptTime - lastInterruptTime > 1) {
-            messungPin1 = digitalRead(encoder_a);
-            if ((messungPin1 == HIGH) && (messungPin1Alt == LOW)) {
-                if (digitalRead(encoder_b) == HIGH) {
-                    encoderWert++;
-                } else {
-                    encoderWert--;
-                }
+    //---------------Encoder-------------------------------------------
+    static unsigned long lastInterruptTime = buttonDebounceTime;
+    unsigned long interruptTime = millis();
+    bool messungPin1 = 0, messungPin1Alt = 0;
+    // If interrupts come faster than 5ms, assume it's a bounce and ignore
+    if (interruptTime - lastInterruptTime > 1)    {
+        
+        messungPin1 = ((PIND & (1<<encoder_a)) == 0 )? 0 : 1; 
+        if ((messungPin1 == HIGH) && (messungPin1Alt == LOW)) {
+            if ((PIND & (1<<PIND3))!=0) {
+                encoderSpinFlag--;
+            } else {
+                encoderSpinFlag++;
             }
-            messungPin1Alt = messungPin1;
-
-            //Restrict value from 0 to +200
-            //radius = min(200, max(0,radius));	
         }
-        // Keep track of when we were here last (no more than every 5ms)
+        messungPin1Alt = messungPin1;
+
+        //Restrict value from 0 to +200
+        //radius = min(200, max(0,radius));
+    }
+    // Keep track of when we were here last (no more than every 5ms)
+    lastInterruptTime = interruptTime;
+}
+
+ISR(PCINT2_vect)
+{
+        static unsigned long lastInterruptTime = 100;
+        unsigned long interruptTime = millis();
+        if (interruptTime - lastInterruptTime > 1)
+        {
+            if ((PIND & (1<<encoder_button)) == 0) {
+                encoderButtonFlag = true;
+            }
+            if ((PIND & (1<<returnButton)) == 0) {
+                returnButtonFlag = true;                        
+            }
+
+        }
         lastInterruptTime = interruptTime;
 }
-ISR(TIMER1_OVF_vect){
+
+ISR(TIMER1_OVF_vect)
+{
 
         //------------------------------GPS-Status LED---------------------------
 
-        TCNT1 = 3036;   // Timer vorbelegt so dass delta_T= 1s
-        switch (myGPS.getGPSQuality()){
-            case 0:
-                digitalWrite(LED_rot, digitalRead(LED_rot) ^ 1);
-            digitalWrite(LED_grun, LOW);
+        TCNT1 = 3036; // Timer vorbelegt so dass delta_T= 1s
+        
+        switch (a.props.myGPS.getGPSQuality()){
+            case 0:              
+            PORTB ^= (1<<LED_RED); //toggle LED_RED 
+            PORTB &= ~(1<<LED_GREEN); //write LED_GREEN LOW  
             break;
+
             case 1:
-                digitalWrite(LED_grun, LOW);
-            digitalWrite(LED_rot, HIGH);
+            PORTB &= ~(1<<LED_GREEN); //write LED_GREEN LOW
+            PORTB |= (1<<LED_RED);
             break;
+
             case 2:
-                digitalWrite(LED_grun, HIGH);
-            digitalWrite(LED_rot, HIGH);
+            PORTB |= (1<<LED_GREEN); //write LED_GREEN HIGH
+            PORTB |= (1<<LED_RED);
             break;
+
             case 3:
-                digitalWrite(LED_grun, HIGH);
-            digitalWrite(LED_rot, LOW);
+            PORTB |=(1<<LED_GREEN); //write LED_GREEN HIGH
+            PORTB &= ~(1<<LED_RED);     
             break;
+
             case 4:
-                digitalWrite(LED_grun, digitalRead(LED_grun) ^ 1);
-            digitalWrite(LED_rot, LOW);
+            PORTB ^= (1<<LED_GREEN);
+            PORTB &= ~(1<<LED_RED);
             break;
         }
-
-
+        
 }
