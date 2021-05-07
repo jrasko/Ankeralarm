@@ -114,7 +114,8 @@ void HDOP::encoderLeft() {
 
 void HDOP::getLCDOutput() {
     char buf[16];
-    sprintf(buf,"%f",anzeige->props.myGPS.getHDOP());
+    //sprintf(buf,"%f",anzeige->props.myGPS.getHDOP());
+    dtostrf(anzeige->props.myGPS.getHDOP(), 4, 1, buf );
     anzeige->print2Lines("HDOP", buf );
 }
 
