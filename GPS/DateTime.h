@@ -13,21 +13,33 @@ using namespace std;
 class DateTime {
 
 public:
-    void updateDate(const string &dateString);
+	void updateDate(const string &dateString);
 
-    void updateTime(const string &timeString);
+	void updateTime(const string &timeString);
 
-    vector<string> toString() const;
+	vector<string> toString() const;
 
+	void setUTCFactor(unsigned char factor);
+
+	unsigned char getUTCFactor() const;
 
 private:
-    double seconds = 0.0;
-    short minutes = 0;
-    short hours = 0;
+	void adjustTime();
 
-    short day = 0;
-    short month = 0;
-    short year = 0;
+	static inline bool isLeapYear(unsigned short y) {
+		return (y % 4 == 0 && y % 100 != 0) || (y % 400 != 0);
+	}
+
+	const unsigned char monthLength[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+	double seconds = 0.0;
+	unsigned char minutes = 0;
+	unsigned char hours = 0;
+
+	unsigned char day = 0;
+	unsigned char month = 0;
+	unsigned short year = 0;
+
+	unsigned char UTCFactor = 0;
 
 };
 
