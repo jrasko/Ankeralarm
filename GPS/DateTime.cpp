@@ -16,7 +16,6 @@ void DateTime::updateDate(const string &dateString) {
 	day = d;
 	month = m;
 	year = y;
-	adjustTime();
 }
 
 void DateTime::updateTime(const string &timeString) {
@@ -31,40 +30,39 @@ void DateTime::updateTime(const string &timeString) {
 	hours = h;
 	minutes = min;
 	seconds = sec;
-	adjustTime();
 }
 
 vector<string> DateTime::toString() const {
 	vector<string> ary;
 	char buff1[16];
 	char buff2[5];
-	sprintf(buff1, "%02u.%02u.%02u", day, month, year);
+	unsigned char h = UTCFactor;
+	unsigned char d = day;
+	unsigned char m = month;
+	unsigned short y = year;
+
+	h += UTCFactor;
+	if (h >= 24) {
+		h -= 24;
+		d++;
+		if (d > monthLength[m - 1] || !(d == 29 && m == 2 && isLeapYear(y))) {
+			m++;
+			if (m > 12) {
+				m -= 12;
+				y++;
+			}
+		}
+	}
+
+	sprintf(buff1, "%02u.%02u.%02u", d, m, y);
 	ary.push_back(buff1);
-	sprintf(buff1, "%02u:%02u:%s", hours, minutes, dtostrf(seconds,5, 2, buff2));
+	sprintf(buff1, "%02u:%02u:%s", h, minutes, dtostrf(seconds, 5, 2, buff2));
 	ary.push_back(buff1);
 	return ary;
 }
 
 void DateTime::setUTCFactor(unsigned char factor) {
 	UTCFactor = factor;
-	adjustTime();
-}
-
-void DateTime::adjustTime() {
-	hours += UTCFactor;
-	if (hours < 24) {
-		return;
-	}
-	hours -= 24;
-	day++;
-	if (day <= monthLength[month - 1] || (day == 29 && month == 2 && isLeapYear(year))) {
-		return;
-	}
-	month++;
-	if (month <= 12) {
-		return;
-	}
-	year++;
 }
 
 unsigned char DateTime::getUTCFactor() const {
