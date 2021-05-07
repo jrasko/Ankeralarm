@@ -82,9 +82,25 @@ public:
     void getLCDOutput() override;
 };
 
-class UTCLocal : public Zustand {
+class UTCFactor : public Zustand {
 public:
     void encoderPush() override;
+
+    void encoderLeft() override;
+
+    void encoderRight() override;
+
+    void buttonReturn() override;
+
+    void getLCDOutput() override;
+};
+class ChangeUTCFactor : public Zustand {
+private:
+	unsigned char factor;
+public:
+	ChangeUTCFactor();
+
+	void encoderPush() override;
 
     void encoderLeft() override;
 
