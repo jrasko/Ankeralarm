@@ -45,7 +45,7 @@ void DisplayBrightness::buttonReturn() {
 void ChangeDisplayBrightness::encoderPush() {
     // Save Brightness
     this->anzeige->props.displayBrighness = brightness;
-    this->anzeige->props.writeEEPROM(brightness);
+    this->anzeige->props.writeEEPROM();
     this->anzeige->setZustand(new DisplayBrightness);
 }
 
