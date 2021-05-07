@@ -30,7 +30,7 @@ void DisplayBrightness::getLCDOutput() {
 
 void DisplayBrightness::encoderLeft() {
     // TODO change Radius if alarm is active
-    this->anzeige->setZustand(new UTCLocal);
+    this->anzeige->setZustand(new UTCFactor);
 }
 
 void DisplayBrightness::encoderRight() {
@@ -101,7 +101,7 @@ void Timeout::encoderLeft() {
 }
 
 void Timeout::encoderRight() {
-    this->anzeige->setZustand(new UTCLocal);
+    this->anzeige->setZustand(new UTCFactor);
 }
 
 void Timeout::buttonReturn() {
@@ -143,23 +143,60 @@ ChangeTimeout::ChangeTimeout() {
 
 
 // UTC/Local Time
-void UTCLocal::encoderPush() {
-    // TODO Switch between UTC/Local Time
+void UTCFactor::encoderPush() {
+   this->anzeige->setZustand(new ChangeUTCFactor);
 }
 
-void UTCLocal::getLCDOutput() {
+void UTCFactor::getLCDOutput() {
     anzeige->lcd.print("UTC/Local");
 }
 
-void UTCLocal::encoderLeft() {
+void UTCFactor::encoderLeft() {
     this->anzeige->setZustand(new Timeout);
 }
 
-void UTCLocal::encoderRight() {
+void UTCFactor::encoderRight() {
     // TODO change Radius if alarm is active
     this->anzeige->setZustand(new DisplayBrightness);
 }
 
-void UTCLocal::buttonReturn() {
+void UTCFactor::buttonReturn() {
     this->anzeige->setZustand(new Settings);
+}
+
+void ChangeUTCFactor::encoderPush() {
+	anzeige->props.UTCFactor=factor;
+	this->anzeige->setZustand(new UTCFactor);
+}
+
+void ChangeUTCFactor::getLCDOutput() {
+	char buf[16];
+	sprintf(buf,"%u",0);
+	anzeige->print2Lines("ChangeUTCFactor", buf);
+}
+
+void ChangeUTCFactor::encoderLeft() {
+	factor--;
+	if (factor < 12){
+		factor = 12;
+	}
+	anzeige->lcd.clear();
+	this->getLCDOutput();
+}
+
+void ChangeUTCFactor::encoderRight() {
+	factor++;
+	if (factor > 12){
+		factor = -12;
+	}
+	anzeige->lcd.clear();
+	this->getLCDOutput();
+}
+
+void ChangeUTCFactor::buttonReturn() {
+    this->anzeige->setZustand(new UTCFactor);
+}
+
+ChangeUTCFactor::ChangeUTCFactor() {
+	factor = anzeige->props.UTCFactor;
 }
