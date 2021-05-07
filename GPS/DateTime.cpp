@@ -36,13 +36,29 @@ vector<string> DateTime::toString() const {
 	vector<string> ary;
 	char buff1[16];
 	char buff2[5];
-	unsigned char h = UTCFactor;
+	unsigned char h = hours;
 	unsigned char d = day;
 	unsigned char m = month;
 	unsigned short y = year;
 
 	h += UTCFactor;
-	if (h >= 24) {
+	if (h >= 244) {
+		h = 24 - (256 - h);
+		d--;
+		if (d == 0) {
+			if (m == 1) {
+				d = 31;
+				m = 12;
+				y--;
+			} else if (d == 1 && m == 3 && isLeapYear(y)) {
+				d = 29;
+				m = 2;
+			} else {
+				d = monthLength[(m - 2)];
+				m--;
+			}
+		}
+	} else if (h >= 24) {
 		h -= 24;
 		d++;
 		if (d > monthLength[m - 1] || !(d == 29 && m == 2 && isLeapYear(y))) {
@@ -53,6 +69,7 @@ vector<string> DateTime::toString() const {
 			}
 		}
 	}
+
 
 	sprintf(buff1, "%02u.%02u.%02u", d, m, y);
 	ary.push_back(buff1);
