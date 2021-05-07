@@ -13,7 +13,6 @@ public:
     bool alarmActive = false;
     unsigned char displayBrighness = 0;
     unsigned char displayTimeout = 0;
-    unsigned char UTCFactor = 0;
 
     // TODO init with EPROM, set Display in setup
     uint8_t *eepromBrightnes;

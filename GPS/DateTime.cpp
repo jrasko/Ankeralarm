@@ -65,5 +65,9 @@ void DateTime::adjustTime() {
 	year++;
 }
 
+unsigned char DateTime::getUTCFactor() const {
+	return UTCFactor;
+}
+
 
 
