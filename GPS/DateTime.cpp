@@ -38,9 +38,9 @@ vector<string> DateTime::toString() const {
 	vector<string> ary;
 	char buf[16];
 	sprintf(buf, "%02u.%02u.%02u", day, month, year);
-	ary.emplace_back(buf);
+	ary.push_back(buf);
 	sprintf(buf, "%02u:%02u:%f", hours, minutes, seconds);
-	ary.emplace_back(buf);
+	ary.push_back(buf);
 	return ary;
 }
 

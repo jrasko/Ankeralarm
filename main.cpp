@@ -58,7 +58,7 @@ using namespace std;
 
 #define ledPin 0         //LED pin 14                       PC0
 #define debug_led 5       //onboard Led                     PB5
-#define lcd_beleuchtung 3 //backlight LCD                   PB3
+//#define lcd_beleuchtung 3 //backlight LCD                   PB3
 #define returnButton 7         //Schalter 1                 PD7  PCINT 23
 #define summer 4          //Summer                          PB4
 #define encoder_a 2       //encoder pin 2 (32)              PD2                     
@@ -121,6 +121,7 @@ void setup() {
     DDRD &= ~((1<<DDD2)| (1<<DDD3) | (1<<DDD4) | (1<<DDD7));//Input PD2 PD3 PD4 PD7
     PORTD |= (1<<PORTB4) | (1<<PORT7); //Kofiguration encoderButton  returnButton PullUp 
 
+    pinMode( 11 ,OUTPUT);
 
     a.activate(new GPSInfo);
     
@@ -151,12 +152,12 @@ void loop() {
         encoderSpinFlag++;
     }
 
-    if (returnButtonFlag && digitalRead(returnButton)) { //falling edge detection
+    if (returnButtonFlag && (PIND &(1<<PIND7))!=0) { //falling edge detection
         a.buttonReturn();
         returnButtonFlag = false;
     }
 
-    if (encoderButtonFlag && digitalRead(encoder_button)) { //falling edge detection
+    if (encoderButtonFlag && (PIND &(1<<PIND4))!=0) { //falling edge detection
         a.encoderPush();
         encoderButtonFlag = false;
     }
@@ -332,7 +333,7 @@ ISR(INT0_vect){
         
         messungPin1 = ((PIND & (1<<encoder_a)) == 0 )? 0 : 1; 
         if ((messungPin1 == HIGH) && (messungPin1Alt == LOW)) {
-            if ((PINB & (1<<encoder_b)) == LOW) {
+            if ((PIND & (1<<PIND3))!=0) {
                 encoderSpinFlag--;
             } else {
                 encoderSpinFlag++;

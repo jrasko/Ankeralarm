@@ -96,7 +96,7 @@ public:
 };
 class ChangeUTCFactor : public Zustand {
 private:
-	unsigned char factor;
+	char factor;
 public:
 	ChangeUTCFactor();
 

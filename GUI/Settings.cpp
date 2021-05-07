@@ -171,13 +171,13 @@ void ChangeUTCFactor::encoderPush() {
 
 void ChangeUTCFactor::getLCDOutput() {
 	char buf[16];
-	sprintf(buf,"%u",0);
+	sprintf(buf,"%i",factor);
 	anzeige->print2Lines("ChangeUTCFactor", buf);
 }
 
 void ChangeUTCFactor::encoderLeft() {
 	factor--;
-	if (factor < 12){
+	if (factor < -12){
 		factor = 12;
 	}
 	anzeige->lcd.clear();
