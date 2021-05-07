@@ -21,6 +21,8 @@ public:
 
 	void setUTCFactor(unsigned char factor);
 
+	unsigned char getUTCFactor() const;
+
 private:
 	void adjustTime();
 
@@ -28,7 +30,6 @@ private:
 		return (y % 4 == 0 && y % 100 != 0) || (y % 400 != 0);
 	}
 
-private:
 	const unsigned char monthLength[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 	double seconds = 0.0;
 	unsigned char minutes = 0;

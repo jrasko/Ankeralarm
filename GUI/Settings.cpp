@@ -165,7 +165,7 @@ void UTCFactor::buttonReturn() {
 }
 
 void ChangeUTCFactor::encoderPush() {
-	anzeige->props.UTCFactor=factor;
+	anzeige->props.myGPS.getLastTimeStamp().setUTCFactor(factor);
 	this->anzeige->setZustand(new UTCFactor);
 }
 
@@ -198,5 +198,5 @@ void ChangeUTCFactor::buttonReturn() {
 }
 
 ChangeUTCFactor::ChangeUTCFactor() {
-	factor = anzeige->props.UTCFactor;
+	factor = anzeige->props.myGPS.getLastTimeStamp().getUTCFactor();
 }
