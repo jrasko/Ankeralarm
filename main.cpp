@@ -53,19 +53,9 @@ using namespace std;
 #endif
 
 #define EEPROM_DEF 0xFF //EEPORM 
-/*
+
 // ----IO-definition-----------------------------------------
-#define ledPin 14          //LED pin 14                     PC0
-#define debug_led 13       //onboard Led                    PB5
-#define lcd_beleuchtung 11 //backlight LCD                  PB3
-#define returnButton 7         //Schalter 1                 PD7  PCINT 23
-#define summer 12          //Summer                         PB4
-#define encoder_a 2        //encoder pin 2 (32)             PD2                     
-#define encoder_b 3        //encoder pin 3                  PD3
-#define encoder_button 4   //encoder pin 4                  PD4
-#define LED_rot 9          //RG-LED pin 8                   PB0
-#define LED_grun 10        //RG-LED pin 9                   PB1
-*/
+
 #define ledPin 0         //LED pin 14                       PC0
 #define debug_led 5       //onboard Led                     PB5
 #define lcd_beleuchtung 3 //backlight LCD                   PB3
@@ -122,20 +112,6 @@ void setup() {
     
 
     //-------------IO-config-------------------------------------------------
-    /*
-    pinMode(ledPin, OUTPUT);                
-    pinMode(schalter, INPUT_PULLUP);
-    pinMode(summer, OUTPUT);
-    pinMode(encoder_a, INPUT);
-    pinMode(encoder_b, INPUT);
-    pinMode(encoder_button, INPUT_PULLUP);
-    pinMode(LED_RED, OUTPUT);
-    pinMode(LED_GREEN, OUTPUT);
-    pinMode(debug_led, OUTPUT);
-    pinMode(returnButton, INPUT_PULLUP);
-    */
-
-
     //Output Config
     DDRB |= (1<<DDB0) | (1<<DDB1) | (1<<DDB3) | (1<<DDB5);  //LED_RED  LED_GREEN  LCD Bachklight  Onbord LED  
     DDRC |= (1<<DDC0); // LED pin14
