@@ -36,20 +36,22 @@ void DateTime::updateTime(const string &timeString) {
 
 vector<string> DateTime::toString() const {
 	vector<string> ary;
-	char buf[16];
-	sprintf(buf, "%02u.%02u.%02u", day, month, year);
-	ary.push_back(buf);
-	sprintf(buf, "%02u:%02u:%f", hours, minutes, seconds);
-	ary.push_back(buf);
+	char buff1[16];
+	char buff2[5];
+	sprintf(buff1, "%02u.%02u.%02u", day, month, year);
+	ary.push_back(buff1);
+	sprintf(buff1, "%02u:%02u:%s", hours, minutes, dtostrf(seconds,5, 2, buff2));
+	ary.push_back(buff1);
 	return ary;
 }
 
 void DateTime::setUTCFactor(unsigned char factor) {
 	UTCFactor = factor;
+	adjustTime();
 }
 
 void DateTime::adjustTime() {
-	hours++;
+	hours += UTCFactor;
 	if (hours < 24) {
 		return;
 	}

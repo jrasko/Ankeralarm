@@ -18,7 +18,7 @@ public:
 
     unsigned short getGPSQuality() const;
 
-    DateTime &getLastTimeStamp() const;
+    const DateTime &getLastTimeStamp() const;
 
     double getHDOP() const;
 
