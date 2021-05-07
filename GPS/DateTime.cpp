@@ -62,9 +62,10 @@ vector<string> DateTime::toString() const {
 		h -= 24;
 		d++;
 		if (d > monthLength[m - 1] || !(d == 29 && m == 2 && isLeapYear(y))) {
+			d = 1;
 			m++;
 			if (m > 12) {
-				m -= 12;
+				m = 1;
 				y++;
 			}
 		}
