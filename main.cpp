@@ -61,12 +61,13 @@ using namespace std;
 #define debug_led 5       //onboard Led                     PB5
 //#define lcd_beleuchtung 3 //backlight LCD                   PB3
 #define returnButton 7         //Schalter 1                 PD7  PCINT 23
+#define snozeButton 6			//							PD6
 #define summer 4          //Summer                          PB4
 #define encoder_a 2       //encoder pin 2 (32)              PD2                     
 #define encoder_b 3        //encoder pin 3                  PD3
 #define encoder_button 4   //encoder pin 4                  PD4
-#define LED_RED 0          //RG-LED pin 8                   PB0
-#define LED_GREEN 1  //RG-LED pin 9                         PB1
+#define LED_RED 1          //RG-LED pin 8                   PB1
+#define LED_GREEN 2  //RG-LED pin 9                         PB2
 
 //---global variables-----------------------------------------
 
@@ -80,7 +81,8 @@ uint8_t rxWritePos = 0;
 
 volatile bool encoderButtonFlag = 0;
 volatile bool returnButtonFlag = 0;
-volatile int encoderSpinFlag = 0;
+volatile bool snoozeButtonFlag = false;
+volatile char encoderSpinFlag = 0;
 
 uint8_t brightness EEMEM = 150; //EEPROM variable
 
@@ -118,13 +120,13 @@ void setup() {
 
 	//-------------IO-config-------------------------------------------------
 	//Output Config
-	DDRB |= (1 << DDB0) | (1 << DDB1) | (1 << DDB3) | (1 << DDB5);  //LED_RED  LED_GREEN  LCD Bachklight  Onbord LED
+	DDRB |= (1 << DDB0) | (1 << DDB1) | (1 << DDB2)| (1 << DDB3) | (1 << DDB5);  //LED_RED  LED_GREEN  LCD Bachklight  Onbord LED
 	DDRC |= (1 << DDC0); // LED pin14
 
 	//Input Config
 	DDRB &= ~(1 << DDB4);
-	DDRD &= ~((1 << DDD2) | (1 << DDD3) | (1 << DDD4) | (1 << DDD7));//Input PD2 PD3 PD4 PD7
-	PORTD |= (1 << PORTB4) | (1 << PORT7); //Kofiguration encoderButton  returnButton PullUp
+	DDRD &= ~((1 << DDD2) | (1 << DDD3) | (1 << DDD4) | (1 << DDD7)| (1<<DDD6));//Input PD2 PD3 PD4 PD7
+	PORTD |= (1 << PORTB4) | (1 << PORTD7) | (1 << PORTB6); //Kofiguration encoderButton  returnButton PullUp
 
 	pinMode(11, OUTPUT);
 
@@ -150,8 +152,21 @@ void loop() {
 
 	if (a.props.alarmActive) {
 		unsigned long distance = a.props.centralPosition.distanceTo(a.props.myGPS.getCurrentPosition());
+		bool alarmIsLow = true;
 		while (distance > a.props.alarmRadius) {
-			// TODO Alarm
+			if (alarmIsLow){
+				alarmIsLow = false;
+				
+				PORTB |=(1<<PORTB4);
+			}
+
+			if ((PIND &(1<<PIND6))==0){
+				PORTB &=~(1<<PORTB4);
+				snoozeButtonFlag = false;
+				a.props.alarmActive = false;
+				break;
+			}
+			
 		}
 	}
 
