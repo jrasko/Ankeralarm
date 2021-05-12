@@ -34,7 +34,6 @@ private:
     Zustand *zustand;
 public:
     Properties props;
-public:
     LiquidCrystal &lcd;
     
 

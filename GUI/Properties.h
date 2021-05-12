@@ -14,6 +14,7 @@ class Properties {
 public:
     GPS myGPS;
     bool alarmActive = false;
+    unsigned char alarmRadius = 25;
     Position centralPosition = Position(LatitudeDegree(0),LongitudeDegree(0));
     unsigned char displayBrighness = 0;
     unsigned char displayTimeout = 0;

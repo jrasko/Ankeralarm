@@ -3,15 +3,19 @@
 
 // Alarm
 void Alarm::encoderLeft() {
-    this->anzeige->setZustand(new Settings);
+	this->anzeige->setZustand(new Settings);
 }
 
 void Alarm::encoderPush() {
+	if (!this->anzeige->props.alarmActive) {
+		this->anzeige->setZustand(new FindPostition);
+	} else {
 
+	}
 }
 
 void Alarm::encoderRight() {
-    this->anzeige->setZustand(new GPSInfo);
+	this->anzeige->setZustand(new GPSInfo);
 }
 
 void Alarm::buttonReturn() {
@@ -19,7 +23,7 @@ void Alarm::buttonReturn() {
 }
 
 void Alarm::getLCDOutput() {
-    anzeige->lcd.print("Alarm");
+	anzeige->lcd.print("Alarm");
 }
 
 // FindPosition
@@ -39,43 +43,56 @@ void FindPostition::buttonReturn() {
 }
 
 void FindPostition::getLCDOutput() {
-    // TODO 3 GPS Anfragen mit zeitlichem Timeout + mitteln
-    vector<Position> posCollection;
-    anzeige->print2Lines("Please wait", "Find Position");
-    posCollection.reserve(4);
-    for (int i = 0; i < 4; ++i) {
-        // wait for updated GPS Data
-        bool update;
-        do {
-            update = anzeige->props.updateGPSData();
-        } while (! update);
-        posCollection.push_back(anzeige->props.myGPS.getCurrentPosition());
-    }
-    anzeige->props.centralPosition = getMedian(posCollection);
+	// TODO 3 GPS Anfragen mit zeitlichem Timeout + mitteln
+	vector<Position> posCollection;
+	anzeige->print2Lines("Please wait", "Find Position");
+	posCollection.reserve(4);
+	for (int i = 0; i < 4; ++i) {
+		// wait for updated GPS Data
+		bool update;
+		do {
+			update = anzeige->props.updateGPSData();
+		} while (!update);
+		posCollection.push_back(anzeige->props.myGPS.getCurrentPosition());
+	}
+	anzeige->props.centralPosition = getMedian(posCollection);
 
 
 }
 
 // SetRadius
 void SetRadius::encoderLeft() {
-
+	if (radius < 5) {
+		radius = 5;
+	}
+	radius -= 5;
+	anzeige->lcd.clear();
+	getLCDOutput();
 }
 
 void SetRadius::encoderPush() {
-
+	this->anzeige->props.alarmRadius = radius;
+	this->anzeige->setZustand(new AreUSure);
 }
 
 void SetRadius::encoderRight() {
-
+	if (radius > 250) {
+		radius = 250;
+	}
+	radius += 5;
+	anzeige->lcd.clear();
+	getLCDOutput();
 }
 
 void SetRadius::buttonReturn() {
-
+	this->anzeige->setZustand(new GPSInfo);
 }
 
 void SetRadius::getLCDOutput() {
-
+	char buff[16];
+	anzeige->print2Lines("Setze den Radius", sprintf(buff, "%u", radius));
 }
+
 
 // AreUSure
 void AreUSure::encoderLeft() {
@@ -83,18 +100,35 @@ void AreUSure::encoderLeft() {
 }
 
 void AreUSure::encoderPush() {
-    // TODO beginne mit Alarm
+	this->anzeige->props.alarmActive = true;
+	this->anzeige->setZustand(new GPSInfo);
 }
 
 void AreUSure::encoderRight() {
 }
 
 void AreUSure::buttonReturn() {
-
+	this->anzeige->setZustand(new GPSInfo);
 }
 
 void AreUSure::getLCDOutput() {
-
+	anzeige->print2Lines("Bist du sicher?", "");
 }
 
 
+void AbortAlarm::encoderPush() {
+	this->anzeige->props.alarmActive = false;
+	this->anzeige->setZustand(new GPSInfo);
+}
+
+void AbortAlarm::encoderLeft() {}
+
+void AbortAlarm::encoderRight() {}
+
+void AbortAlarm::buttonReturn() {
+	this->anzeige->setZustand(new GPSInfo);
+}
+
+void AbortAlarm::getLCDOutput() {
+	this->anzeige->print2Lines("Alarm beenden", "Bist du sicher?")
+}
