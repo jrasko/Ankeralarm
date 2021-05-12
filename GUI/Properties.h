@@ -8,10 +8,13 @@
 #define maxIncomingMessageLength 100
 
 #include "../GPS/GPS.h"
+#include "NMEARead.h"
 
 
+string currentDataString;
 class Properties {
 public:
+    NMEARead gpsdata;
     GPS myGPS;
     bool alarmActive = false;
     unsigned char alarmRadius = 25;
@@ -38,6 +41,21 @@ public:
         eeprom_write_byte(eepromBrightnes, displayBrighness);
     }
 
+    void updateGPSData()
+    {
+        if (gpsdata.NMEA_read(currentDataString))
+        {
+            const gpsData &data = gpsData(currentDataString.c_str());
+            currentDataString.clear();
+            if (!data.isValid())
+            {
+                // Ignoriere nicht valide Daten
+                return;
+            }
+            //Update bei korrekten Daten
+            myGPS.update(data);
+        }
+    }
    
 
 };

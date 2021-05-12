@@ -45,6 +45,7 @@ using namespace std;
 #define UBRR_VAL ((F_CPU + BAUD * 8) / (BAUD * 16) - 1) // clever runden
 #define BAUD_REAL (F_CPU / (16 * (UBRR_VAL + 1)))       // Reale Baudrate
 #define BAUD_ERROR ((BAUD_REAL * 1000) / BAUD)          // Fehler in Promille, 1000 = kein Fehler.
+//On Change Note the Definition in NMEARead.h
 #define RX_Buffer_SIZE 128                              //einstellung der Größe des emfangs Buffers
 #define TX_Buffer_SIZE 128                              //einstelleng der gößes des sende Buffers;
 
@@ -68,6 +69,7 @@ using namespace std;
 #define LED_GREEN 1  //RG-LED pin 9                         PB1
 
 //---global variables-----------------------------------------
+
 char serialBuffer[TX_Buffer_SIZE]; // Buffer für UART Übertragung
 char rxBuffer[RX_Buffer_SIZE];     // Buffer für UART Emfang
 
@@ -80,15 +82,13 @@ volatile bool encoderButtonFlag = 0;
 volatile bool returnButtonFlag = 0;
 volatile int encoderSpinFlag = 0;
 
-uint8_t brightness
-EEMEM = 150; //EEPROM variable
+uint8_t brightness EEMEM = 150; //EEPROM variable
 
-string currentDataString;
 
 // SoftwareSerial mySoftwareSerial(6, 7); //Rx Tx //zur Debugging
 
 //----Funktionsprototypen------------------------------------
-bool NMEA_read(string &currentString);
+//bool NMEA_read(string &currentString);
 
 void alarm();
 
@@ -114,6 +114,7 @@ void setup() {
 	_delay_ms(1000);
 	interrupt_init();
 
+	a.props.gpsdata.init(&serialReadPos, &serialWritePos, &rxReadPos, &rxWritePos, serialBuffer, rxBuffer);
 
 	//-------------IO-config-------------------------------------------------
 	//Output Config
@@ -131,21 +132,21 @@ void setup() {
 
 }
 
-void updateGPSData() {
-	if (NMEA_read(currentDataString)) {
-		const gpsData &data = gpsData(currentDataString.c_str());
-		currentDataString.clear();
-		if (!data.isValid()) {
-			// Ignoriere nicht valide Daten
-			return;
-		}
-		//Update bei korrekten Daten
-		a.props.myGPS.update(data);
-	}
-}
+// void updateGPSData() {
+// 	if (NMEA_read(currentDataString)) {
+// 		const gpsData &data = gpsData(currentDataString.c_str());
+// 		currentDataString.clear();
+// 		if (!data.isValid()) {
+// 			// Ignoriere nicht valide Daten
+// 			return;
+// 		}
+// 		//Update bei korrekten Daten
+// 		a.props.myGPS.update(data);
+// 	}
+// }
 
 void loop() {
-	updateGPSData(); //Timing der updatefunktion ist wichting. entweder ausglöst durch intrupt oder ca alle 10s(update rate des gps Moduls)
+	a.props.updateGPSData(); //Timing der updatefunktion ist wichting. entweder ausglöst durch intrupt oder ca alle 10s(update rate des gps Moduls)
 
 	if (a.props.alarmActive) {
 		unsigned long distance = a.props.centralPosition.distanceTo(a.props.myGPS.getCurrentPosition());
@@ -202,49 +203,7 @@ void loop() {
 //    }
 }
 
-bool NMEA_read(string &currentString) { // Auslesen des "Ringspeichers" und sortieren der NMEA Sätze
-	char nextChar;
-	static bool newDataAvailable = false;
-	static int countIncomingChars = 0;
 
-	if (rxReadPos == rxWritePos) {
-		//No Data available
-		return false;
-	}
-	// Hier ansetzen falls letzter eingehender char benötigt wird
-	nextChar = rxBuffer[rxReadPos];
-	if (nextChar == '$') {
-		// Beginning of a new DataString
-		newDataAvailable = true;
-	}
-	if (!newDataAvailable) {
-		rxReadPos++;
-		if (rxReadPos >= RX_Buffer_SIZE) {
-			rxReadPos = 0;
-		}
-		return false;
-	}
-
-	currentString.push_back(nextChar);
-
-	if (nextChar == '\r') {
-		//String is complete
-		newDataAvailable = false;
-		countIncomingChars = 0;
-		return true;
-	}
-	countIncomingChars++;
-	rxReadPos++;
-	if (rxReadPos >= RX_Buffer_SIZE) {
-		rxReadPos = 0;
-	}
-	if (countIncomingChars >= maxIncomingMessageLength) {
-		newDataAvailable = false;
-		countIncomingChars = 0;
-		return false;
-	}
-	return false;
-}
 
 //----UART-Interface (Sereielle Schnittstelle für GPS Modul)------------------------
 void appendSerial(char c) { //Transmit
@@ -274,14 +233,6 @@ ISR(USART_TX_vect){
 				serialReadPos = 0;
 			}
 		}
-}
-
-char peekChar(void) {
-	char ret = 'n';
-	if (rxReadPos != rxWritePos) {
-		ret = rxBuffer[rxReadPos];
-	}
-	return ret;
 }
 
 ISR(USART_RX_vect){
