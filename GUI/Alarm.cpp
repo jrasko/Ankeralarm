@@ -46,7 +46,7 @@ void FindPostition::getLCDOutput() {
 	// TODO 3 GPS Anfragen mit zeitlichem Timeout + mitteln
 	vector<Position> posCollection;
 	anzeige->print2Lines("Please wait", "Find Position");
-	posCollection.reserve(4);
+	/*posCollection.reserve(4);
 	for (int i = 0; i < 4; ++i) {
 		// wait for updated GPS Data
 		bool update;
@@ -55,8 +55,9 @@ void FindPostition::getLCDOutput() {
 		} while (!update);
 		posCollection.push_back(anzeige->props.myGPS.getCurrentPosition());
 	}
-	anzeige->props.centralPosition = getMedian(posCollection);
-
+	anzeige->props.centralPosition = getMedian(posCollection);*/
+	anzeige->props.centralPosition = anzeige->props.myGPS.getCurrentPosition();
+	anzeige->setZustand(new SetRadius);
 
 }
 
