@@ -86,5 +86,18 @@ public:
     void getLCDOutput() override;
 };
 
+class Radius : public Zustand {
+public:
+    void encoderPush() override;
+
+    void encoderRight() override;
+
+    void buttonReturn() override;
+
+    void encoderLeft() override;
+
+    void getLCDOutput() override;
+};
+
 
 #endif
