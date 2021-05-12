@@ -208,7 +208,7 @@ ChangeUTCFactor::ChangeUTCFactor() {
 }
 
 void AlarmRadius::encoderPush() {
-	this->anzeige->setZustand(new ChangeAlarmRadius)
+	this->anzeige->setZustand(new ChangeAlarmRadius);
 }
 
 void AlarmRadius::encoderLeft() {
@@ -256,7 +256,8 @@ void ChangeAlarmRadius::buttonReturn() {
 
 void ChangeAlarmRadius::getLCDOutput() {
 	char buff[16];
-	anzeige->print2Lines("ChangeAlarmRadius", sprintf(buff, "%u", radius));
+	sprintf(buff, "%u", radius); 
+	anzeige->print2Lines("ChangeAlarmRadius", buff);
 }
 
 ChangeAlarmRadius::ChangeAlarmRadius() {

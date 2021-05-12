@@ -10,7 +10,7 @@ void Alarm::encoderPush() {
 	if (!this->anzeige->props.alarmActive) {
 		this->anzeige->setZustand(new FindPostition);
 	} else {
-
+		this->anzeige->setZustand(new AbortAlarm);
 	}
 }
 
@@ -91,7 +91,8 @@ void SetRadius::buttonReturn() {
 
 void SetRadius::getLCDOutput() {
 	char buff[16];
-	anzeige->print2Lines("Setze den Radius", sprintf(buff, "%u", radius));
+	sprintf(buff, "%u", radius);
+	anzeige->print2Lines("Setze den Radius", buff);
 }
 
 
@@ -131,5 +132,5 @@ void AbortAlarm::buttonReturn() {
 }
 
 void AbortAlarm::getLCDOutput() {
-	this->anzeige->print2Lines("Alarm beenden", "Bist du sicher?")
+	this->anzeige->print2Lines("Alarm beenden", "Bist du sicher?");
 }
