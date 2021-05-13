@@ -7,18 +7,18 @@
 
 class gpsData {
 private:
-    std::vector<std::string> data;
-    bool dirty = false;
+	std::vector<std::string> data;
+	bool dirty = false;
 public:
-    std::vector<std::string> getData() const {
-        return data;
-    }
+	std::vector<std::string> getData() const {
+		return data;
+	}
 
-    explicit gpsData(const char *myGPSString);
+	explicit gpsData(const char *myGPSString);
 
-    bool isValid() const {
-        return !dirty;
-    }
+	bool isValid() const {
+		return !dirty;
+	}
 };
 
 

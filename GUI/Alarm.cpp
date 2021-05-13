@@ -44,9 +44,10 @@ void FindPostition::buttonReturn() {
 
 void FindPostition::getLCDOutput() {
 	// TODO 3 GPS Anfragen mit zeitlichem Timeout + mitteln
-	vector<Position> posCollection;
 	anzeige->print2Lines("Please wait", "Find Position");
-	/*posCollection.reserve(4);
+	/*
+	vector <Position> posCollection;
+	posCollection.reserve(4);
 	for (int i = 0; i < 4; ++i) {
 		// wait for updated GPS Data
 		bool update;

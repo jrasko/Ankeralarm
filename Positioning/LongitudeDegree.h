@@ -11,25 +11,25 @@ using namespace std;
 class LongitudeDegree {
 
 public:
-    explicit LongitudeDegree(const std::string &koordString, char direction);
+	explicit LongitudeDegree(const std::string &koordString, char direction);
 
-    explicit LongitudeDegree(double deg);
+	explicit LongitudeDegree(double deg);
 
-    LongitudeDegree(const LongitudeDegree &d) {
-        degrees = d.degrees;
-    }
+	LongitudeDegree(const LongitudeDegree &d) {
+		degrees = d.degrees;
+	}
 
-    double getDegrees() const {
-        return degrees;
-    }
+	double getDegrees() const {
+		return degrees;
+	}
 
 
-    friend LongitudeDegree operator-(const LongitudeDegree &dg1, const LongitudeDegree &dg2);
+	friend LongitudeDegree operator-(const LongitudeDegree &dg1, const LongitudeDegree &dg2);
 
-    double toMeters(double latdeg) const;
+	double toMeters(double latdeg) const;
 
 private:
-    double degrees;
+	double degrees;
 };
 
 

@@ -256,7 +256,7 @@ void ChangeAlarmRadius::buttonReturn() {
 
 void ChangeAlarmRadius::getLCDOutput() {
 	char buff[16];
-	sprintf(buff, "%u", radius); 
+	sprintf(buff, "%u", radius);
 	anzeige->print2Lines("ChangeAlarmRadius", buff);
 }
 

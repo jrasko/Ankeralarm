@@ -61,7 +61,7 @@ using namespace std;
 #define debug_led 5       //onboard Led                     PB5
 //#define lcd_beleuchtung 3 //backlight LCD                   PB3
 #define returnButton 7         //Schalter 1                 PD7  PCINT 23
-#define snozeButton 6			//							PD6
+#define snozeButton 6            //							PD6
 #define summer 4          //Summer                          PB4
 #define encoder_a 2       //encoder pin 2 (32)              PD2                     
 #define encoder_b 3        //encoder pin 3                  PD3
@@ -120,12 +120,13 @@ void setup() {
 
 	//-------------IO-config-------------------------------------------------
 	//Output Config
-	DDRB |= (1 << DDB0) | (1 << DDB1) | (1 << DDB2)| (1 << DDB3) | (1 << DDB5);  //LED_RED  LED_GREEN  LCD Bachklight  Onbord LED
+	DDRB |= (1 << DDB0) | (1 << DDB1) | (1 << DDB2) | (1 << DDB3) |
+			(1 << DDB5);  //LED_RED  LED_GREEN  LCD Bachklight  Onbord LED
 	DDRC |= (1 << DDC0); // LED pin14
 
 	//Input Config
 	DDRB &= ~(1 << DDB4);
-	DDRD &= ~((1 << DDD2) | (1 << DDD3) | (1 << DDD4) | (1 << DDD7)| (1<<DDD6));//Input PD2 PD3 PD4 PD7
+	DDRD &= ~((1 << DDD2) | (1 << DDD3) | (1 << DDD4) | (1 << DDD7) | (1 << DDD6));//Input PD2 PD3 PD4 PD7
 	PORTD |= (1 << PORTB4) | (1 << PORTD7) | (1 << PORTB6); //Kofiguration encoderButton  returnButton PullUp
 
 	pinMode(11, OUTPUT);
@@ -154,19 +155,19 @@ void loop() {
 		unsigned long distance = a.props.centralPosition.distanceTo(a.props.myGPS.getCurrentPosition());
 		bool alarmIsLow = true;
 		while (distance > a.props.alarmRadius) {
-			if (alarmIsLow){
+			if (alarmIsLow) {
 				alarmIsLow = false;
-				
-				PORTB |=(1<<PORTB4);
+
+				PORTB |= (1 << PORTB4);
 			}
 
-			if ((PIND &(1<<PIND6))==0){
-				PORTB &=~(1<<PORTB4);
+			if ((PIND & (1 << PIND6)) == 0) {
+				PORTB &= ~(1 << PORTB4);
 				snoozeButtonFlag = false;
 				a.props.alarmActive = false;
 				break;
 			}
-			
+
 		}
 	}
 
@@ -219,7 +220,6 @@ void loop() {
 }
 
 
-
 //----UART-Interface (Sereielle Schnittstelle für GPS Modul)------------------------
 void appendSerial(char c) { //Transmit
 	serialBuffer[serialWritePos] = c;
@@ -239,24 +239,24 @@ void serialWrite(char c[]) { //receive
 	}
 }
 
-ISR(USART_TX_vect){
-		//receive Ring-Buffer
-		if (serialReadPos != serialWritePos){
-			UDR0 = serialBuffer[serialReadPos];
-			serialReadPos++;
-			if (serialReadPos >= TX_Buffer_SIZE) {
-				serialReadPos = 0;
-			}
+ISR(USART_TX_vect) {
+	//receive Ring-Buffer
+	if (serialReadPos != serialWritePos) {
+		UDR0 = serialBuffer[serialReadPos];
+		serialReadPos++;
+		if (serialReadPos >= TX_Buffer_SIZE) {
+			serialReadPos = 0;
 		}
+	}
 }
 
-ISR(USART_RX_vect){
-		//Transmit Ring-Buffer
-		rxBuffer[rxWritePos] = UDR0;
-		rxWritePos++;
-		if (rxWritePos >= RX_Buffer_SIZE){
-			rxWritePos = 0;
-		}
+ISR(USART_RX_vect) {
+	//Transmit Ring-Buffer
+	rxBuffer[rxWritePos] = UDR0;
+	rxWritePos++;
+	if (rxWritePos >= RX_Buffer_SIZE) {
+		rxWritePos = 0;
+	}
 }
 
 void interrupt_init(void) {
@@ -300,80 +300,77 @@ void interrupt_init(void) {
 }
 
 //---Interruptrutine------------------------------------------
-ISR(INT0_vect){
-		//---------------Encoder-------------------------------------------
-		static unsigned long lastInterruptTime = buttonDebounceTime;
-		unsigned long interruptTime = millis();
-		bool messungPin1 = 0, messungPin1Alt = 0;
-		// If interrupts come faster than 5ms, assume it's a bounce and ignore
-		if (interruptTime - lastInterruptTime > 1)    {
+ISR(INT0_vect) {
+	//---------------Encoder-------------------------------------------
+	static unsigned long lastInterruptTime = buttonDebounceTime;
+	unsigned long interruptTime = millis();
+	bool messungPin1 = 0, messungPin1Alt = 0;
+	// If interrupts come faster than 5ms, assume it's a bounce and ignore
+	if (interruptTime - lastInterruptTime > 1) {
 
-			messungPin1 = ((PIND & (1 << encoder_a)) == 0) ? 0 : 1;
-			if ((messungPin1 == HIGH) && (messungPin1Alt == LOW)) {
-				if ((PIND & (1 << PIND3)) != 0) {
-					encoderSpinFlag--;
-				} else {
-					encoderSpinFlag++;
-				}
+		messungPin1 = ((PIND & (1 << encoder_a)) == 0) ? 0 : 1;
+		if ((messungPin1 == HIGH) && (messungPin1Alt == LOW)) {
+			if ((PIND & (1 << PIND3)) != 0) {
+				encoderSpinFlag--;
+			} else {
+				encoderSpinFlag++;
 			}
-			messungPin1Alt = messungPin1;
-
-			//Restrict value from 0 to +200
-			//radius = min(200, max(0,radius));
 		}
-		// Keep track of when we were here last (no more than every 5ms)
-		lastInterruptTime = interruptTime;
+		messungPin1Alt = messungPin1;
+
+		//Restrict value from 0 to +200
+		//radius = min(200, max(0,radius));
+	}
+	// Keep track of when we were here last (no more than every 5ms)
+	lastInterruptTime = interruptTime;
 }
 
-ISR(PCINT2_vect)
-		{
-				static unsigned long lastInterruptTime = 100;
-				unsigned long interruptTime = millis();
-				if (interruptTime - lastInterruptTime > 1)
-				{
-					if ((PIND & (1 << encoder_button)) == 0) {
-						encoderButtonFlag = true;
-					}
-					if ((PIND & (1 << returnButton)) == 0) {
-						returnButtonFlag = true;
-					}
-
-				}
-				lastInterruptTime = interruptTime;
+ISR(PCINT2_vect) {
+	static unsigned long lastInterruptTime = 100;
+	unsigned long interruptTime = millis();
+	if (interruptTime - lastInterruptTime > 1) {
+		if ((PIND & (1 << encoder_button)) == 0) {
+			encoderButtonFlag = true;
+		}
+		if ((PIND & (1 << returnButton)) == 0) {
+			returnButtonFlag = true;
 		}
 
-ISR(TIMER1_OVF_vect)
-		{
+	}
+	lastInterruptTime = interruptTime;
+}
 
-				//------------------------------GPS-Status LED---------------------------
+ISR(TIMER1_OVF_vect) {
 
-				TCNT1 = 3036; // Timer vorbelegt so dass delta_T= 1s
+	//------------------------------GPS-Status LED---------------------------
 
-		switch (a.props.myGPS.getGPSQuality()){
-			case 0:
-				PORTB ^= (1 << LED_RED); //toggle LED_RED
+	TCNT1 = 3036; // Timer vorbelegt so dass delta_T= 1s
+
+	switch (a.props.myGPS.getGPSQuality()) {
+		case 0:
+			PORTB ^= (1 << LED_RED); //toggle LED_RED
 			PORTB &= ~(1 << LED_GREEN); //write LED_GREEN LOW
 			break;
 
-			case 1:
-				PORTB &= ~(1 << LED_GREEN); //write LED_GREEN LOW
+		case 1:
+			PORTB &= ~(1 << LED_GREEN); //write LED_GREEN LOW
 			PORTB |= (1 << LED_RED);
 			break;
 
-			case 2:
-				PORTB |= (1 << LED_GREEN); //write LED_GREEN HIGH
+		case 2:
+			PORTB |= (1 << LED_GREEN); //write LED_GREEN HIGH
 			PORTB |= (1 << LED_RED);
 			break;
 
-			case 3:
-				PORTB |= (1 << LED_GREEN); //write LED_GREEN HIGH
+		case 3:
+			PORTB |= (1 << LED_GREEN); //write LED_GREEN HIGH
 			PORTB &= ~(1 << LED_RED);
 			break;
 
-			case 4:
-				PORTB ^= (1 << LED_GREEN);
+		case 4:
+			PORTB ^= (1 << LED_GREEN);
 			PORTB &= ~(1 << LED_RED);
 			break;
-		}
+	}
 
-		}
+}

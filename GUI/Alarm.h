@@ -7,59 +7,59 @@
 
 class Alarm : public Zustand {
 public:
-    void encoderPush() override;
+	void encoderPush() override;
 
-    void encoderLeft() override;
+	void encoderLeft() override;
 
-    void encoderRight() override;
+	void encoderRight() override;
 
-    void buttonReturn() override;
+	void buttonReturn() override;
 
-    void getLCDOutput() override;
+	void getLCDOutput() override;
 };
 
 class FindPostition : public Zustand {
 public:
-    void encoderPush() override;
+	void encoderPush() override;
 
-    void encoderLeft() override;
+	void encoderLeft() override;
 
-    void encoderRight() override;
+	void encoderRight() override;
 
-    void buttonReturn() override;
+	void buttonReturn() override;
 
-    void getLCDOutput() override;
+	void getLCDOutput() override;
 };
 
 class SetRadius : public Zustand {
 private:
 	unsigned char radius = 25;
 public:
-    void encoderPush() override;
+	void encoderPush() override;
 
-    void encoderLeft() override;
+	void encoderLeft() override;
 
-    void encoderRight() override;
+	void encoderRight() override;
 
-    void buttonReturn() override;
+	void buttonReturn() override;
 
-    void getLCDOutput() override;
+	void getLCDOutput() override;
 };
 
 class AreUSure : public Zustand {
 public:
-    void encoderPush() override;
+	void encoderPush() override;
 
-    void encoderLeft() override;
+	void encoderLeft() override;
 
-    void encoderRight() override;
+	void encoderRight() override;
 
-    void buttonReturn() override;
+	void buttonReturn() override;
 
-    void getLCDOutput() override;
+	void getLCDOutput() override;
 };
 
-class AbortAlarm : public Zustand{
+class AbortAlarm : public Zustand {
 public:
 	void encoderPush() override;
 

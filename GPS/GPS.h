@@ -14,30 +14,30 @@ class GPS {
 
 public:
 
-    void update(const gpsData &data);
+	void update(const gpsData &data);
 
-    unsigned short getGPSQuality() const;
+	unsigned short getGPSQuality() const;
 
-    const DateTime &getLastTimeStamp() const;
+	const DateTime &getLastTimeStamp() const;
 
-    double getHDOP() const;
+	double getHDOP() const;
 
-    unsigned long getFixAge() const;
+	unsigned long getFixAge() const;
 
-    unsigned short getSatellitesAvailable() const;
+	unsigned short getSatellitesAvailable() const;
 
-    const Position &getCurrentPosition() const;
+	const Position &getCurrentPosition() const;
 
 
 private:
-    //    Maybe deprecated
-    //    TinyGPS gps;
-    DateTime lastTimeStamp;
-    Position currentPosition = Position(LatitudeDegree(0), LongitudeDegree(0));
-    unsigned short gpsStatus = 0;
-    double HDOP = 50.0;
-    unsigned short satellitesAvailable = 0;
-    unsigned long lastInputTime = 0;
+	//    Maybe deprecated
+	//    TinyGPS gps;
+	DateTime lastTimeStamp;
+	Position currentPosition = Position(LatitudeDegree(0), LongitudeDegree(0));
+	unsigned short gpsStatus = 0;
+	double HDOP = 50.0;
+	unsigned short satellitesAvailable = 0;
+	unsigned long lastInputTime = 0;
 };
 
 
