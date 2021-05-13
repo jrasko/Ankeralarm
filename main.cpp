@@ -15,12 +15,11 @@
 // Ohne ergeben sich unten Fehler in der Berechnung
 #endif
 
-#include <string>
 #include <util/delay.h>
 
 #include <Arduino.h>
 #include <LiquidCrystal.h>
-#include <SoftwareSerial.h>
+//#include <SoftwareSerial.h>
 
 #include "GPS/GPS.h"
 #include "GPS/gpsData.h"
@@ -142,16 +141,15 @@ void loop() {
 		while (distance > a.props.alarmRadius) {
 			if (alarmIsLow) {
 				alarmIsLow = false;
-
+				a.print2Lines("     ALARM!     ","");
 				PORTB |= (1 << PORTB4);
 			}
-
 			if ((PIND & (1 << PIND6)) == 0) {
 				PORTB &= ~(1 << PORTB4);
 				a.props.alarmActive = false;
+				a.getLCDOutput();
 				break;
 			}
-
 		}
 	}
 

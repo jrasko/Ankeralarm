@@ -63,6 +63,10 @@ public:
 		this->zustand->buttonReturn();
 	}
 
+	void getLCDOutput(){
+		this->zustand->getLCDOutput();
+	}
+
 	void print2Lines(const char *l1, const char *l2) {
 		lcd.setCursor(0, 0);
 		lcd.write(l1);
