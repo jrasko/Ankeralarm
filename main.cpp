@@ -15,11 +15,12 @@
 // Ohne ergeben sich unten Fehler in der Berechnung
 #endif
 
+#include <string>
 #include <util/delay.h>
 
 #include <Arduino.h>
 #include <LiquidCrystal.h>
-//#include <SoftwareSerial.h>
+#include <SoftwareSerial.h>
 
 #include "GPS/GPS.h"
 #include "GPS/gpsData.h"
@@ -90,8 +91,6 @@ uint8_t brightness EEMEM = 150; //EEPROM variable
 //----Funktionsprototypen------------------------------------
 //bool NMEA_read(string &currentString);
 
-void alarm();
-
 void interrupt_init(); //UART init
 void appendSerial(char c); //UART recive
 void serialWrite(char *c); //UART transmit
@@ -130,6 +129,7 @@ void setup() {
 	pinMode(11, OUTPUT);
 
 	a.activate(new GPSInfo);
+
 }
 
 void loop() {
@@ -140,16 +140,19 @@ void loop() {
 		bool alarmIsLow = true;
 		while (distance > a.props.alarmRadius) {
 			if (alarmIsLow) {
+				// activate Alarm
 				alarmIsLow = false;
 				a.print2Lines("     ALARM!     ","");
 				PORTB |= (1 << PORTB4);
 			}
 			if ((PIND & (1 << PIND6)) == 0) {
+				// deactivate alarm
 				PORTB &= ~(1 << PORTB4);
 				a.props.alarmActive = false;
 				a.getLCDOutput();
 				break;
 			}
+
 		}
 	}
 
