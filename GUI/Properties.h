@@ -45,7 +45,7 @@ public:
 
 	void updateGPSData() {
 		if (gpsdata.NMEA_read(currentDataString)) {
-			const gpsData &data = gpsData(currentDataString.c_str());
+			gpsData data = gpsData(currentDataString.c_str());
 			currentDataString = "";
 			currentDataString.reserve(80);
 
