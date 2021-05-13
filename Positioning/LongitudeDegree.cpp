@@ -2,12 +2,12 @@
 
 #define toDEG 3.14159265/180
 
-LongitudeDegree::LongitudeDegree(const std::string &koordString, char direction) {
+LongitudeDegree::LongitudeDegree(const String &koordString, char direction) {
 	unsigned char deg = 0;
 	double min = 0;
 
-	deg = String(koordString.substr(0, 3).c_str()).toInt();
-	min = String(koordString.substr(3, 10).c_str()).toDouble();
+	deg = koordString.substring(0, 3).toInt();
+	min = koordString.substring(3, 10).toDouble();
 
 	double jdeg = min / 60.0 + deg;
 	if (direction == 'W') {

@@ -5,7 +5,7 @@
  * @param data includes a vector of strings which is build from the raw GPS Data
  */
 void GPS::update(const gpsData &data) {
-	vector<string> v = data.getData();
+	Vector<String> v = data.getData();
 	if (!data.isValid() || (v.size() != 13 && v.size() != 15)) {
 		return;
 	}
@@ -23,9 +23,9 @@ void GPS::update(const gpsData &data) {
 		LongitudeDegree lon(v[4], v[5][0]);
 		currentPosition = Position(lat, lon);
 
-		gpsStatus = String(v[6].c_str()).toInt();
-		satellitesAvailable = String(v[7].c_str()).toInt();
-		HDOP = String(v[8].c_str()).toDouble();
+		gpsStatus = v[6].toInt();
+		satellitesAvailable = v[7].toInt();
+		HDOP = v[8].toDouble();
 	}
 	lastInputTime = millis();
 }

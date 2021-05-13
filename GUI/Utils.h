@@ -63,7 +63,7 @@ public:
 		this->zustand->buttonReturn();
 	}
 
-	void getLCDOutput(){
+	void getLCDOutput() {
 		this->zustand->getLCDOutput();
 	}
 

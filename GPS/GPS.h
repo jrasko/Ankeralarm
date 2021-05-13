@@ -2,13 +2,11 @@
 #ifndef ANKERALARM_2_GPS_H
 #define ANKERALARM_2_GPS_H
 
-#include <vector>
 #include <Arduino.h>
+#include <Vector.h>
 #include "gpsData.h"
 #include "../Positioning/Position.h"
 #include "DateTime.h"
-
-using namespace std;
 
 class GPS {
 
@@ -30,8 +28,7 @@ public:
 
 
 private:
-	//    Maybe deprecated
-	//    TinyGPS gps;
+
 	DateTime lastTimeStamp;
 	Position currentPosition = Position(LatitudeDegree(0), LongitudeDegree(0));
 	unsigned short gpsStatus = 0;

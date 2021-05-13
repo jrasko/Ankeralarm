@@ -1,16 +1,12 @@
 #ifndef ANKERALARM_LATITUDEDEGREE_H
 #define ANKERALARM_LATITUDEDEGREE_H
 
-#include <sstream>
-#include <cmath>
 #include <Arduino.h>
-
-using namespace std;
 
 class LatitudeDegree {
 
 public:
-	explicit LatitudeDegree(const std::string &koordString, char direction);
+	explicit LatitudeDegree(const String &koordString, char direction);
 
 	explicit LatitudeDegree(double deg);
 

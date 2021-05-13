@@ -5,9 +5,8 @@
 
 #include "LatitudeDegree.h"
 #include "LongitudeDegree.h"
-#include <vector>
-
-using namespace std;
+#include <Arduino.h>
+#include <Vector.h>
 
 class Position {
 public:
@@ -15,7 +14,7 @@ public:
 	Position(const LatitudeDegree &latitude, const LongitudeDegree &longitude) : latitude(latitude),
 																				 longitude(longitude) {}
 
-	friend Position getMedian(const vector<Position> &p);
+	friend Position getMedian(const Vector<Position> &p);
 
 	double distanceTo(const Position &p) const;
 
@@ -25,7 +24,7 @@ public:
 
 	const LongitudeDegree &getLongitude() const;
 
-	vector<string> toString() const;
+	Vector<String> toString() const;
 
 private:
 	LatitudeDegree latitude;

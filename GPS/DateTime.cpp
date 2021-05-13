@@ -6,36 +6,34 @@
  * @param dateString with the format "ddmmyy"
  * @attention DATA IS NOT CHECKED FOR CONSISTENCY
  */
-void DateTime::updateDate(const string &dateString) {
+void DateTime::updateDate(const String &dateString) {
 	unsigned char d, m = 0;
 	unsigned short y = 0;
-	d = String(dateString.substr(0, 2).c_str()).toInt();
-	m = String(dateString.substr(2, 2).c_str()).toInt();
-	y = String(dateString.substr(4, 2).c_str()).toInt();
+	d = dateString.substring(0, 2).toInt();
+	m = dateString.substring(2, 2).toInt();
+	y = dateString.substring(4, 2).toInt();
 
 	day = d;
 	month = m;
 	year = y;
 }
 
-void DateTime::updateTime(const string &timeString) {
+void DateTime::updateTime(const String &timeString) {
 	unsigned char min, h = 0;
 	double sec = 0;
 
 
-	h = String(timeString.substr(0, 2).c_str()).toInt();
-	min = String(timeString.substr(2, 2).c_str()).toInt();
-	sec = String(timeString.substr(4, 5).c_str()).toDouble();
+	h = timeString.substring(0, 2).toInt();
+	min = timeString.substring(2, 2).toInt();
+	sec = timeString.substring(4, 5).toDouble();
 
 	hours = h;
 	minutes = min;
 	seconds = sec;
 }
 
-vector<string> DateTime::toString() const {
-	vector<string> ary;
-	char buff1[16];
-	char buff2[5];
+Vector<String> DateTime::toString() const {
+	Vector<String> ary;
 	unsigned char h = hours;
 	unsigned char d = day;
 	unsigned char m = month;
@@ -50,7 +48,7 @@ vector<string> DateTime::toString() const {
 				d = 31;
 				m = 12;
 				y--;
-			} else if (d == 1 && m == 3 && isLeapYear(y)) {
+			} else if (m == 3 && isLeapYear(y)) {
 				d = 29;
 				m = 2;
 			} else {
@@ -61,7 +59,7 @@ vector<string> DateTime::toString() const {
 	} else if (h >= 24) {
 		h -= 24;
 		d++;
-		if (d > monthLength[m - 1] || d == 29 && m == 2 && isLeapYear(y)) {
+		if (d > monthLength[m - 1] || (d == 29 && m == 2 && isLeapYear(y))) {
 			d = 1;
 			m++;
 			if (m > 12) {
@@ -70,11 +68,14 @@ vector<string> DateTime::toString() const {
 			}
 		}
 	}
+	char buff[16];
+	char buff1[16];
+	char buff2[5];
 
-
-	sprintf(buff1, "%02u.%02u.%02u", d, m, y);
-	ary.push_back(buff1);
-	sprintf(buff1, "%02u:%02u:%s", h, minutes, dtostrf(seconds, 5, 2, buff2));
+	sprintf(buff, "%02u.%02u.%02u", d, m, y);
+	ary.push_back(buff);
+	dtostrf(seconds, 5, 2, buff2);
+	sprintf(buff1, "%02u:%02u:%s", h, minutes, buff2);
 	ary.push_back(buff1);
 	return ary;
 }

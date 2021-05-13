@@ -4,7 +4,7 @@
 #include "Utils.h"
 #include "Settings.h"
 #include "Alarm.h"
-#include <bitset>
+#include <Arduino.h>
 
 
 class GPSInfo : public Zustand {

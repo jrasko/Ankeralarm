@@ -7,6 +7,7 @@
 #define RX_Buffer_SIZE 128 //einstellung der Größe des emfangs Buffers
 
 #define TX_Buffer_SIZE 128 //einstelleng der gößes des sende Buffers;
+
 class NMEARead {
 private:
 	char *serialBuffer; // Buffer für UART Übertragung
@@ -32,7 +33,7 @@ public:
 			newDataAvailable = true;
 		}
 		if (!newDataAvailable) {
-			*rxReadPos = *rxReadPos+1;
+			*rxReadPos = *rxReadPos + 1;
 			if (*rxReadPos >= RX_Buffer_SIZE) {
 				*rxReadPos = 0;
 			}

@@ -2,32 +2,25 @@
 #ifndef ANKERALARM_2_DATE_H
 #define ANKERALARM_2_DATE_H
 
-#include <sstream>
-#include <string>
-#include <cmath>
-#include <vector>
 #include <Arduino.h>
-
-using namespace std;
+#include <Vector.h>
 
 class DateTime {
 
 public:
-	void updateDate(const string &dateString);
+	void updateDate(const String &dateString);
 
-	void updateTime(const string &timeString);
+	void updateTime(const String &timeString);
 
-	vector<string> toString() const;
+	Vector<String> toString() const;
 
 	void setUTCFactor(unsigned char factor);
 
 	unsigned char getUTCFactor() const;
 
 private:
-	void adjustTime();
-
 	static inline bool isLeapYear(unsigned short y) {
-		return (y % 4 == 0 && y % 100 != 0) || (y % 400 != 0);
+		return (y % 4 == 0 && y % 100 != 0) || (y % 400 == 0);
 	}
 
 	const unsigned char monthLength[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};

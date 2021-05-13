@@ -15,7 +15,6 @@
 // Ohne ergeben sich unten Fehler in der Berechnung
 #endif
 
-#include <string>
 #include <util/delay.h>
 
 #include <Arduino.h>
@@ -31,8 +30,6 @@
 #include <avr/eeprom.h>
 #include <avr/io.h>
 #include <avr/wdt.h>
-
-using namespace std;
 
 //---defines--------------------------------------------------
 
@@ -89,7 +86,6 @@ uint8_t brightness EEMEM = 150; //EEPROM variable
 // SoftwareSerial mySoftwareSerial(6, 7); //Rx Tx //zur Debugging
 
 //----Funktionsprototypen------------------------------------
-//bool NMEA_read(string &currentString);
 
 void interrupt_init(); //UART init
 void appendSerial(char c); //UART recive
@@ -142,7 +138,7 @@ void loop() {
 			if (alarmIsLow) {
 				// activate Alarm
 				alarmIsLow = false;
-				a.print2Lines("     ALARM!     ","");
+				a.print2Lines("     ALARM!     ", "");
 				PORTB |= (1 << PORTB4);
 			}
 			if ((PIND & (1 << PIND6)) == 0) {

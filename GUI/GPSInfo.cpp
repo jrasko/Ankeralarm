@@ -44,7 +44,7 @@ void Koordinaten::encoderLeft() {
 }
 
 void Koordinaten::getLCDOutput() {
-	const vector<string> &lines = anzeige->props.myGPS.getCurrentPosition().toString();
+	const Vector<String> &lines = anzeige->props.myGPS.getCurrentPosition().toString();
 	anzeige->print2Lines(lines[0].c_str(), lines[1].c_str());
 }
 
@@ -143,7 +143,7 @@ void Time::encoderLeft() {
 }
 
 void Time::getLCDOutput() {
-	const vector<string> &lines = anzeige->props.myGPS.getLastTimeStamp().toString();
+	const Vector<String> &lines = anzeige->props.myGPS.getLastTimeStamp().toString();
 	anzeige->print2Lines(lines[0].c_str(), lines[1].c_str());
 }
 

@@ -21,12 +21,12 @@ bool gpsChecksumOk(const char *gpsMessage) {
 }
 
 bool validateGPSString(const char *proofIt) {
-	std::vector<std::string> v;
+	Vector<String> v;
 	int k = 0;
 	while (true) {
-		std::string currentString;
+		String currentString;
 		while (proofIt[k] != ',' && proofIt[k] != '\0') {
-			currentString.push_back(proofIt[k]);
+			currentString.concat(proofIt[k]);
 			k++;
 		}
 		v.push_back(currentString);
@@ -55,13 +55,12 @@ gpsData::gpsData(const char *myGPSString) {
 		return;
 	}
 	unsigned short k = 0;
-	std::vector<std::string> v;
-	v.reserve(15);
+	Vector<String> v;
 	for (int i = 0; i < 15; ++i) {
-		std::string currentString;
+		String currentString;
 		currentString.reserve(10);
 		while (myGPSString[k] != ',' && myGPSString[k] != '\0') {
-			currentString.push_back(myGPSString[k]);
+			currentString.concat(myGPSString[k]);
 			k++;
 		}
 		v.push_back(currentString);

@@ -1,11 +1,9 @@
 #include "LatitudeDegree.h"
 
 
-LatitudeDegree::LatitudeDegree(const std::string &koordString, char direction) {
-	unsigned char deg = 0;
-	double min = 0;
-	deg = String(koordString.substr(0, 2).c_str()).toInt();
-	min = String(koordString.substr(2, 10).c_str()).toDouble();
+LatitudeDegree::LatitudeDegree(const String &koordString, char direction) {
+	unsigned char deg = koordString.substring(0, 2).toInt();
+	double min = koordString.substring(2, 10).toDouble();
 
 	double jdeg = min / 60.0 + deg;
 	if (direction == 'S') {
