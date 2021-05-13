@@ -162,7 +162,6 @@ void loop() {
 
 			if ((PIND & (1 << PIND6)) == 0) {
 				PORTB &= ~(1 << PORTB4);
-				snoozeButtonFlag = false;
 				a.props.alarmActive = false;
 				break;
 			}
