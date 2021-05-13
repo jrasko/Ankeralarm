@@ -81,7 +81,6 @@ uint8_t rxWritePos = 0;
 
 volatile bool encoderButtonFlag = 0;
 volatile bool returnButtonFlag = 0;
-volatile bool snoozeButtonFlag = false;
 volatile char encoderSpinFlag = 0;
 
 uint8_t brightness EEMEM = 150; //EEPROM variable
