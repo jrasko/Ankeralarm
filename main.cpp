@@ -79,8 +79,8 @@ uint8_t serialWritePos = 0;
 uint8_t rxReadPos = 0;
 uint8_t rxWritePos = 0;
 
-volatile bool encoderButtonFlag = 0;
-volatile bool returnButtonFlag = 0;
+volatile bool encoderButtonFlag = false;
+volatile bool returnButtonFlag = false;
 volatile char encoderSpinFlag = 0;
 
 uint8_t brightness EEMEM = 150; //EEPROM variable
@@ -131,21 +131,7 @@ void setup() {
 	pinMode(11, OUTPUT);
 
 	a.activate(new GPSInfo);
-
 }
-
-// void updateGPSData() {
-// 	if (NMEA_read(currentDataString)) {
-// 		const gpsData &data = gpsData(currentDataString.c_str());
-// 		currentDataString.clear();
-// 		if (!data.isValid()) {
-// 			// Ignoriere nicht valide Daten
-// 			return;
-// 		}
-// 		//Update bei korrekten Daten
-// 		a.props.myGPS.update(data);
-// 	}
-// }
 
 void loop() {
 	a.props.updateGPSData(); //Timing der updatefunktion ist wichting. entweder ausglöst durch intrupt oder ca alle 10s(update rate des gps Moduls)

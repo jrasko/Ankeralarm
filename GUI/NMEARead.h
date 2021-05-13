@@ -59,9 +59,6 @@ public:
 		return false;
 	}
 
-public:
-
-
 	void init(uint8_t *_serialReadPos, uint8_t *_serialWritePos, uint8_t *_rxReadPos, uint8_t *_rxWritePos,
 			  char _serialBuffer[TX_Buffer_SIZE], char _rxBuffer[RX_Buffer_SIZE]) {
 		serialReadPos = _serialReadPos;
