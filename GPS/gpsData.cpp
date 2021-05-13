@@ -56,8 +56,10 @@ gpsData::gpsData(const char *myGPSString) {
 	}
 	unsigned short k = 0;
 	std::vector<std::string> v;
+	v.reserve(15);
 	for (int i = 0; i < 15; ++i) {
 		std::string currentString;
+		currentString.reserve(10);
 		while (myGPSString[k] != ',' && myGPSString[k] != '\0') {
 			currentString.push_back(myGPSString[k]);
 			k++;

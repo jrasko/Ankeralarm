@@ -8,15 +8,13 @@
 #define maxIncomingMessageLength 100
 
 #include "../GPS/GPS.h"
-#include <string>
+#include <Arduino.h>
 #include "NMEARead.h"
-
-
 
 
 class Properties {
 private:
-	string currentDataString = "";
+	String currentDataString;
 public:
 	NMEARead gpsdata;
 	GPS myGPS;
@@ -48,7 +46,9 @@ public:
 	void updateGPSData() {
 		if (gpsdata.NMEA_read(currentDataString)) {
 			const gpsData &data = gpsData(currentDataString.c_str());
-			currentDataString.clear();
+			currentDataString = "";
+			currentDataString.reserve(80);
+
 			if (!data.isValid()) {
 				// Ignoriere nicht valide Daten
 				return;
