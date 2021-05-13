@@ -80,7 +80,6 @@ public:
 		this->zustand->setAnzeige(this);
 		lcd.clear();
 		this->zustand->getLCDOutput();
-
 	}
 };
 

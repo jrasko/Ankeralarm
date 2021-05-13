@@ -11,7 +11,6 @@
 class GPS {
 
 public:
-
 	void update(const gpsData &data);
 
 	unsigned short getGPSQuality() const;
@@ -28,7 +27,6 @@ public:
 
 
 private:
-
 	DateTime lastTimeStamp;
 	Position currentPosition = Position(LatitudeDegree(0), LongitudeDegree(0));
 	unsigned short gpsStatus = 0;

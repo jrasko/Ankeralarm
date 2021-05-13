@@ -39,7 +39,7 @@ public:
 		setDisplayBrightness(brightness);
 	}
 
-	void writeEEPROM() {
+	void writeEEPROM() const {
 		eeprom_write_byte(eepromBrightnes, displayBrighness);
 	}
 
@@ -48,12 +48,6 @@ public:
 			gpsData data = gpsData(currentDataString.c_str());
 			currentDataString = "";
 			currentDataString.reserve(80);
-
-			if (!data.isValid()) {
-				// Ignoriere nicht valide Daten
-				return;
-			}
-			//Update bei korrekten Daten
 			myGPS.update(data);
 		}
 	}

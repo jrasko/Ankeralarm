@@ -7,11 +7,9 @@
  * @attention DATA IS NOT CHECKED FOR CONSISTENCY
  */
 void DateTime::updateDate(const String &dateString) {
-	unsigned char d, m = 0;
-	unsigned short y = 0;
-	d = dateString.substring(0, 2).toInt();
-	m = dateString.substring(2, 2).toInt();
-	y = dateString.substring(4, 2).toInt();
+	unsigned char d = dateString.substring(0, 2).toInt();
+	unsigned char m = dateString.substring(2, 2).toInt();
+	unsigned short y = dateString.substring(4, 2).toInt();
 
 	day = d;
 	month = m;
@@ -19,13 +17,9 @@ void DateTime::updateDate(const String &dateString) {
 }
 
 void DateTime::updateTime(const String &timeString) {
-	unsigned char min, h = 0;
-	double sec = 0;
-
-
-	h = timeString.substring(0, 2).toInt();
-	min = timeString.substring(2, 2).toInt();
-	sec = timeString.substring(4, 5).toDouble();
+	unsigned char h = timeString.substring(0, 2).toInt();
+	unsigned char min = timeString.substring(2, 2).toInt();
+	double sec = timeString.substring(4, 5).toDouble();
 
 	hours = h;
 	minutes = min;
@@ -71,11 +65,12 @@ Vector<String> DateTime::toString() const {
 	char buff[16];
 	char buff1[16];
 	char buff2[5];
-
 	sprintf(buff, "%02u.%02u.%02u", d, m, y);
-	ary.push_back(buff);
+
 	dtostrf(seconds, 5, 2, buff2);
 	sprintf(buff1, "%02u:%02u:%s", h, minutes, buff2);
+
+	ary.push_back(buff);
 	ary.push_back(buff1);
 	return ary;
 }
