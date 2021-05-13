@@ -8,12 +8,15 @@
 #define maxIncomingMessageLength 100
 
 #include "../GPS/GPS.h"
+#include <string>
 #include "NMEARead.h"
 
 
-string currentDataString;
+
 
 class Properties {
+private:
+	string currentDataString = "";
 public:
 	NMEARead gpsdata;
 	GPS myGPS;
