@@ -151,7 +151,7 @@ void loop() {
 	a.props.updateGPSData(); //Timing der updatefunktion ist wichting. entweder ausglöst durch intrupt oder ca alle 10s(update rate des gps Moduls)
 
 	if (a.props.alarmActive) {
-		unsigned long distance = a.props.centralPosition.distanceTo(a.props.myGPS.getCurrentPosition());
+		double distance = a.props.centralPosition.distanceTo(a.props.myGPS.getCurrentPosition());
 		bool alarmIsLow = true;
 		while (distance > a.props.alarmRadius) {
 			if (alarmIsLow) {
