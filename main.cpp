@@ -133,7 +133,7 @@ void setup() {
 }
 
 void loop() {
-	a.props.updateGPSData(); //Timing der updatefunktion ist wichting. entweder ausglöst durch intrupt oder ca alle 10s(update rate des gps Moduls)
+		a.props.updateGPSData(); //Timing der updatefunktion ist wichting. entweder ausglöst durch intrupt oder ca alle 10s(update rate des gps Moduls)
 
 	if (a.props.alarmActive) {
 		double distance = a.props.centralPosition.distanceTo(a.props.myGPS.getCurrentPosition());

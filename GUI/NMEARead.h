@@ -31,7 +31,7 @@ public:
 			newDataAvailable = true;
 		}
 		if (!newDataAvailable) {
-			*rxReadPos++;
+			*rxReadPos = *rxReadPos+1;
 			if (*rxReadPos >= RX_Buffer_SIZE) {
 				*rxReadPos = 0;
 			}
@@ -47,7 +47,7 @@ public:
 			return true;
 		}
 		countIncomingChars++;
-		*rxReadPos++;
+		*rxReadPos = *rxReadPos + 1;
 		if (*rxReadPos >= RX_Buffer_SIZE) {
 			*rxReadPos = 0;
 		}
