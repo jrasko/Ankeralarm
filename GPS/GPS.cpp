@@ -45,30 +45,17 @@ unsigned short GPS::getGPSQuality() const {
 		// Seit einiger zeit keine validen Daten vorhanden, verlust des fixes
 		return 1;
 	}
-	if (currentFixAge >= 20 * 1000 || satellitesAvailable <= 3 || HDOP >= 10) {
+	if (currentFixAge >= 12 * 1000 || satellitesAvailable <= 3 || HDOP >= 10) {
 		return 2;
-	}
-
-	if (currentFixAge >= 15 * 1000) {
-		return 3;
-	}
-	if (currentFixAge >= 12 * 1000) {
-		if (HDOP < 1.0) {
-			return 5;
-		}
-		if (HDOP < 2.5) {
-			return 4;
-		}
-		return 3;
-	}
+	}	
 	//FixAge ist zwischen 10 und 12
-	if (HDOP < 1.0) {
-		return 6;
+	if (HDOP == 1.0) {
+		return 4;
 	}
-	if (HDOP < 2.5) {
-		return 5;
+	if (HDOP < 2.0) {
+		return 3;
 	}
-	return 4;
+	return 2;
 }
 
 const DateTime &GPS::getLastTimeStamp() const {
