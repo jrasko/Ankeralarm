@@ -41,7 +41,6 @@ Vector<String> Position::toString() const {
 	unsigned short latDegree, latMinutes, latSeconds, lonDegree, lonMinutes, lonSeconds;
 	char latDir = (lat > 0) ? 'N' : 'S';
 	char lonDir = (lon > 0) ? 'E' : 'W';
-
 	if (lat < 0) {
 		lat = -lat;
 	}
@@ -64,9 +63,9 @@ Vector<String> Position::toString() const {
 	char buff2[16];
 
 	sprintf(buff, "lat: %02d,%02d,%02d%c", latDegree, latMinutes, latSeconds, latDir);
-	ary.push_back(buff);
+	ary.push_back(String(buff));
 	sprintf(buff2, "lon:%03d,%02d,%02d%c", lonDegree, lonMinutes, lonSeconds, lonDir);
-	ary.push_back(buff2);
+	ary.push_back(String(buff2));
 	return ary;
 }
 
