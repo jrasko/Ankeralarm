@@ -2,23 +2,24 @@
 #ifndef ANKERALARM_2_GPSDATA_H
 #define ANKERALARM_2_GPSDATA_H
 
-#include <vector>
-#include <string>
+#include <Arduino.h>
+#include <Vector.h>
 
 class gpsData {
 private:
-    std::vector<std::string> data;
-    bool dirty = false;
+	String data[20];
+	bool dirty = false;
 public:
-    std::vector<std::string> getData() const {
-        return data;
-    }
+	const String *getData() const{
+		return data;
+	}
 
-    explicit gpsData(const char *myGPSString);
+	explicit gpsData(const char *myGPSString);
 
-    bool isValid() const {
-        return !dirty;
-    }
+	bool isValid() const {
+		return !dirty;
+	}
+
 };
 
 

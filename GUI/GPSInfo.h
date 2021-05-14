@@ -4,86 +4,98 @@
 #include "Utils.h"
 #include "Settings.h"
 #include "Alarm.h"
-#include <bitset>
-
+#include <Arduino.h>
 
 
 class GPSInfo : public Zustand {
 public:
-    void encoderPush() override;
+	void encoderPush() override;
 
-    void encoderRight() override;
+	void encoderRight() override;
 
-    void buttonReturn() override;
+	void buttonReturn() override;
 
-    void encoderLeft() override;
+	void encoderLeft() override;
 
-    void getLCDOutput() override;
+	void getLCDOutput() override;
 };
 
 class Koordinaten : public Zustand {
 public:
-    void encoderPush() override;
+	void encoderPush() override;
 
-    void encoderRight() override;
+	void encoderRight() override;
 
-    void buttonReturn() override;
+	void buttonReturn() override;
 
-    void encoderLeft() override;
+	void encoderLeft() override;
 
-    void getLCDOutput() override;
+	void getLCDOutput() override;
 };
 
 class Satellites : public Zustand {
 public:
-    void encoderPush() override;
+	void encoderPush() override;
 
-    void encoderRight() override;
+	void encoderRight() override;
 
-    void buttonReturn() override;
+	void buttonReturn() override;
 
-    void encoderLeft() override;
+	void encoderLeft() override;
 
-    void getLCDOutput() override;
+	void getLCDOutput() override;
 };
 
 class FixAge : public Zustand {
 public:
-    void encoderPush() override;
+	void encoderPush() override;
 
-    void encoderRight() override;
+	void encoderRight() override;
 
-    void buttonReturn() override;
+	void buttonReturn() override;
 
-    void encoderLeft() override;
+	void encoderLeft() override;
 
-    void getLCDOutput() override;
+	void getLCDOutput() override;
 };
 
 class HDOP : public Zustand {
 public:
-    void encoderPush() override;
+	void encoderPush() override;
 
-    void encoderRight() override;
+	void encoderRight() override;
 
-    void buttonReturn() override;
+	void buttonReturn() override;
 
-    void encoderLeft() override;
+	void encoderLeft() override;
 
-    void getLCDOutput() override;
+	void getLCDOutput() override;
 };
 
 class Time : public Zustand {
 public:
-    void encoderPush() override;
+	void encoderPush() override;
 
-    void encoderRight() override;
+	void encoderRight() override;
 
-    void buttonReturn() override;
+	void buttonReturn() override;
 
-    void encoderLeft() override;
+	void encoderLeft() override;
 
-    void getLCDOutput() override;
+	void getLCDOutput() override;
+};
+
+class Radius : public Zustand {
+public:
+	void encoderPush() override;
+
+	void encoderRight() override;
+
+	void buttonReturn() override;
+
+	void encoderLeft() override;
+
+	void getLCDOutput() override;
 };
 
 

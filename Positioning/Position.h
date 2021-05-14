@@ -5,31 +5,32 @@
 
 #include "LatitudeDegree.h"
 #include "LongitudeDegree.h"
-#include <vector>
-
-using namespace std;
+#include <Arduino.h>
+#include <Vector.h>
+#include <math.h>
 
 class Position {
 public:
+	Position(): latitude(0), longitude(0){}
 
-    Position(const LatitudeDegree &latitude, const LongitudeDegree &longitude) : latitude(latitude),
-                                                                                 longitude(longitude) {}
+	Position(const LatitudeDegree &latitude, const LongitudeDegree &longitude) : latitude(latitude),
+																				 longitude(longitude) {}
 
-    friend Position getMedian(const vector<Position> &p);
+	friend Position getMedian(const Vector<Position> &p,unsigned char size);
 
-    double distanceTo(const Position &p) const;
+	double distanceTo(const Position &p) const;
 
-    void setPosition(LatitudeDegree &x, LongitudeDegree &y);
+	void setPosition(LatitudeDegree &x, LongitudeDegree &y);
 
-    const LatitudeDegree &getLatitude() const;
+	const LatitudeDegree &getLatitude() const;
 
-    const LongitudeDegree &getLongitude() const;
+	const LongitudeDegree &getLongitude() const;
 
-    vector<string> toString() const;
+	const char *toString() const;
 
 private:
-    LatitudeDegree latitude;
-    LongitudeDegree longitude;
+	LatitudeDegree latitude;
+	LongitudeDegree longitude;
 };
 
 
