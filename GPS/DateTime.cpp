@@ -8,8 +8,8 @@
  */
 void DateTime::updateDate(const String &dateString) {
 	unsigned char d = dateString.substring(0, 2).toInt();
-	unsigned char m = dateString.substring(2, 2).toInt();
-	unsigned short y = dateString.substring(4, 2).toInt();
+	unsigned char m = dateString.substring(2, 4).toInt();
+	unsigned char y = dateString.substring(4, 6).toInt();
 
 	day = d;
 	month = m;
@@ -18,8 +18,8 @@ void DateTime::updateDate(const String &dateString) {
 
 void DateTime::updateTime(const String &timeString) {
 	unsigned char h = timeString.substring(0, 2).toInt();
-	unsigned char min = timeString.substring(2, 2).toInt();
-	double sec = timeString.substring(4, 5).toDouble();
+	unsigned char min = timeString.substring(2, 4).toInt();
+	double sec = timeString.substring(4, 9).toDouble();
 
 	hours = h;
 	minutes = min;
@@ -30,7 +30,7 @@ const char *DateTime::toString() const {
 	unsigned char h = hours;
 	unsigned char d = day;
 	unsigned char m = month;
-	unsigned short y = year;
+	unsigned char y = year;
 
 	h += UTCFactor;
 	if (h >= 244) {
@@ -67,8 +67,8 @@ const char *DateTime::toString() const {
 	if (buff[0] == ' '){
 		buff[0] = '0';
 	}
-	sprintf(ary, "%02u.%02u.%02u        %02u:%02u:%s", d, m, y, h, minutes, buff);
-	delete buff;
+	sprintf(ary, "%02u.%02u.%02u         %02u:%02u:%s", d, m, y, h, minutes, buff);
+	delete[] buff;
 	ary[16] = '\0';
 	return ary;
 }

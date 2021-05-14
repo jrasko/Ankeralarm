@@ -19,8 +19,8 @@ public:
 	unsigned char getUTCFactor() const;
 
 private:
-	static inline bool isLeapYear(unsigned short y) {
-		return (y % 4 == 0 && y % 100 != 0) || (y % 400 == 0);
+	static inline bool isLeapYear(unsigned char y) {
+		return (y % 4 == 0 && y != 0);
 	}
 
 	const unsigned char monthLength[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
@@ -30,7 +30,7 @@ private:
 
 	unsigned char day = 0;
 	unsigned char month = 0;
-	unsigned short year = 0;
+	unsigned char year = 0;
 
 	unsigned char UTCFactor = 0;
 

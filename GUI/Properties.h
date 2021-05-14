@@ -44,8 +44,7 @@ public:
 	}
 
 	void updateGPSData() {
-		if (/* gpsdata.NMEA_read(currentDataString) */ true) {
-			currentDataString = "$GPGGA,192822.00,5035.56591,N,00720.91370,E,1,10,0.83,330.9,M,46.9,M,,*52";
+		if (gpsdata.NMEA_read(currentDataString)) {
 			gpsData data = gpsData(currentDataString.c_str());
 			currentDataString = "";
 			myGPS.update(data);
