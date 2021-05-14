@@ -20,16 +20,16 @@ void Position::setPosition(LatitudeDegree &x, LongitudeDegree &y) {
 	longitude = y;
 }
 
-Position getMedian(const Vector<Position> &p) {
+Position getMedian(const Vector<Position> &p, unsigned char size) {
 	double latDeg = 0;
 	double lonDeg = 0;
 
-	for (const auto &i : p) {
-		latDeg += i.latitude.getDegrees();
-		lonDeg += i.longitude.getDegrees();
+	for (int i = 0; i < size; ++i) {
+		latDeg += p[i].latitude.getDegrees();
+		lonDeg += p[i].longitude.getDegrees();
 	}
-	latDeg /= p.size();
-	lonDeg /= p.size();
+	latDeg /= size;
+	lonDeg /= size;
 
 	return {LatitudeDegree(latDeg), LongitudeDegree(lonDeg)};
 }

@@ -11,7 +11,7 @@
 class GPS {
 
 public:
-	void update(const gpsData &data);
+	bool update(const gpsData &data);
 
 	unsigned short getGPSQuality() const;
 

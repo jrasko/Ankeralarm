@@ -130,15 +130,22 @@ void setup() {
 
 void loop() {
 	//Timing der updatefunktion ist wichting. entweder ausglöst durch intrupt oder ca alle 10s(update rate des gps Moduls)
-	a.props.updateGPSData();
+	if(a.props.updateGPSData()){
+		a.lcd.clear();
+		a.getLCDOutput();
+	}
 
 	if (a.props.alarmActive) {
 		double distance = a.props.centralPosition.distanceTo(a.props.myGPS.getCurrentPosition());
+		//a.lcd.setCursor(0,0);
+		//a.lcd.print(distance);
+		//_delay_ms(10000);
 		bool alarmIsLow = true;
 		while (distance > a.props.alarmRadius) {
 			if (alarmIsLow) {
 				// activate Alarm
 				alarmIsLow = false;
+				a.lcd.clear();
 				a.print2Lines("     ALARM!     ", "");
 				PORTB |= (1 << PORTB4);
 			}
@@ -146,10 +153,10 @@ void loop() {
 				// deactivate alarm
 				PORTB &= ~(1 << PORTB4);
 				a.props.alarmActive = false;
+				a.lcd.clear();
 				a.getLCDOutput();
 				break;
 			}
-
 		}
 	}
 
