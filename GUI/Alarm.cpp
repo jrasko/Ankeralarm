@@ -44,18 +44,22 @@ void FindPostition::buttonReturn() {
 
 void FindPostition::getLCDOutput() {
 	// TODO 3 GPS Anfragen mit zeitlichem Timeout + mitteln
-	anzeige->print2Lines("Please wait", "Find Position");
-	Position ary[4];
+	anzeige->print2Lines("Please wait  0/4", "Find Position");
+	const unsigned char size = 8;
+	Position ary[size];
 	Vector <Position> posCollection(ary);
-	for (int i = 0; i < 4; ++i) {
+	for (int i = 0; i < 8; ++i) {
 		// wait for updated GPS Data
-		bool update = false;
+		bool update;
 		do {
 			update = anzeige->props.updateGPSData();
 		} while (!update);
 		posCollection[i] = anzeige->props.myGPS.getCurrentPosition();
+		char buff[17];
+		sprintf(buff,"Please wait  %u/4",(i+1)/2);
+		anzeige->print2Lines(buff,"Find Position");
 	}
-	anzeige->props.centralPosition = getMedian(posCollection);
+	anzeige->props.centralPosition = getMedian(posCollection, size);
 	anzeige->setZustand(new SetRadius);
 }
 

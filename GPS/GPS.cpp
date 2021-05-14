@@ -4,10 +4,11 @@
  * Updates the Attributes of the GPS Object
  * @param data includes a vector of strings which is build from the raw GPS Data
  */
-void GPS::update(const gpsData &data) {
+bool GPS::update(const gpsData &data) {
 	const String *v = data.getData();
+	bool hasUpdated = false;
 	if (!data.isValid()) {
-		return;
+		return false;
 	}
 	if (v[0] == "$GPRMC") {
 		//GPRMC
@@ -16,6 +17,7 @@ void GPS::update(const gpsData &data) {
 		LatitudeDegree lat(v[3], v[4][0]);
 		LongitudeDegree lon(v[5], v[6][0]);
 		currentPosition = Position(lat, lon);
+		hasUpdated = true;
 	} else if (v[0] == "$GPGGA") {
 		//GPGGA
 		lastTimeStamp.updateTime(v[1]);
@@ -26,8 +28,10 @@ void GPS::update(const gpsData &data) {
 		gpsStatus = v[6].toInt();
 		satellitesAvailable = v[7].toInt();
 		HDOP = v[8].toDouble();
+		hasUpdated = true;
 	}
 	lastInputTime = millis();
+	return hasUpdated;
 }
 
 /**
@@ -49,7 +53,7 @@ unsigned short GPS::getGPSQuality() const {
 		return 2;
 	}	
 	//FixAge ist zwischen 10 und 12
-	if (HDOP == 1.0) {
+	if (HDOP < 1.1) {
 		return 4;
 	}
 	if (HDOP < 2.0) {

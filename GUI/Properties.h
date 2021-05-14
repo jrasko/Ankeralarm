@@ -47,8 +47,7 @@ public:
 		if (gpsdata.NMEA_read(currentDataString)) {
 			gpsData data = gpsData(currentDataString.c_str());
 			currentDataString = "";
-			myGPS.update(data);
-			return true;
+			return myGPS.update(data);
 		}
 		return false;
 	}

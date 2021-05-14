@@ -171,6 +171,6 @@ void Radius::getLCDOutput() {
 	char buff2[16];
 	dtostrf(anzeige->props.centralPosition.distanceTo(anzeige->props.myGPS.getCurrentPosition()), 6, 0, buff);
 	sprintf(buff1, "Distance: %s", buff);
-	sprintf(buff2, "max Radius: %u", anzeige->props.alarmRadius);
+	sprintf(buff2, "max Radius:  %03u", anzeige->props.alarmRadius);
 	anzeige->print2Lines(buff1, buff2);
 }

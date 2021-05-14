@@ -3,6 +3,7 @@
 #define ANKERALARM_LONGITUDEDEGREE_H
 
 #include <Arduino.h>
+#include "math.h"
 
 class LongitudeDegree {
 
