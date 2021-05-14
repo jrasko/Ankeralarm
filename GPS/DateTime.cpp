@@ -67,7 +67,7 @@ const char *DateTime::toString() const {
 	if (buff[0] == ' '){
 		buff[0] = '0';
 	}
-	sprintf(ary, "%02u.%02u.%02u         %02u:%02u:%s", d, m, y, h, minutes, buff);
+	sprintf(ary, "%02u.%02u.%02u        %02u:%02u:%s", d, m, y, h, minutes, buff);
 	ary[16] = '\0';
 	return ary;
 }

@@ -35,15 +35,7 @@ bool validateGPSString(const char *proofIt) {
 		}
 		k++;
 	}
-	if (v[0] == "$GPGGA") {
-		if (v[6] != "1") {
-			return false;
-		}
-	} else if (v[0] == "$GPRMC") {
-		if (v[2][0] != 'A') {
-			return false;
-		}
-	} else {
+	if (v[0] == "$GPRMC" && v[2][0] != 'A') {
 		return false;
 	}
 	return gpsChecksumOk(proofIt);
