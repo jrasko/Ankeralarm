@@ -12,7 +12,7 @@ public:
 
 	void updateTime(const String &timeString);
 
-	Vector<String> toString() const;
+	const char *toString() const;
 
 	void setUTCFactor(unsigned char factor);
 

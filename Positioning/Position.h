@@ -24,7 +24,7 @@ public:
 
 	const LongitudeDegree &getLongitude() const;
 
-	Vector<String> toString() const;
+	const char *toString() const;
 
 private:
 	LatitudeDegree latitude;

@@ -34,8 +34,7 @@ Position getMedian(const Vector<Position> &p) {
 	return {LatitudeDegree(latDeg), LongitudeDegree(lonDeg)};
 }
 
-Vector<String> Position::toString() const {
-	Vector<String> ary;
+const char *Position::toString() const {
 	double lat = latitude.getDegrees();
 	double lon = longitude.getDegrees();
 	unsigned short latDegree, latMinutes, latSeconds, lonDegree, lonMinutes, lonSeconds;
@@ -59,13 +58,10 @@ Vector<String> Position::toString() const {
 	lon = 60.0 * (lon - lonMinutes);
 	lonSeconds = (unsigned short) (0.5001 + lon);
 
-	char buff[16];
-	char buff2[16];
+	char *ary = new char[34];
 
-	sprintf(buff, "lat: %02d,%02d,%02d%c", latDegree, latMinutes, latSeconds, latDir);
-	ary.push_back(String(buff));
-	sprintf(buff2, "lon:%03d,%02d,%02d%c", lonDegree, lonMinutes, lonSeconds, lonDir);
-	ary.push_back(String(buff2));
+	sprintf(ary, "lat: %02d,%02d,%02d%c   lon:%03d,%02d,%02d%c", latDegree, latMinutes, latSeconds, latDir);
+	ary[16] = '\0';
 	return ary;
 }
 

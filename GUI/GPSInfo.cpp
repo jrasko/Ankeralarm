@@ -44,8 +44,9 @@ void Koordinaten::encoderLeft() {
 }
 
 void Koordinaten::getLCDOutput() {
-	const Vector<String> &lines = anzeige->props.myGPS.getCurrentPosition().toString();
-	anzeige->print2Lines(lines[0].c_str(), lines[1].c_str());
+	const char *lines = anzeige->props.myGPS.getCurrentPosition().toString();
+	anzeige->print2Lines(lines, &lines[17]);
+	delete lines;
 }
 
 //Sattelites
@@ -143,8 +144,9 @@ void Time::encoderLeft() {
 }
 
 void Time::getLCDOutput() {
-	const Vector<String> &lines = anzeige->props.myGPS.getLastTimeStamp().toString();
-	anzeige->print2Lines(lines[0].c_str(), lines[1].c_str());
+	const char *lines = anzeige->props.myGPS.getLastTimeStamp().toString();
+	anzeige->print2Lines(lines, &lines[17]);
+	delete lines;
 }
 
 void Radius::encoderPush() {

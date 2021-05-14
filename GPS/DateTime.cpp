@@ -26,8 +26,7 @@ void DateTime::updateTime(const String &timeString) {
 	seconds = sec;
 }
 
-Vector<String> DateTime::toString() const {
-	Vector<String> ary;
+const char *DateTime::toString() const {
 	unsigned char h = hours;
 	unsigned char d = day;
 	unsigned char m = month;
@@ -62,16 +61,11 @@ Vector<String> DateTime::toString() const {
 			}
 		}
 	}
-	char buff[16];
-	char buff1[16];
-	char buff2[5];
-	sprintf(buff, "%02u.%02u.%02u", d, m, y);
-
-	dtostrf(seconds, 5, 2, buff2);
-	sprintf(buff1, "%02u:%02u:%s", h, minutes, buff2);
-
-	ary.push_back(buff);
-	ary.push_back(buff1);
+	char buff[5];
+	char *ary = new char[34];
+	dtostrf(seconds, 5, 2, buff);
+	sprintf(ary, "%02u.%02u.%02u       %02u:%02u:%s", d, m, y, h, minutes, buff);
+	ary[16] = '\0';
 	return ary;
 }
 
