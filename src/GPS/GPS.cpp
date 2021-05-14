@@ -12,6 +12,10 @@ bool GPS::update(const gpsData &data) {
 	}
 	if (v[0] == "$GPRMC") {
 		//GPRMC
+		if (v[2] != "A"){
+			//invalid data
+			return false;
+		}
 		lastTimeStamp.updateTime(v[1]);
 		lastTimeStamp.updateDate(v[9]);
 		LatitudeDegree lat(v[3], v[4][0]);
@@ -20,12 +24,16 @@ bool GPS::update(const gpsData &data) {
 		hasUpdated = true;
 	} else if (v[0] == "$GPGGA") {
 		//GPGGA
+		gpsStatus = v[6].toInt();
+		if (gpsStatus == 0){
+			// invalid data
+			return false;
+		}
 		lastTimeStamp.updateTime(v[1]);
 		LatitudeDegree lat(v[2], v[3][0]);
 		LongitudeDegree lon(v[4], v[5][0]);
 		currentPosition = Position(lat, lon);
 
-		gpsStatus = v[6].toInt();
 		satellitesAvailable = v[7].toInt();
 		HDOP = v[8].toDouble();
 		hasUpdated = true;
