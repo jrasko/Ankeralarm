@@ -43,12 +43,14 @@ public:
 		eeprom_write_byte(eepromBrightnes, displayBrighness);
 	}
 
-	void updateGPSData() {
+	bool updateGPSData() {
 		if (gpsdata.NMEA_read(currentDataString)) {
 			gpsData data = gpsData(currentDataString.c_str());
 			currentDataString = "";
 			myGPS.update(data);
+			return true;
 		}
+		return false;
 	}
 
 

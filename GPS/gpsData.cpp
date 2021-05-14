@@ -36,9 +36,6 @@ bool validateGPSString(const char *proofIt) {
 		}
 		k++;
 	}
-	if (v[0] == "$GPRMC" && v[2][0] != 'A') {
-		return false;
-	}
 	return gpsChecksumOk(proofIt);
 }
 

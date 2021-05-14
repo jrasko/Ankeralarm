@@ -10,6 +10,7 @@
 
 class Position {
 public:
+	Position(): latitude(0), longitude(0){}
 
 	Position(const LatitudeDegree &latitude, const LongitudeDegree &longitude) : latitude(latitude),
 																				 longitude(longitude) {}

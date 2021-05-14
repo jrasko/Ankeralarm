@@ -28,7 +28,7 @@ public:
 
 private:
 	DateTime lastTimeStamp;
-	Position currentPosition = Position(LatitudeDegree(0), LongitudeDegree(0));
+	Position currentPosition = Position();
 	unsigned short gpsStatus = 0;
 	double HDOP = 50.0;
 	unsigned short satellitesAvailable = 0;

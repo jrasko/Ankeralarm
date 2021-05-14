@@ -7,13 +7,9 @@
  * @attention DATA IS NOT CHECKED FOR CONSISTENCY
  */
 void DateTime::updateDate(const String &dateString) {
-	unsigned char d = dateString.substring(0, 2).toInt();
-	unsigned char m = dateString.substring(2, 4).toInt();
-	unsigned char y = dateString.substring(4, 6).toInt();
-
-	day = d;
-	month = m;
-	year = y;
+	day = dateString.substring(0, 2).toInt();
+	month = dateString.substring(2, 4).toInt();
+	year = dateString.substring(4, 6).toInt();
 }
 
 void DateTime::updateTime(const String &timeString) {
