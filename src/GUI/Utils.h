@@ -18,13 +18,13 @@ public:
 	}
 
 	//TODO leere Methode geben damit im Code nix implementiert werden muss
-	virtual void encoderPush() = 0;
+	virtual void encoderPush() {};
 
-	virtual void encoderLeft() = 0;
+	virtual void encoderLeft() {};
 
-	virtual void encoderRight() = 0;
+	virtual void encoderRight() {};
 
-	virtual void buttonReturn() = 0;
+	virtual void buttonReturn() {};
 
 	virtual void getLCDOutput() = 0;
 };

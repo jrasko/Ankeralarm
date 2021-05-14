@@ -29,6 +29,7 @@ const char *DateTime::toString() const {
 	unsigned char y = year;
 
 	h += UTCFactor;
+	// In case of negative h
 	if (h >= 244) {
 		h = 24 - (256 - h);
 		d--;
@@ -37,6 +38,9 @@ const char *DateTime::toString() const {
 				d = 31;
 				m = 12;
 				y--;
+				if (y == 255){
+					y = 0;
+				}
 			} else if (m == 3 && isLeapYear(y)) {
 				d = 29;
 				m = 2;
@@ -46,6 +50,7 @@ const char *DateTime::toString() const {
 			}
 		}
 	} else if (h >= 24) {
+		// In case of positive h
 		h -= 24;
 		d++;
 		if (d > monthLength[m - 1] || (d == 29 && m == 2 && isLeapYear(y))) {
@@ -54,6 +59,9 @@ const char *DateTime::toString() const {
 			if (m > 12) {
 				m = 1;
 				y++;
+				if (h > 99){
+					h = 0;
+				}
 			}
 		}
 	}
@@ -69,11 +77,11 @@ const char *DateTime::toString() const {
 	return ary;
 }
 
-void DateTime::setUTCFactor(unsigned char factor) {
+void DateTime::setUTCFactor(const char factor) {
 	UTCFactor = factor;
 }
 
-unsigned char DateTime::getUTCFactor() const {
+char DateTime::getUTCFactor() const {
 	return UTCFactor;
 }
 

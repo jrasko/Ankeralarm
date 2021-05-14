@@ -18,32 +18,13 @@ void Alarm::encoderRight() {
 	this->anzeige->setZustand(new GPSInfo);
 }
 
-void Alarm::buttonReturn() {
-
-}
-
 void Alarm::getLCDOutput() {
 	anzeige->lcd.print("Alarm");
 }
 
 // FindPosition
-void FindPostition::encoderLeft() {
-
-}
-
-void FindPostition::encoderPush() {
-
-}
-
-void FindPostition::encoderRight() {
-}
-
-void FindPostition::buttonReturn() {
-
-}
 
 void FindPostition::getLCDOutput() {
-	// TODO 3 GPS Anfragen mit zeitlichem Timeout + mitteln
 	anzeige->print2Lines("Please wait  0/4", "Find Position");
 	const unsigned char size = 8;
 	Position ary[size];
@@ -99,16 +80,9 @@ void SetRadius::getLCDOutput() {
 
 
 // AreUSure
-void AreUSure::encoderLeft() {
-
-}
-
 void AreUSure::encoderPush() {
 	this->anzeige->props.alarmActive = true;
 	this->anzeige->setZustand(new GPSInfo);
-}
-
-void AreUSure::encoderRight() {
 }
 
 void AreUSure::buttonReturn() {
@@ -124,10 +98,6 @@ void AbortAlarm::encoderPush() {
 	this->anzeige->props.alarmActive = false;
 	this->anzeige->setZustand(new GPSInfo);
 }
-
-void AbortAlarm::encoderLeft() {}
-
-void AbortAlarm::encoderRight() {}
 
 void AbortAlarm::buttonReturn() {
 	this->anzeige->setZustand(new GPSInfo);

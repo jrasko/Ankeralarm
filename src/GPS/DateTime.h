@@ -14,9 +14,9 @@ public:
 
 	const char *toString() const;
 
-	void setUTCFactor(unsigned char factor);
+	void setUTCFactor(char factor);
 
-	unsigned char getUTCFactor() const;
+	char getUTCFactor() const;
 
 private:
 	static inline bool isLeapYear(unsigned char y) {
@@ -32,7 +32,7 @@ private:
 	unsigned char month = 0;
 	unsigned char year = 0;
 
-	unsigned char UTCFactor = 0;
+	char UTCFactor = 0;
 
 };
 

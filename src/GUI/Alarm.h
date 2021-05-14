@@ -13,21 +13,11 @@ public:
 
 	void encoderRight() override;
 
-	void buttonReturn() override;
-
 	void getLCDOutput() override;
 };
 
 class FindPostition : public Zustand {
 public:
-	void encoderPush() override;
-
-	void encoderLeft() override;
-
-	void encoderRight() override;
-
-	void buttonReturn() override;
-
 	void getLCDOutput() override;
 };
 
@@ -50,10 +40,6 @@ class AreUSure : public Zustand {
 public:
 	void encoderPush() override;
 
-	void encoderLeft() override;
-
-	void encoderRight() override;
-
 	void buttonReturn() override;
 
 	void getLCDOutput() override;
@@ -62,10 +48,6 @@ public:
 class AbortAlarm : public Zustand {
 public:
 	void encoderPush() override;
-
-	void encoderLeft() override;
-
-	void encoderRight() override;
 
 	void buttonReturn() override;
 

@@ -13,8 +13,6 @@ public:
 
 	void encoderRight() override;
 
-	void buttonReturn() override;
-
 	void encoderLeft() override;
 
 	void getLCDOutput() override;
@@ -35,8 +33,6 @@ public:
 
 class Satellites : public Zustand {
 public:
-	void encoderPush() override;
-
 	void encoderRight() override;
 
 	void buttonReturn() override;
@@ -48,8 +44,6 @@ public:
 
 class FixAge : public Zustand {
 public:
-	void encoderPush() override;
-
 	void encoderRight() override;
 
 	void buttonReturn() override;
@@ -61,8 +55,6 @@ public:
 
 class HDOP : public Zustand {
 public:
-	void encoderPush() override;
-
 	void encoderRight() override;
 
 	void buttonReturn() override;
@@ -74,8 +66,6 @@ public:
 
 class Time : public Zustand {
 public:
-	void encoderPush() override;
-
 	void encoderRight() override;
 
 	void buttonReturn() override;
@@ -87,8 +77,6 @@ public:
 
 class Radius : public Zustand {
 public:
-	void encoderPush() override;
-
 	void encoderRight() override;
 
 	void buttonReturn() override;

@@ -10,10 +10,6 @@ void GPSInfo::encoderRight() {
 	this->anzeige->setZustand(new Settings);
 }
 
-void GPSInfo::buttonReturn() {
-
-}
-
 void GPSInfo::encoderLeft() {
 	this->anzeige->setZustand(new Alarm);
 }
@@ -50,10 +46,6 @@ void Koordinaten::getLCDOutput() {
 }
 
 //Sattelites
-void Satellites::encoderPush() {
-
-}
-
 void Satellites::encoderRight() {
 	this->anzeige->setZustand(new FixAge);
 }
@@ -74,14 +66,9 @@ void Satellites::getLCDOutput() {
 }
 
 //FixAge
-void FixAge::encoderPush() {
-
-}
-
 void FixAge::encoderRight() {
 	this->anzeige->setZustand(new HDOP);
 }
-
 
 void FixAge::buttonReturn() {
 	this->anzeige->setZustand(new GPSInfo);
@@ -96,13 +83,8 @@ void FixAge::getLCDOutput() {
 	sprintf(buf, "%lu", anzeige->props.myGPS.getFixAge());
 	anzeige->print2Lines("Fix Age:", buf);
 }
+
 //HDOP
-
-
-void HDOP::encoderPush() {
-
-}
-
 void HDOP::encoderRight() {
 	this->anzeige->setZustand(new Time);
 }
@@ -123,10 +105,6 @@ void HDOP::getLCDOutput() {
 }
 
 // Time
-void Time::encoderPush() {
-
-}
-
 void Time::encoderRight() {
 	if (anzeige->props.alarmActive) {
 		this->anzeige->setZustand(new Radius);
@@ -147,10 +125,6 @@ void Time::getLCDOutput() {
 	const char *lines = anzeige->props.myGPS.getLastTimeStamp().toString();
 	anzeige->print2Lines(lines, &lines[17]);
 	delete lines;
-}
-
-void Radius::encoderPush() {
-
 }
 
 void Radius::encoderRight() {
