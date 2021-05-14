@@ -21,7 +21,8 @@ bool gpsChecksumOk(const char *gpsMessage) {
 }
 
 bool validateGPSString(const char *proofIt) {
-	Vector<String> v;
+	String ary[2];
+	Vector<String> v(ary);
 	int k = 0;
 	while (true) {
 		String currentString;

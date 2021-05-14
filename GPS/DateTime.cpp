@@ -61,13 +61,14 @@ const char *DateTime::toString() const {
 			}
 		}
 	}
-	char buff[5];
-	char *ary = new char[34];
+	char * buff = new char[5];
+	char * ary = new char[34];
 	dtostrf(seconds, 5, 2, buff);
 	if (buff[0] == ' '){
 		buff[0] = '0';
 	}
 	sprintf(ary, "%02u.%02u.%02u        %02u:%02u:%s", d, m, y, h, minutes, buff);
+	delete buff;
 	ary[16] = '\0';
 	return ary;
 }
