@@ -29,7 +29,7 @@ void FindPostition::getLCDOutput() {
 	const unsigned char size = 8;
 	Position ary[size];
 	Vector<Position> posCollection(ary);
-	for (int i = 0; i < 8; ++i) {
+	for (unsigned char i = 0; i < 8; ++i) {
 		// wait for updated GPS Data
 		bool update;
 		do {

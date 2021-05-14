@@ -3,11 +3,8 @@
 #define toDEG 3.14159265/180
 
 LongitudeDegree::LongitudeDegree(const String &koordString, char direction) {
-	unsigned char deg = 0;
-	double min = 0;
-
-	deg = koordString.substring(0, 3).toInt();
-	min = koordString.substring(3, 10).toDouble();
+	unsigned char deg = koordString.substring(0, 3).toInt();
+	double min = koordString.substring(3).toDouble();
 
 	double jdeg = min / 60.0 + deg;
 	if (direction == 'W') {

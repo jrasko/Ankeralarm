@@ -38,7 +38,7 @@ bool GPS::update(const gpsData &data) {
  * Calulates a number as indicator for the Quality of the GPS Signal
  * @return 0 -> No GPS Data available, 1 -> No Fix, 2-6 -> Indicator for the Quality, 2 is the badest and 5 the best Quality
  */
-unsigned short GPS::getGPSQuality() const {
+unsigned char GPS::getGPSQuality() const {
 	const unsigned long maxFixAge = 30 * 1000; //30 secs
 	if (lastInputTime == 0) {
 		// Von Anfang an keine validen Daten vorhanden
@@ -70,7 +70,7 @@ double GPS::getHDOP() const {
 	return HDOP;
 }
 
-unsigned short GPS::getSatellitesAvailable() const {
+unsigned char GPS::getSatellitesAvailable() const {
 	return satellitesAvailable;
 }
 

@@ -13,7 +13,7 @@ class GPS {
 public:
 	bool update(const gpsData &data);
 
-	unsigned short getGPSQuality() const;
+	unsigned char getGPSQuality() const;
 
 	DateTime &getLastTimeStamp();
 
@@ -21,7 +21,7 @@ public:
 
 	unsigned long getFixAge() const;
 
-	unsigned short getSatellitesAvailable() const;
+	unsigned char getSatellitesAvailable() const;
 
 	const Position &getCurrentPosition() const;
 
@@ -29,9 +29,9 @@ public:
 private:
 	DateTime lastTimeStamp;
 	Position currentPosition = Position();
-	unsigned short gpsStatus = 0;
+	unsigned char gpsStatus = 0;
 	double HDOP = 50.0;
-	unsigned short satellitesAvailable = 0;
+	unsigned char satellitesAvailable = 0;
 	unsigned long lastInputTime = 0;
 };
 

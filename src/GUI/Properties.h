@@ -30,7 +30,7 @@ public:
 	}
 
 	void setDisplayTimeout(unsigned char timeout) {
-		// Nicht mit Timer möglich, da Timer 2 fürs Display Benötigt wird!
+		// No timer available, search for another solution
 	}
 
 	void readEEPROM() {

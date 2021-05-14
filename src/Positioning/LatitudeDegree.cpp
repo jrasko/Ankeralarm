@@ -3,7 +3,7 @@
 
 LatitudeDegree::LatitudeDegree(const String &koordString, char direction) {
 	unsigned char deg = koordString.substring(0, 2).toInt();
-	double min = koordString.substring(2, 10).toDouble();
+	double min = koordString.substring(2).toDouble();
 
 	double jdeg = min / 60.0 + deg;
 	if (direction == 'S') {

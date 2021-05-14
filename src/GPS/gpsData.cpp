@@ -23,7 +23,7 @@ bool gpsChecksumOk(const char *gpsMessage) {
 bool validateGPSString(const char *proofIt) {
 	String ary[2];
 	Vector<String> v(ary);
-	int k = 0;
+	unsigned char k = 0;
 	while (true) {
 		String currentString;
 		while (proofIt[k] != ',' && proofIt[k] != '\0') {
@@ -44,8 +44,8 @@ gpsData::gpsData(const char *myGPSString) {
 		dirty = true;
 		return;
 	}
-	unsigned short k = 0;
-	for (int i = 0; i < 15; ++i) {
+	unsigned char k = 0;
+	for (unsigned char i = 0; i < 15; ++i) {
 		String currentString;
 		while (myGPSString[k] != ',' && myGPSString[k] != '\0') {
 			currentString.concat(myGPSString[k]);
