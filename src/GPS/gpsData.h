@@ -10,7 +10,7 @@ private:
 	String data[20];
 	bool dirty = false;
 public:
-	const String *getData() const{
+	const String *getData() const {
 		return data;
 	}
 

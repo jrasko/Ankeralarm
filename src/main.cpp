@@ -54,17 +54,17 @@
 
 // ----IO-definition-----------------------------------------
 
-#define ledPin 0         	//LED pin 14                      PC0
-#define debug_led 5       	//onboard Led                     PB5
+#define ledPin 0            //LED pin 14                      PC0
+#define debug_led 5        //onboard Led                     PB5
 //#define lcd_beleuchtung 3 //backlight LCD                   PB3
 #define returnButton 7      //Schalter 1                      PD7  PCINT 23
 #define snozeButton 6       //							      PD6
-#define summer 4          	//Summer                          PB4
-#define encoder_a 2       	//encoder pin 2 (32)              PD2                     
-#define encoder_b 3        	//encoder pin 3                   PD3
-#define encoder_button 4   	//encoder pin 4                   PD4
-#define LED_RED 1          	//RG-LED pin 8                    PB1
-#define LED_GREEN 2  		//RG-LED pin 9                    PB2
+#define summer 4            //Summer                          PB4
+#define encoder_a 2        //encoder pin 2 (32)              PD2
+#define encoder_b 3            //encoder pin 3                   PD3
+#define encoder_button 4    //encoder pin 4                   PD4
+#define LED_RED 1            //RG-LED pin 8                    PB1
+#define LED_GREEN 2        //RG-LED pin 9                    PB2
 
 //---global variables-----------------------------------------
 
@@ -83,8 +83,6 @@ volatile char encoderSpinFlag = 0;
 uint8_t brightness EEMEM = 150; //EEPROM variable
 
 
-// SoftwareSerial mySoftwareSerial(6, 7); //Rx Tx //zur Debugging
-
 //----Funktionsprototypen------------------------------------
 
 void interrupt_init(); //UART init
@@ -101,12 +99,11 @@ unsigned char debug = 0;
 void setup() {
 	a.props.eepromBrightnes = &brightness;
 	a.props.readEEPROM();
-	//analogWrite(lcd_beleuchtung, eeprom_read_byte(&brightness)); //einschlaten der Beleuchtung
 	lcd.begin(16, 2);
 	lcd.display();
-	lcd.write("Ankeralarm V2");
-	lcd.write("T.Zwiener");
-	//_delay_ms(1000);
+	lcd.write("Ankeralarm V3");
+	lcd.write("Zwiener & Raskob");
+	_delay_ms(1000);
 	interrupt_init();
 
 	a.props.gpsdata.init(&serialReadPos, &serialWritePos, &rxReadPos, &rxWritePos, serialBuffer, rxBuffer);
@@ -129,15 +126,14 @@ void setup() {
 }
 
 void loop() {
-	//Timing der updatefunktion ist wichting. entweder ausglöst durch intrupt oder ca alle 10s(update rate des gps Moduls)
-	
-	a.props.updateGPSData();
+
+	if (a.props.updateGPSData()) {
+		a.lcd.clear();
+		a.getLCDOutput();
+	}
 
 	if (a.props.alarmActive) {
 		double distance = a.props.centralPosition.distanceTo(a.props.myGPS.getCurrentPosition());
-		//a.lcd.setCursor(0,0);
-		//a.lcd.print(distance);
-		//_delay_ms(10000);
 		bool alarmIsLow = true;
 		while (distance > a.props.alarmRadius) {
 			if (alarmIsLow) {

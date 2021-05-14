@@ -47,7 +47,7 @@ void FindPostition::getLCDOutput() {
 	anzeige->print2Lines("Please wait  0/4", "Find Position");
 	const unsigned char size = 8;
 	Position ary[size];
-	Vector <Position> posCollection(ary);
+	Vector<Position> posCollection(ary);
 	for (int i = 0; i < 8; ++i) {
 		// wait for updated GPS Data
 		bool update;
@@ -56,8 +56,8 @@ void FindPostition::getLCDOutput() {
 		} while (!update);
 		posCollection[i] = anzeige->props.myGPS.getCurrentPosition();
 		char buff[17];
-		sprintf(buff,"Please wait  %u/4",(i+1)/2);
-		anzeige->print2Lines(buff,"Find Position");
+		sprintf(buff, "Please wait  %u/4", (i + 1) / 2);
+		anzeige->print2Lines(buff, "Find Position");
 	}
 	anzeige->props.centralPosition = getMedian(posCollection, size);
 	anzeige->setZustand(new SetRadius);

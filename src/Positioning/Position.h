@@ -11,12 +11,12 @@
 
 class Position {
 public:
-	Position(): latitude(0), longitude(0){}
+	Position() : latitude(0), longitude(0) {}
 
 	Position(const LatitudeDegree &latitude, const LongitudeDegree &longitude) : latitude(latitude),
 																				 longitude(longitude) {}
 
-	friend Position getMedian(const Vector<Position> &p,unsigned char size);
+	friend Position getMedian(const Vector<Position> &p, unsigned char size);
 
 	double distanceTo(const Position &p) const;
 

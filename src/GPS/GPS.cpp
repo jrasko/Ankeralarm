@@ -51,7 +51,7 @@ unsigned short GPS::getGPSQuality() const {
 	}
 	if (currentFixAge >= 12 * 1000 || satellitesAvailable <= 3 || HDOP >= 10) {
 		return 2;
-	}	
+	}
 	//FixAge ist zwischen 10 und 12
 	if (HDOP < 1.1) {
 		return 4;
