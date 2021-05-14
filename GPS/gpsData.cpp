@@ -55,17 +55,14 @@ gpsData::gpsData(const char *myGPSString) {
 		return;
 	}
 	unsigned short k = 0;
-	Vector<String> v;
 	for (int i = 0; i < 15; ++i) {
 		String currentString;
-		currentString.reserve(10);
 		while (myGPSString[k] != ',' && myGPSString[k] != '\0') {
 			currentString.concat(myGPSString[k]);
 			k++;
 		}
-		v.push_back(currentString);
+		data[i] = currentString;
 		k++;
 	}
-	data = v;
 }
 

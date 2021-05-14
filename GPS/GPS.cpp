@@ -5,8 +5,8 @@
  * @param data includes a vector of strings which is build from the raw GPS Data
  */
 void GPS::update(const gpsData &data) {
-	const Vector<String> &v = data.getData();
-	if (!data.isValid() || (v.size() != 13 && v.size() != 15)) {
+	const String *v = data.getData();
+	if (!data.isValid()) {
 		return;
 	}
 	if (v[0] == "$GPRMC") {

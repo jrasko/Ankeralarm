@@ -38,8 +38,8 @@ const char *Position::toString() const {
 	double lat = latitude.getDegrees();
 	double lon = longitude.getDegrees();
 	unsigned short latDegree, latMinutes, latSeconds, lonDegree, lonMinutes, lonSeconds;
-	char latDir = (lat > 0) ? 'N' : 'S';
-	char lonDir = (lon > 0) ? 'E' : 'W';
+	char latDir = (lat >= 0) ? 'N' : 'S';
+	char lonDir = (lon >= 0) ? 'E' : 'W';
 	if (lat < 0) {
 		lat = -lat;
 	}
@@ -60,7 +60,8 @@ const char *Position::toString() const {
 
 	char *ary = new char[34];
 
-	sprintf(ary, "lat: %02d,%02d,%02d%c   lon:%03d,%02d,%02d%c", latDegree, latMinutes, latSeconds, latDir);
+	sprintf(ary, "lat: %02d,%02d,%02d%c   lon:%03d,%02d,%02d%c", latDegree, latMinutes, latSeconds, latDir, lonDegree,
+			lonMinutes, lonSeconds, lonDir);
 	ary[16] = '\0';
 	return ary;
 }

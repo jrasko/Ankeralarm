@@ -7,10 +7,10 @@
 
 class gpsData {
 private:
-	Vector<String> data;
+	String data[20];
 	bool dirty = false;
 public:
-	Vector<String> getData() const {
+	const String *getData() const{
 		return data;
 	}
 
@@ -19,6 +19,7 @@ public:
 	bool isValid() const {
 		return !dirty;
 	}
+
 };
 
 
