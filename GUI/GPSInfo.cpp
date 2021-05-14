@@ -44,8 +44,8 @@ void Koordinaten::encoderLeft() {
 }
 
 void Koordinaten::getLCDOutput() {
-	const Vector<const char*> &lines = anzeige->props.myGPS.getCurrentPosition().toString();
-	anzeige->print2Lines(lines[0], lines[1]);
+	const Vector<String> &lines = anzeige->props.myGPS.getCurrentPosition().toString();
+	anzeige->print2Lines(lines[0].c_str(), lines[1].c_str());
 }
 
 //Sattelites
