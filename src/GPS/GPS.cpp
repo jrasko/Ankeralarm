@@ -62,7 +62,7 @@ unsigned short GPS::getGPSQuality() const {
 	return 2;
 }
 
-DateTime &GPS::getLastTimeStamp(){
+DateTime &GPS::getLastTimeStamp() {
 	return lastTimeStamp;
 }
 

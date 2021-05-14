@@ -38,7 +38,7 @@ const char *DateTime::toString() const {
 				d = 31;
 				m = 12;
 				y--;
-				if (y == 255){
+				if (y == 255) {
 					y = 0;
 				}
 			} else if (m == 3 && isLeapYear(y)) {
@@ -59,7 +59,7 @@ const char *DateTime::toString() const {
 			if (m > 12) {
 				m = 1;
 				y++;
-				if (h > 99){
+				if (h > 99) {
 					h = 0;
 				}
 			}
