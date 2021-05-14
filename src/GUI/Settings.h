@@ -33,7 +33,7 @@ public:
 
 class ChangeDisplayBrightness : public Zustand {
 private:
-	unsigned char brightness;
+	unsigned char brightness = 255;
 public:
 	ChangeDisplayBrightness();
 
@@ -63,7 +63,7 @@ public:
 
 class ChangeTimeout : public Zustand {
 private:
-	unsigned char timeout;
+	unsigned char timeout = 0;
 public:
 	ChangeTimeout();
 
@@ -93,7 +93,7 @@ public:
 
 class ChangeUTCFactor : public Zustand {
 private:
-	char factor;
+	char factor = 0;
 public:
 	ChangeUTCFactor();
 
@@ -124,7 +124,7 @@ public:
 
 class ChangeAlarmRadius : public Zustand {
 private:
-	unsigned char radius;
+	unsigned char radius = 0;
 public:
 	ChangeAlarmRadius();
 
