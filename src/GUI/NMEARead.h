@@ -4,18 +4,18 @@
 
 #include <Arduino.h>
 
-#define RX_Buffer_SIZE 128 //einstellung der Größe des emfangs Buffers
+#define RX_Buffer_SIZE 128 //einstellung der Größe des empfangs Buffers
 
-#define TX_Buffer_SIZE 128 //einstelleng der gößes des sende Buffers;
+#define TX_Buffer_SIZE 128 //einstellung der größe des sende Buffers;
 
 class NMEARead {
 private:
-	char *serialBuffer; // Buffer für UART Übertragung
-	char *rxBuffer;     // Buffer für UART Emfang
-	uint8_t *serialReadPos;
-	uint8_t *serialWritePos;
-	uint8_t *rxReadPos;
-	uint8_t *rxWritePos;
+	char *serialBuffer = nullptr; // Buffer für UART Übertragung
+	char *rxBuffer = nullptr;     // Buffer für UART Empfang
+	uint8_t *serialReadPos = nullptr;
+	uint8_t *serialWritePos = nullptr;
+	uint8_t *rxReadPos = nullptr;
+	uint8_t *rxWritePos = nullptr;
 public:
 	bool NMEA_read(String &currentString) { // Auslesen des "Ringspeichers" und sortieren der NMEA Sätze
 		char nextChar;

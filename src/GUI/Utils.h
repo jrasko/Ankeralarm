@@ -4,17 +4,17 @@
 #include "LiquidCrystal.h"
 #include "Properties.h"
 
-class Anzeige;
+class Display;
 
-class Zustand {
+class State {
 protected:
-	Anzeige *anzeige;
+	Display *display;
 
 public:
-	virtual ~Zustand() = default;
+	virtual ~State() = default;
 
-	void setAnzeige(Anzeige *a) {
-		this->anzeige = a;
+	void setAnzeige(Display *a) {
+		this->display = a;
 	}
 
 	virtual void encoderPush() {};
@@ -28,42 +28,41 @@ public:
 	virtual void getLCDOutput() = 0;
 };
 
-class Anzeige {
+class Display {
 private:
-	Zustand *zustand;
+	State *state;
 public:
-	Properties props;
+	Properties &props = Properties::getInstance();
 	LiquidCrystal &lcd;
 
+	explicit Display(LiquidCrystal &l) : state(nullptr), lcd(l) {}
 
-	explicit Anzeige(LiquidCrystal &l) : zustand(nullptr), lcd(l) {}
-
-	~Anzeige() {
-		delete zustand;
+	~Display() {
+		delete state;
 	}
 
-	void activate(Zustand *z) {
+	void activate(State *z) {
 		this->setZustand(z);
 	}
 
 	void encoderLeft() {
-		this->zustand->encoderLeft();
+		this->state->encoderLeft();
 	}
 
 	void encoderRight() {
-		this->zustand->encoderRight();
+		this->state->encoderRight();
 	}
 
 	void encoderPush() {
-		this->zustand->encoderPush();
+		this->state->encoderPush();
 	}
 
 	void buttonReturn() {
-		this->zustand->buttonReturn();
+		this->state->buttonReturn();
 	}
 
 	void getLCDOutput() {
-		this->zustand->getLCDOutput();
+		this->state->getLCDOutput();
 	}
 
 	void print2Lines(const char *l1, const char *l2) {
@@ -73,12 +72,12 @@ public:
 		lcd.write(l2);
 	}
 
-	void setZustand(Zustand *z) {
-		delete this->zustand;
-		this->zustand = z;
-		this->zustand->setAnzeige(this);
+	void setZustand(State *z) {
+		delete this->state;
+		this->state = z;
+		this->state->setAnzeige(this);
 		lcd.clear();
-		this->zustand->getLCDOutput();
+		this->state->getLCDOutput();
 	}
 };
 

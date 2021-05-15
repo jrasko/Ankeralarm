@@ -5,7 +5,7 @@
 #include "Settings.h"
 #include "GPSInfo.h"
 
-class Alarm : public Zustand {
+class Alarm : public State {
 public:
 	void encoderPush() override;
 
@@ -16,12 +16,12 @@ public:
 	void getLCDOutput() override;
 };
 
-class FindPostition : public Zustand {
+class FindPosition : public State {
 public:
 	void getLCDOutput() override;
 };
 
-class SetRadius : public Zustand {
+class SetRadius : public State {
 private:
 	unsigned char radius = 25;
 public:
@@ -36,7 +36,7 @@ public:
 	void getLCDOutput() override;
 };
 
-class AreUSure : public Zustand {
+class AreUSure : public State {
 public:
 	void encoderPush() override;
 
@@ -45,7 +45,7 @@ public:
 	void getLCDOutput() override;
 };
 
-class AbortAlarm : public Zustand {
+class AbortAlarm : public State {
 public:
 	void encoderPush() override;
 

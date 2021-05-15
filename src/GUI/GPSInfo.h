@@ -7,7 +7,7 @@
 #include <Arduino.h>
 
 
-class GPSInfo : public Zustand {
+class GPSInfo : public State {
 public:
 	void encoderPush() override;
 
@@ -18,7 +18,7 @@ public:
 	void getLCDOutput() override;
 };
 
-class Koordinaten : public Zustand {
+class Coordinates : public State {
 public:
 	void encoderPush() override;
 
@@ -31,7 +31,7 @@ public:
 	void getLCDOutput() override;
 };
 
-class Satellites : public Zustand {
+class Satellites : public State {
 public:
 	void encoderRight() override;
 
@@ -42,7 +42,7 @@ public:
 	void getLCDOutput() override;
 };
 
-class FixAge : public Zustand {
+class FixAge : public State {
 public:
 	void encoderRight() override;
 
@@ -53,7 +53,7 @@ public:
 	void getLCDOutput() override;
 };
 
-class HDOP : public Zustand {
+class HDOP : public State {
 public:
 	void encoderRight() override;
 
@@ -64,7 +64,7 @@ public:
 	void getLCDOutput() override;
 };
 
-class Time : public Zustand {
+class Time : public State {
 public:
 	void encoderRight() override;
 
@@ -75,7 +75,7 @@ public:
 	void getLCDOutput() override;
 };
 
-class Radius : public Zustand {
+class Radius : public State {
 public:
 	void encoderRight() override;
 

@@ -36,15 +36,15 @@
 #define buttonDebounceTime 10 //in ms
 #define maxIncomingMessageLength 100
 
-//---UART-Interface (Sereielle Schnittstelle für GPS Modul)
+//---UART-Interface (Serial interface for GPS module)
 #define BAUD 9600UL // Baudrate
-// Berechnungen
-#define UBRR_VAL ((F_CPU + BAUD * 8) / (BAUD * 16) - 1) // clever runden
-#define BAUD_REAL (F_CPU / (16 * (UBRR_VAL + 1)))       // Reale Baudrate
-#define BAUD_ERROR ((BAUD_REAL * 1000) / BAUD)          // Fehler in Promille, 1000 = kein Fehler.
+// Calculations
+#define UBRR_VAL ((F_CPU + BAUD * 8) / (BAUD * 16) - 1) // smart rounding
+#define BAUD_REAL (F_CPU / (16 * (UBRR_VAL + 1)))       // Real Baudrate
+#define BAUD_ERROR ((BAUD_REAL * 1000) / BAUD)          // Error in per thousand, 1000 = no error.
 //On Change Note the Definition in NMEARead.h
-#define RX_Buffer_SIZE 128                              //einstellung der Größe des emfangs Buffers
-#define TX_Buffer_SIZE 128                              //einstelleng der gößes des sende Buffers;
+#define RX_Buffer_SIZE 128                              //Size of the Receive Buffer
+#define TX_Buffer_SIZE 128                              //Size of the Send Buffer;
 
 #if ((BAUD_ERROR < 990) || (BAUD_ERROR > 1010))
 #error Systematischer Fehler der Baudrate grösser 1% und damit zu hoch!
@@ -54,24 +54,25 @@
 
 // ----IO-definition-----------------------------------------
 
-#define ledPin 0            //LED pin 14                      PC0
-#define debug_led 5        //onboard Led                     PB5
-//#define lcd_beleuchtung 3 //backlight LCD                   PB3
-#define returnButton 7      //Schalter 1                      PD7  PCINT 23
-#define snozeButton 6       //							      PD6
-#define summer 4            //Summer                          PB4
-#define encoder_a 2        //encoder pin 2 (32)              PD2
-#define encoder_b 3            //encoder pin 3                   PD3
-#define encoder_button 4    //encoder pin 4                   PD4
-#define LED_RED 1            //RG-LED pin 8                    PB1
-#define LED_GREEN 2        //RG-LED pin 9                    PB2
+#define ledPin 0            //LED pin 14			PC0
+#define debug_led 5            //onboard Led			PB5
+//#define lcd_beleuchtung 3 //backlight LCD			PB3
+#define returnButton 7        //Switch 1				PD7  PCINT 23
+#define snoozeButton 6        //Switch 2				PD6
+#define summer 4            //Alarm summer			PB4
+#define encoder_a 2            //encoder pin 2 (32)	PD2
+#define encoder_b 3            //encoder pin 3			PD3
+#define encoder_button 4    //encoder pin 4			PD4
+#define LED_RED 1            //RG-LED pin 8			PB1
+#define LED_GREEN 2            //RG-LED pin 9			PB2
 
 //---global variables-----------------------------------------
 
-char serialBuffer[TX_Buffer_SIZE]; // Buffer für UART Übertragung
-char rxBuffer[RX_Buffer_SIZE];     // Buffer für UART Emfang
+char serialBuffer[TX_Buffer_SIZE]; // Buffer for UART Transmission
+char rxBuffer[RX_Buffer_SIZE];     // Buffer for UART Receive
 
-uint8_t serialReadPos = 0; //variablen für den Ringbuffer
+// Variables for Ring Buffer
+uint8_t serialReadPos = 0;
 uint8_t serialWritePos = 0;
 uint8_t rxReadPos = 0;
 uint8_t rxWritePos = 0;
@@ -83,22 +84,21 @@ volatile char encoderSpinFlag = 0;
 uint8_t brightness EEMEM = 150; //EEPROM variable
 
 
-//----Funktionsprototypen------------------------------------
+//----Function Header---------------------------------------
 
 void interrupt_init(); //UART init
-void appendSerial(char c); //UART recive
+void appendSerial(char c); //UART receive
 void serialWrite(char *c); //UART transmit
 
-//---LCD init------------------------------------------------
+//---Global Objects------------------------------------------------
 LiquidCrystal lcd(14, 15, 16, 17, 18, 19);
-Anzeige a(lcd);
-
+Display a(lcd);
 
 unsigned char debug = 0;
 
 void setup() {
-	a.props.eepromBrightnes = &brightness;
-	a.props.readEEPROM();
+	a.props.eepromBrightness = &brightness;
+	a.props.readBrightnessFromEEPROM();
 	lcd.begin(16, 2);
 	lcd.display();
 	lcd.write("Ankeralarm V3");
@@ -108,16 +108,15 @@ void setup() {
 
 	a.props.gpsdata.init(&serialReadPos, &serialWritePos, &rxReadPos, &rxWritePos, serialBuffer, rxBuffer);
 
-	//-------------IO-config-------------------------------------------------
 	//Output Config
 	DDRB |= (1 << DDB0) | (1 << DDB1) | (1 << DDB2) | (1 << DDB3) |
-			(1 << DDB5);  //LED_RED  LED_GREEN  LCD Bachklight  Onbord LED
+			(1 << DDB5);  //LED_RED  LED_GREEN  LCD Backlight onboard LED
 	DDRC |= (1 << DDC0); // LED pin14
 
 	//Input Config
 	DDRB &= ~(1 << DDB4);
 	DDRD &= ~((1 << DDD2) | (1 << DDD3) | (1 << DDD4) | (1 << DDD7) | (1 << DDD6));//Input PD2 PD3 PD4 PD7
-	PORTD |= (1 << PORTB4) | (1 << PORTD7) | (1 << PORTB6); //Kofiguration encoderButton  returnButton PullUp
+	PORTD |= (1 << PORTB4) | (1 << PORTD7) | (1 << PORTB6); //Configuration encoderButton  returnButton PullUp
 
 	pinMode(11, OUTPUT);
 
@@ -126,7 +125,6 @@ void setup() {
 }
 
 void loop() {
-
 	if (a.props.updateGPSData()) {
 		a.lcd.clear();
 		a.getLCDOutput();
@@ -162,17 +160,18 @@ void loop() {
 		a.encoderLeft();
 		encoderSpinFlag++;
 	}
-
-	if (returnButtonFlag && (PIND & (1 << PIND7)) != 0) { //falling edge detection
+	//falling edge detection
+	if (returnButtonFlag && (PIND & (1 << PIND7)) != 0) {
 		a.buttonReturn();
 		returnButtonFlag = false;
 	}
-
-	if (encoderButtonFlag && (PIND & (1 << PIND4)) != 0) { //falling edge detection
+	//falling edge detection
+	if (encoderButtonFlag && (PIND & (1 << PIND4)) != 0) {
 		a.encoderPush();
 		encoderButtonFlag = false;
 	}
 
+	//TODO
 	if (a.props.myGPS.getGPSQuality() > 1) {
 		//LCD Outputs
 	} else {
@@ -181,8 +180,11 @@ void loop() {
 }
 
 
-//----UART-Interface (Sereielle Schnittstelle für GPS Modul)------------------------
-void appendSerial(char c) { //Transmit
+//----UART-Interface (Serial interface for GPS module)------------------------
+/**
+ * Transmit
+ */
+void appendSerial(char c) {
 	serialBuffer[serialWritePos] = c;
 	serialWritePos++;
 
@@ -191,7 +193,10 @@ void appendSerial(char c) { //Transmit
 	}
 }
 
-void serialWrite(char c[]) { //receive
+/**
+ * Receive
+ */
+void serialWrite(char c[]) {
 	for (uint8_t i = 0; i < strlen(c); i++) {
 		appendSerial(c[i]);
 	}
@@ -199,7 +204,7 @@ void serialWrite(char c[]) { //receive
 		UDR0 = 0;
 	}
 }
-
+//------------------------------Interrupts---------------------------
 ISR(USART_TX_vect) {
 	//receive Ring-Buffer
 	if (serialReadPos != serialWritePos) {
@@ -222,24 +227,24 @@ ISR(USART_RX_vect) {
 
 void interrupt_init(void) {
 
-	cli(); //disable Intrrupts
+	cli(); //disable Interrupts
 
-	//---config des UART-Interface (Sereielle Schnittstelle für GPS Modul)------------
-	UBRR0H = UBRR_VAL >> 8; //Festlegung der Baudrate
+	//---config for the UART-Interface (Serial interface for GPS module)------------
+	UBRR0H = UBRR_VAL >> 8; //Set Baudrate
 	UBRR0L = UBRR_VAL & 0xFF;
 
 	UCSR0B = (1 << TXEN0) | (1 << RXEN0) | (1 << TXCIE0) |
-			 (1 << RXCIE0);                 // Aktivierung von Tx | Interrupt aktivierung bei RXCn flage=true
-	UCSR0C = (1 << UCSZ01) | (1 << UCSZ00); // Asynchron 8N
+			 (1 << RXCIE0);                 // Aktivierung von Tx | Interrupt activation on RXCn flag=true
+	UCSR0C = (1 << UCSZ01) | (1 << UCSZ00); // Async 8N
 
-	//---config des Encoders Interrupts-----------------------------------------------
+	//---config for Encoder Interrupt------------------------------------------------
 	EIMSK = (1 << INT0);
 	EICRA = (1 << ISC01) | (1 << ISC00);
 
-	PCICR |= (1 << PCIE2);    //Pin change Interrupt aktiviern
+	PCICR |= (1 << PCIE2);    //activate Pin change Interrupt
 	PCMSK2 |= (1 << PCINT20) | (1 << PCINT23); //Pin change Interrupt Maskieren für Pin 4 (PCINT 20)
 
-	//---config der Timer-------------------------------------------------------------
+	//---config for the Timer-----------------------------------------------------------
 
 	// Timer 1 //Status LEDs
 	TCCR1A = 0;
@@ -248,7 +253,7 @@ void interrupt_init(void) {
 	TCCR1B |= (1 << CS12);  // 256 als Prescale-Wert spezifizieren
 	TIMSK1 |= (1 << TOIE1); // Timer Overflow Interrupt aktivieren
 
-	// Timer 2 //Dispaly Timeout
+	// Timer 2 //Display Timeout
 
 
 
@@ -260,12 +265,12 @@ void interrupt_init(void) {
 	sei(); //enable Interrupts
 }
 
-//---Interruptrutine------------------------------------------
+//---Interrupt routine------------------------------------------
 ISR(INT0_vect) {
 	//---------------Encoder-------------------------------------------
 	static unsigned long lastInterruptTime = buttonDebounceTime;
 	unsigned long interruptTime = millis();
-	bool messungPin1 = 0, messungPin1Alt = 0;
+	bool messungPin1 = 0, messungPin1Alt = false;
 	// If interrupts come faster than 5ms, assume it's a bounce and ignore
 	if (interruptTime - lastInterruptTime > 1) {
 
@@ -305,32 +310,34 @@ ISR(TIMER1_OVF_vect) {
 
 	//------------------------------GPS-Status LED---------------------------
 
-	TCNT1 = 3036; // Timer vorbelegt so dass delta_T= 1s
+	TCNT1 = 3036; // Timer preset so that delta_T= 1s
 
 	switch (a.props.myGPS.getGPSQuality()) {
-		case 0:
-			PORTB ^= (1 << LED_RED); //toggle LED_RED
-			PORTB &= ~(1 << LED_GREEN); //write LED_GREEN LOW
-			break;
-
 		case 1:
-			PORTB &= ~(1 << LED_GREEN); //write LED_GREEN LOW
-			PORTB |= (1 << LED_RED);
+			//Red
+			PORTB &= ~(1 << LED_GREEN); //LED_GREEN LOW
+			PORTB |= (1 << LED_RED);  //LED_RED HIGH
 			break;
-
 		case 2:
-			PORTB |= (1 << LED_GREEN); //write LED_GREEN HIGH
-			PORTB |= (1 << LED_RED);
+			//Orange
+			PORTB |= (1 << LED_GREEN); //LED_GREEN HIGH
+			PORTB |= (1 << LED_RED); //LED_RED HIGH
 			break;
-
 		case 3:
-			PORTB |= (1 << LED_GREEN); //write LED_GREEN HIGH
-			PORTB &= ~(1 << LED_RED);
-			break;
+			//Green
+			PORTB |= (1 << LED_GREEN); //LED_GREEN HIGH
+			PORTB &= ~(1 << LED_RED); //LED_RED LOWbreak;
 
 		case 4:
-			PORTB ^= (1 << LED_GREEN);
-			PORTB &= ~(1 << LED_RED);
+			//Green Blinking
+			PORTB ^= (1 << LED_GREEN); //LED_GREEN Blinking
+			PORTB &= ~(1 << LED_RED); //LED_RED LOW
+			break;
+		default:
+			//Case 0 inclusive
+			//Red Blinking
+			PORTB ^= (1 << LED_RED); //LED_RED Blinking
+			PORTB &= ~(1 << LED_GREEN); //LED_GREEN LOW
 			break;
 	}
 

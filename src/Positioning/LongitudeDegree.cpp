@@ -1,6 +1,6 @@
 #include "LongitudeDegree.h"
 
-#define toDEG 3.14159265/180
+#define toDEG (3.14159265/180)
 
 LongitudeDegree::LongitudeDegree(const String &koordString, char direction) {
 	unsigned char deg = koordString.substring(0, 3).toInt();

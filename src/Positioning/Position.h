@@ -20,8 +20,6 @@ public:
 
 	double distanceTo(const Position &p) const;
 
-	void setPosition(LatitudeDegree &x, LongitudeDegree &y);
-
 	const LatitudeDegree &getLatitude() const;
 
 	const LongitudeDegree &getLongitude() const;

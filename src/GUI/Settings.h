@@ -5,7 +5,7 @@
 #include "Alarm.h"
 #include "GPSInfo.h"
 
-class Settings : public Zustand {
+class Settings : public State {
 public:
 	void encoderPush() override;
 
@@ -18,7 +18,7 @@ public:
 	void getLCDOutput() override;
 };
 
-class DisplayBrightness : public Zustand {
+class DisplayBrightness : public State {
 public:
 	void encoderPush() override;
 
@@ -31,7 +31,7 @@ public:
 	void getLCDOutput() override;
 };
 
-class ChangeDisplayBrightness : public Zustand {
+class ChangeDisplayBrightness : public State {
 private:
 	unsigned char brightness = 255;
 public:
@@ -48,7 +48,7 @@ public:
 	void getLCDOutput() override;
 };
 
-class Timeout : public Zustand {
+class Timeout : public State {
 public:
 	void encoderPush() override;
 
@@ -61,7 +61,7 @@ public:
 	void getLCDOutput() override;
 };
 
-class ChangeTimeout : public Zustand {
+class ChangeTimeout : public State {
 private:
 	unsigned char timeout = 0;
 public:
@@ -78,7 +78,7 @@ public:
 	void getLCDOutput() override;
 };
 
-class UTCFactor : public Zustand {
+class UTCFactor : public State {
 public:
 	void encoderPush() override;
 
@@ -91,7 +91,7 @@ public:
 	void getLCDOutput() override;
 };
 
-class ChangeUTCFactor : public Zustand {
+class ChangeUTCFactor : public State {
 private:
 	char factor = 0;
 public:
@@ -109,7 +109,7 @@ public:
 };
 
 
-class AlarmRadius : public Zustand {
+class AlarmRadius : public State {
 public:
 	void encoderPush() override;
 
@@ -122,7 +122,7 @@ public:
 	void getLCDOutput() override;
 };
 
-class ChangeAlarmRadius : public Zustand {
+class ChangeAlarmRadius : public State {
 private:
 	unsigned char radius = 0;
 public:

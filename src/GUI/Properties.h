@@ -2,28 +2,31 @@
 #ifndef ANKERALARM_PROPERTIES_H
 #define ANKERALARM_PROPERTIES_H
 
-#define lcd_beleuchtung 11 // hintergundbeleuchtung des LCDs
-#define RX_Buffer_SIZE 128  //einstellung der Größe des emfangs Buffers
-#define TX_Buffer_SIZE 128  //einstelleng der gößes des sende Buffers;
+#define lcd_beleuchtung 11 // Hintergrundbeleuchtung des LCDs
+#define RX_Buffer_SIZE 128  //einstellung der Größe des empfangs Buffers
+#define TX_Buffer_SIZE 128  //einstellung der größes des sende Buffers;
 #define maxIncomingMessageLength 100
 
 #include "../GPS/GPS.h"
 #include <Arduino.h>
 #include "NMEARead.h"
 
-
+// Singleton
 class Properties {
 private:
 	String currentDataString;
+	// Singleton: Avoid multiple Objects
+	Properties() = default;
 public:
-	NMEARead gpsdata;
 	GPS myGPS;
+	NMEARead gpsdata;
+	Position centralPosition;
+
 	bool alarmActive = false;
 	unsigned char alarmRadius = 25;
-	Position centralPosition = Position(LatitudeDegree(0), LongitudeDegree(0));
-	unsigned char displayBrighness = 0;
+	unsigned char displayBrightness = 255;
 	unsigned char displayTimeout = 0;
-	uint8_t *eepromBrightnes;
+	uint8_t *eepromBrightness = nullptr;
 
 	static void setDisplayBrightness(unsigned char brightness) {
 		analogWrite(lcd_beleuchtung, brightness);
@@ -33,14 +36,14 @@ public:
 		// No timer available, search for another solution
 	}
 
-	void readEEPROM() {
-		unsigned char brightness = eeprom_read_byte(eepromBrightnes);
-		displayBrighness = brightness;
+	void readBrightnessFromEEPROM() {
+		unsigned char brightness = eeprom_read_byte(eepromBrightness);
+		displayBrightness = brightness;
 		setDisplayBrightness(brightness);
 	}
 
-	void writeEEPROM() const {
-		eeprom_write_byte(eepromBrightnes, displayBrighness);
+	void writeBrightnessInEEPROM() const {
+		eeprom_write_byte(eepromBrightness, displayBrightness);
 	}
 
 	bool updateGPSData() {
@@ -52,6 +55,14 @@ public:
 		return false;
 	}
 
+	// Singleton: Avoid Copies of Object
+	Properties(const Properties &) = delete;
+	Properties &operator=(const Properties &) = delete;
+	// Get singleton
+	static Properties &getInstance() {
+		static Properties _instance;
+		return _instance;
+	}
 
 };
 

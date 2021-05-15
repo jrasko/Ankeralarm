@@ -20,7 +20,6 @@ public:
 		return degrees;
 	}
 
-
 	friend LongitudeDegree operator-(const LongitudeDegree &dg1, const LongitudeDegree &dg2);
 
 	double toMeters(double latdeg) const;

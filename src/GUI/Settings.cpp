@@ -2,60 +2,60 @@
 #include "Settings.h"
 
 void Settings::encoderPush() {
-	this->anzeige->setZustand(new DisplayBrightness);
+	this->display->setZustand(new DisplayBrightness);
 }
 
 void Settings::encoderLeft() {
-	this->anzeige->setZustand(new GPSInfo);
+	this->display->setZustand(new GPSInfo);
 }
 
 void Settings::encoderRight() {
-	this->anzeige->setZustand(new Alarm);
+	this->display->setZustand(new Alarm);
 }
 
 void Settings::buttonReturn() {}
 
 void Settings::getLCDOutput() {
-	anzeige->lcd.print("Settings");
+	display->lcd.print("Settings");
 }
 
 // Brightness
 void DisplayBrightness::encoderPush() {
-	this->anzeige->setZustand(new ChangeDisplayBrightness);
+	this->display->setZustand(new ChangeDisplayBrightness);
 }
 
 void DisplayBrightness::getLCDOutput() {
-	anzeige->lcd.print("Brightness");
+	display->lcd.print("Brightness");
 }
 
 void DisplayBrightness::encoderLeft() {
-	if (anzeige->props.alarmActive) {
-		this->anzeige->setZustand(new AlarmRadius);
+	if (display->props.alarmActive) {
+		this->display->setZustand(new AlarmRadius);
 	} else {
-		this->anzeige->setZustand(new UTCFactor);
+		this->display->setZustand(new UTCFactor);
 	}
 }
 
 void DisplayBrightness::encoderRight() {
-	this->anzeige->setZustand(new Timeout);
+	this->display->setZustand(new Timeout);
 }
 
 void DisplayBrightness::buttonReturn() {
-	this->anzeige->setZustand(new Settings);
+	this->display->setZustand(new Settings);
 }
 
 //Change Brightness
 void ChangeDisplayBrightness::encoderPush() {
 	// Save Brightness
-	this->anzeige->props.displayBrighness = brightness;
-	this->anzeige->props.writeEEPROM();
-	this->anzeige->setZustand(new DisplayBrightness);
+	this->display->props.displayBrightness = brightness;
+	this->display->props.writeBrightnessInEEPROM();
+	this->display->setZustand(new DisplayBrightness);
 }
 
 void ChangeDisplayBrightness::getLCDOutput() {
 	char buf[16];
 	sprintf(buf, "%u", brightness);
-	anzeige->print2Lines("ChangeBrightness", buf);
+	display->print2Lines("ChangeBrightness", buf);
 }
 
 void ChangeDisplayBrightness::encoderLeft() {
@@ -64,7 +64,7 @@ void ChangeDisplayBrightness::encoderLeft() {
 	}
 	brightness -= 5;
 	Properties::setDisplayBrightness(brightness);
-	anzeige->lcd.clear();
+	display->lcd.clear();
 	this->getLCDOutput();
 }
 
@@ -74,111 +74,111 @@ void ChangeDisplayBrightness::encoderRight() {
 	}
 	brightness += 5;
 	Properties::setDisplayBrightness(brightness);
-	anzeige->lcd.clear();
+	display->lcd.clear();
 	this->getLCDOutput();
 }
 
 void ChangeDisplayBrightness::buttonReturn() {
 	// Reset Brightness
-	brightness = anzeige->props.displayBrighness;
+	brightness = display->props.displayBrightness;
 	Properties::setDisplayBrightness(brightness);
-	this->anzeige->setZustand(new DisplayBrightness);
+	this->display->setZustand(new DisplayBrightness);
 
 }
 
 ChangeDisplayBrightness::ChangeDisplayBrightness() {
-	brightness = anzeige->props.displayBrighness;
+	brightness = display->props.displayBrightness;
 }
 
 // Timeout
 void Timeout::encoderPush() {
-	this->anzeige->setZustand(new ChangeTimeout);
+	this->display->setZustand(new ChangeTimeout);
 }
 
 void Timeout::getLCDOutput() {
-	anzeige->lcd.print("Timeout");
+	display->lcd.print("Timeout");
 }
 
 void Timeout::encoderLeft() {
-	this->anzeige->setZustand(new DisplayBrightness);
+	this->display->setZustand(new DisplayBrightness);
 }
 
 void Timeout::encoderRight() {
-	this->anzeige->setZustand(new UTCFactor);
+	this->display->setZustand(new UTCFactor);
 }
 
 void Timeout::buttonReturn() {
-	this->anzeige->setZustand(new Settings);
+	this->display->setZustand(new Settings);
 }
 
 void ChangeTimeout::encoderPush() {
 	// Save Timeout
-	this->anzeige->props.displayTimeout = timeout;
+	this->display->props.displayTimeout = timeout;
 }
 
 void ChangeTimeout::getLCDOutput() {
 	char buf[16];
 	sprintf(buf, "%u", timeout);
-	anzeige->print2Lines("ChangeTimeout", buf);
+	display->print2Lines("ChangeTimeout", buf);
 }
 
 void ChangeTimeout::encoderLeft() {
 	timeout--;
-	anzeige->lcd.clear();
+	display->lcd.clear();
 	this->getLCDOutput();
 }
 
 void ChangeTimeout::encoderRight() {
 	timeout++;
-	anzeige->lcd.clear();
+	display->lcd.clear();
 	this->getLCDOutput();
 }
 
 void ChangeTimeout::buttonReturn() {
 	// Reset Timeout
-	this->anzeige->props.setDisplayTimeout(this->anzeige->props.displayTimeout);
-	this->anzeige->setZustand(new Timeout);
+	this->display->props.setDisplayTimeout(this->display->props.displayTimeout);
+	this->display->setZustand(new Timeout);
 }
 
 ChangeTimeout::ChangeTimeout() {
-	timeout = anzeige->props.displayTimeout;
+	timeout = display->props.displayTimeout;
 }
 
 
 // UTC/Local Time
 void UTCFactor::encoderPush() {
-	this->anzeige->setZustand(new ChangeUTCFactor);
+	this->display->setZustand(new ChangeUTCFactor);
 }
 
 void UTCFactor::getLCDOutput() {
-	anzeige->lcd.print("UTC/Local");
+	display->lcd.print("UTC/Local");
 }
 
 void UTCFactor::encoderLeft() {
-	this->anzeige->setZustand(new Timeout);
+	this->display->setZustand(new Timeout);
 }
 
 void UTCFactor::encoderRight() {
-	if (anzeige->props.alarmActive) {
-		this->anzeige->setZustand(new AlarmRadius);
+	if (display->props.alarmActive) {
+		this->display->setZustand(new AlarmRadius);
 	} else {
-		this->anzeige->setZustand(new DisplayBrightness);
+		this->display->setZustand(new DisplayBrightness);
 	}
 }
 
 void UTCFactor::buttonReturn() {
-	this->anzeige->setZustand(new Settings);
+	this->display->setZustand(new Settings);
 }
 
 void ChangeUTCFactor::encoderPush() {
-	anzeige->props.myGPS.getLastTimeStamp().setUTCFactor(factor);
-	this->anzeige->setZustand(new UTCFactor);
+	display->props.myGPS.getLastTimeStamp().setUTCFactor(factor);
+	this->display->setZustand(new UTCFactor);
 }
 
 void ChangeUTCFactor::getLCDOutput() {
 	char buf[16];
 	sprintf(buf, "%i", factor);
-	anzeige->print2Lines("ChangeUTCFactor", buf);
+	display->print2Lines("ChangeUTCFactor", buf);
 }
 
 void ChangeUTCFactor::encoderLeft() {
@@ -186,7 +186,7 @@ void ChangeUTCFactor::encoderLeft() {
 	if (factor < -12) {
 		factor = 12;
 	}
-	anzeige->lcd.clear();
+	display->lcd.clear();
 	this->getLCDOutput();
 }
 
@@ -195,36 +195,36 @@ void ChangeUTCFactor::encoderRight() {
 	if (factor > 12) {
 		factor = -12;
 	}
-	anzeige->lcd.clear();
+	display->lcd.clear();
 	this->getLCDOutput();
 }
 
 void ChangeUTCFactor::buttonReturn() {
-	this->anzeige->setZustand(new UTCFactor);
+	this->display->setZustand(new UTCFactor);
 }
 
 ChangeUTCFactor::ChangeUTCFactor() {
-	factor = anzeige->props.myGPS.getLastTimeStamp().getUTCFactor();
+	factor = display->props.myGPS.getLastTimeStamp().getUTCFactor();
 }
 
 void AlarmRadius::encoderPush() {
-	this->anzeige->setZustand(new ChangeAlarmRadius);
+	this->display->setZustand(new ChangeAlarmRadius);
 }
 
 void AlarmRadius::encoderLeft() {
-	this->anzeige->setZustand(new UTCFactor);
+	this->display->setZustand(new UTCFactor);
 }
 
 void AlarmRadius::encoderRight() {
-	this->anzeige->setZustand(new DisplayBrightness);
+	this->display->setZustand(new DisplayBrightness);
 }
 
 void AlarmRadius::buttonReturn() {
-	this->anzeige->setZustand(new Settings);
+	this->display->setZustand(new Settings);
 }
 
 void AlarmRadius::getLCDOutput() {
-	anzeige->print2Lines("Set Alarm Radius", "");
+	display->print2Lines("Set Alarm Radius", "");
 }
 
 void ChangeAlarmRadius::encoderLeft() {
@@ -232,13 +232,13 @@ void ChangeAlarmRadius::encoderLeft() {
 		radius = 5;
 	}
 	radius -= 5;
-	anzeige->lcd.clear();
+	display->lcd.clear();
 	getLCDOutput();
 }
 
 void ChangeAlarmRadius::encoderPush() {
-	this->anzeige->props.alarmRadius = radius;
-	this->anzeige->setZustand(new AlarmRadius);
+	this->display->props.alarmRadius = radius;
+	this->display->setZustand(new AlarmRadius);
 }
 
 void ChangeAlarmRadius::encoderRight() {
@@ -246,20 +246,20 @@ void ChangeAlarmRadius::encoderRight() {
 		radius = 250;
 	}
 	radius += 5;
-	anzeige->lcd.clear();
+	display->lcd.clear();
 	getLCDOutput();
 }
 
 void ChangeAlarmRadius::buttonReturn() {
-	this->anzeige->setZustand(new AlarmRadius);
+	this->display->setZustand(new AlarmRadius);
 }
 
 void ChangeAlarmRadius::getLCDOutput() {
 	char buff[16];
 	sprintf(buff, "%u", radius);
-	anzeige->print2Lines("ChangeAlarmRadius", buff);
+	display->print2Lines("ChangeAlarmRadius", buff);
 }
 
 ChangeAlarmRadius::ChangeAlarmRadius() {
-	this->radius = anzeige->props.alarmRadius;
+	this->radius = display->props.alarmRadius;
 }

@@ -3,7 +3,7 @@
 
 /**
  * Calculates the distance between this Object and p in metres
- * @param p the Positon which is compared with this pos
+ * @param p the Position which is compared with this pos
  * @return the distance from Position to p in meters
  */
 double Position::distanceTo(const Position &p) const {
@@ -15,11 +15,12 @@ double Position::distanceTo(const Position &p) const {
 	return sqrt(dlat.toMeters() * dlat.toMeters() + dlong.toMeters(avgDeg) * dlong.toMeters(avgDeg));
 }
 
-void Position::setPosition(LatitudeDegree &x, LongitudeDegree &y) {
-	latitude = x;
-	longitude = y;
-}
-
+/**
+ * Calculates the centre from a list of coordinates
+ * @param p list of coordinates
+ * @param size of the list (p.size() returns always 0)
+ * @return the center coordinate
+ */
 Position getMedian(const Vector<Position> &p, unsigned char size) {
 	double latDeg = 0;
 	double lonDeg = 0;
@@ -34,6 +35,10 @@ Position getMedian(const Vector<Position> &p, unsigned char size) {
 	return {LatitudeDegree(latDeg), LongitudeDegree(lonDeg)};
 }
 
+/**
+ * returns a dynamic char[34] representation of the position
+ * @return
+ */
 const char *Position::toString() const {
 	double lat = latitude.getDegrees();
 	double lon = longitude.getDegrees();

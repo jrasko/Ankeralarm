@@ -43,24 +43,24 @@ bool GPS::update(const gpsData &data) {
 }
 
 /**
- * Calulates a number as indicator for the Quality of the GPS Signal
- * @return 0 -> No GPS Data available, 1 -> No Fix, 2-4 -> Indicator for the Quality, 2 is the badest and 5 the best Quality
+ * Calculates a number as indicator for the Quality of the GPS Signal
+ * @return 0 -> No GPS Data available, 1 -> No Fix, 2-4 -> Indicator for the Quality, 2 is the badest and 4 the best Quality
  */
 unsigned char GPS::getGPSQuality() const {
 	const unsigned long maxFixAge = 30 * 1000; //30 secs
 	if (lastInputTime == 0) {
-		// Von Anfang an keine validen Daten vorhanden
+		// No valid data available from the beginning
 		return 0;
 	}
 	unsigned long currentFixAge = millis() - lastInputTime;
 	if (gpsStatus == 0 || currentFixAge >= maxFixAge) {
-		// Seit einiger zeit keine validen Daten vorhanden, verlust des fixes
+		// No valid data available for some time, loss of the fix
 		return 1;
 	}
 	if (currentFixAge >= 12 * 1000 || satellitesAvailable <= 3 || HDOP >= 10) {
 		return 2;
 	}
-	//FixAge ist zwischen 10 und 12
+	//FixAge is under 12 seconds
 	if (HDOP < 1.1) {
 		return 4;
 	}
