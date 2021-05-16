@@ -6,12 +6,10 @@
  */
 bool GPS::update(const gpsData &data) {
 	const String *v = data.getData();
-	bool hasUpdated = false;
 	if (!data.isValid()) {
 		return false;
 	}
 	if (v[0] == "$GPRMC") {
-		//GPRMC
 		if (v[2] != "A"){
 			//invalid data
 			return false;
@@ -21,9 +19,10 @@ bool GPS::update(const gpsData &data) {
 		LatitudeDegree lat(v[3], v[4][0]);
 		LongitudeDegree lon(v[5], v[6][0]);
 		currentPosition = Position(lat, lon);
-		hasUpdated = true;
-	} else if (v[0] == "$GPGGA") {
-		//GPGGA
+		lastInputTime = millis();
+		return true;
+	} 
+	if (v[0] == "$GPGGA") {
 		gpsStatus = v[6].toInt();
 		if (gpsStatus == 0){
 			// invalid data
@@ -36,10 +35,10 @@ bool GPS::update(const gpsData &data) {
 
 		satellitesAvailable = v[7].toInt();
 		HDOP = v[8].toDouble();
-		hasUpdated = true;
+		lastInputTime = millis();
+		return true;
 	}
-	lastInputTime = millis();
-	return hasUpdated;
+	return false;
 }
 
 /**
@@ -51,7 +50,7 @@ unsigned char GPS::getGPSQuality() const {
 	const unsigned long currentFixAge = millis() - lastInputTime;
 
 	if (lastInputTime == 0 || currentFixAge >= 90 * 1000) {
-		// No valid data available from the beginning or 2 mins no Fix
+		// No valid data available from the beginning or 1.5 mins no Fix
 		return 0;
 	}
 	if (gpsStatus == 0 || currentFixAge >= maxFixAge) {
