@@ -50,7 +50,7 @@ unsigned char GPS::getGPSQuality() const {
 	const unsigned long maxFixAge = 30 * 1000; //30 secs
 	const unsigned long currentFixAge = millis() - lastInputTime;
 
-	if (lastInputTime == 0 || currentFixAge >= 120 * 1000) {
+	if (lastInputTime == 0 || currentFixAge >= 90 * 1000) {
 		// No valid data available from the beginning or 2 mins no Fix
 		return 0;
 	}
