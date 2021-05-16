@@ -134,20 +134,24 @@ void loop() {
 	if (a.props.alarmActive) {
 		double distance = a.props.centralPosition.distanceTo(a.props.myGPS.getCurrentPosition());
 		bool alarmIsLow = true;
-		while (distance > a.props.alarmRadius ||a.props.myGPS.getGPSQuality() == 0) {
+		while (distance > a.props.alarmRadius || a.props.myGPS.getGPSQuality() == 0) {
 			if (alarmIsLow) {
 				// activate Alarm
 				alarmIsLow = false;
+				a.props.setDisplayBrightness(255);
 				a.lcd.clear();
 				a.print2Lines("     ALARM!     ", "");
 				PORTB |= (1 << PORTB4);
 			}
+			a.props.updateGPSData();
+			a.lcd.setCursor(0,1);
+			a.lcd.print(a.props.centralPosition.distanceTo(a.props.myGPS.getCurrentPosition()));
 			if ((PIND & (1 << PIND6)) == 0) {
 				// deactivate alarm
 				PORTB &= ~(1 << PORTB4);
 				a.props.alarmActive = false;
-				a.lcd.clear();
-				a.getLCDOutput();
+				a.props.setDisplayBrightness(a.props.displayBrightness);
+				a.setZustand(new GPSInfo);
 				break;
 			}
 		}
@@ -170,13 +174,6 @@ void loop() {
 	if (encoderButtonFlag && (PIND & (1 << PIND4)) != 0) {
 		a.encoderPush();
 		encoderButtonFlag = false;
-	}
-
-	//TODO
-	if (a.props.myGPS.getGPSQuality() > 1) {
-		//LCD Outputs
-	} else {
-		//print no GPS
 	}
 }
 
