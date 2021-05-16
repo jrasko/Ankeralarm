@@ -41,12 +41,11 @@ public:
 		if (millis() - lastInteraction > displayTimeout * 1000 && !timeoutActive) {
 			setDisplayBrightness(0);
 			timeoutActive = true;
-			return;
 		}
 		// Deactivate Timeout
 		if(millis() - lastInteraction <= displayTimeout * 1000 && timeoutActive){
-			timeoutActive = false;
 			setDisplayBrightness(displayBrightness);
+			timeoutActive = false;
 		}
 	}
 
