@@ -10,7 +10,7 @@ bool GPS::update(const gpsData &data) {
 		return false;
 	}
 	if (v[0] == "$GPRMC") {
-		if (v[2] != "A"){
+		if (v[2] != "A") {
 			//invalid data
 			return false;
 		}
@@ -21,10 +21,10 @@ bool GPS::update(const gpsData &data) {
 		currentPosition = Position(lat, lon);
 		lastInputTime = millis();
 		return true;
-	} 
+	}
 	if (v[0] == "$GPGGA") {
 		gpsStatus = v[6].toInt();
-		if (gpsStatus == 0){
+		if (gpsStatus == 0) {
 			// invalid data
 			return false;
 		}
@@ -46,10 +46,9 @@ bool GPS::update(const gpsData &data) {
  * @return 0 -> No GPS Data available, 1 -> No Fix, 2-4 -> Indicator for the Quality, 2 is the badest and 4 the best Quality
  */
 unsigned char GPS::getGPSQuality() const {
-	const unsigned long maxFixAge = 30 * 1000; //30 secs
+	const unsigned long maxFixAge = 30000; //30 secs
 	const unsigned long currentFixAge = millis() - lastInputTime;
-
-	if (lastInputTime == 0 || currentFixAge >= 90 * 1000) {
+	if (lastInputTime == 0 || currentFixAge >= 90000) {
 		// No valid data available from the beginning or 1.5 mins no Fix
 		return 0;
 	}
@@ -57,7 +56,7 @@ unsigned char GPS::getGPSQuality() const {
 		// No valid data available for some time, loss of the fix
 		return 1;
 	}
-	if (currentFixAge >= 12 * 1000 || satellitesAvailable <= 3 || HDOP >= 10) {
+	if (currentFixAge >= 12000 || satellitesAvailable <= 3 || HDOP >= 10) {
 		return 2;
 	}
 	//FixAge is under 12 seconds

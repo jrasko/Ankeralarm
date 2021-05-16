@@ -15,8 +15,10 @@
 class Properties {
 private:
 	String currentDataString;
+
 	// Singleton: Avoid multiple Objects
 	Properties() = default;
+
 public:
 	GPS myGPS;
 	NMEARead gpsdata;
@@ -57,7 +59,9 @@ public:
 
 	// Singleton: Avoid Copies of Object
 	Properties(const Properties &) = delete;
+
 	Properties &operator=(const Properties &) = delete;
+
 	// Get singleton
 	static Properties &getInstance() {
 		static Properties _instance;

@@ -1,4 +1,3 @@
-
 #include "gpsData.h"
 
 bool gpsChecksumOk(const char *gpsMessage) {

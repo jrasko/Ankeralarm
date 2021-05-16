@@ -102,7 +102,7 @@ void setup() {
 	lcd.begin(16, 2);
 	lcd.display();
 	lcd.write("Ankeralarm V3");
-	lcd.setCursor(0,1);
+	lcd.setCursor(0, 1);
 	lcd.write("Zwiener & Raskob");
 	_delay_ms(1000);
 	interrupt_init();
@@ -138,19 +138,19 @@ void loop() {
 			if (alarmIsLow) {
 				// activate Alarm
 				alarmIsLow = false;
-				a.props.setDisplayBrightness(255);
+				Properties::setDisplayBrightness(255);
 				a.lcd.clear();
 				a.print2Lines("     ALARM!     ", "");
 				PORTB |= (1 << PORTB4);
 			}
 			a.props.updateGPSData();
-			a.lcd.setCursor(0,1);
+			a.lcd.setCursor(0, 1);
 			a.lcd.print(a.props.centralPosition.distanceTo(a.props.myGPS.getCurrentPosition()));
 			if ((PIND & (1 << PIND6)) == 0) {
 				// deactivate alarm
 				PORTB &= ~(1 << PORTB4);
 				a.props.alarmActive = false;
-				a.props.setDisplayBrightness(a.props.displayBrightness);
+				Properties::setDisplayBrightness(a.props.displayBrightness);
 				a.setZustand(new GPSInfo);
 				break;
 			}
@@ -195,7 +195,7 @@ void appendSerial(char c) {
  * Receive
  */
 void serialWrite(char c[]) {
-	for (uint8_t i = 0; i < strlen(c); i++) {
+	for (unsigned int i = 0; i < strlen(c); i++) {
 		appendSerial(c[i]);
 	}
 	if (UCSR0A & (1 << UDRE0)) {
@@ -223,7 +223,7 @@ ISR(USART_RX_vect) {
 	}
 }
 
-void interrupt_init(void) {
+void interrupt_init() {
 
 	cli(); //disable Interrupts
 
@@ -268,7 +268,7 @@ ISR(INT0_vect) {
 	//---------------Encoder-------------------------------------------
 	static unsigned long lastInterruptTime = buttonDebounceTime;
 	unsigned long interruptTime = millis();
-	bool messungPin1 = 0, messungPin1Alt = false;
+	bool messungPin1, messungPin1Alt = false;
 	// If interrupts come faster than 5ms, assume it's a bounce and ignore
 	if (interruptTime - lastInterruptTime > 1) {
 

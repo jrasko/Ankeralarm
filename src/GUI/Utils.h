@@ -8,7 +8,7 @@ class Display;
 
 class State {
 protected:
-	Display *display;
+	Display *display = nullptr;
 
 public:
 	virtual ~State() = default;
@@ -30,12 +30,12 @@ public:
 
 class Display {
 private:
-	State *state;
+	State *state = nullptr;
 public:
 	Properties &props = Properties::getInstance();
 	LiquidCrystal &lcd;
 
-	explicit Display(LiquidCrystal &l) : state(nullptr), lcd(l) {}
+	explicit Display(LiquidCrystal &l) : lcd(l) {}
 
 	~Display() {
 		delete state;
