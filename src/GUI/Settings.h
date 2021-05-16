@@ -63,7 +63,7 @@ public:
 
 class ChangeTimeout : public State {
 private:
-	unsigned char timeout = 0;
+	unsigned char timeout = 60;
 public:
 	ChangeTimeout();
 

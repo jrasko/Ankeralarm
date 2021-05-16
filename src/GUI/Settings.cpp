@@ -123,20 +123,24 @@ void ChangeTimeout::getLCDOutput() {
 }
 
 void ChangeTimeout::encoderLeft() {
-	timeout--;
+	if (timeout < 10) {
+		timeout = 10;
+	}
+	timeout -= 5;
 	display->lcd.clear();
 	this->getLCDOutput();
 }
 
 void ChangeTimeout::encoderRight() {
-	timeout++;
+	if (timeout > 250) {
+		timeout = 250;
+	}
+	timeout += 5;
 	display->lcd.clear();
 	this->getLCDOutput();
 }
 
 void ChangeTimeout::buttonReturn() {
-	// Reset Timeout
-	this->display->props.setDisplayTimeout(this->display->props.displayTimeout);
 	this->display->setZustand(new Timeout);
 }
 

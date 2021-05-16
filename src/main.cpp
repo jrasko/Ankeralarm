@@ -158,23 +158,28 @@ void loop() {
 	}
 
 	while (encoderSpinFlag > 0) {
+		a.props.lastInteraction = millis();
 		a.encoderRight();
 		encoderSpinFlag--;
 	}
 	while (encoderSpinFlag < 0) {
+		a.props.lastInteraction = millis();
 		a.encoderLeft();
 		encoderSpinFlag++;
 	}
 	//falling edge detection
 	if (returnButtonFlag && (PIND & (1 << PIND7)) != 0) {
+		a.props.lastInteraction = millis();
 		a.buttonReturn();
 		returnButtonFlag = false;
 	}
 	//falling edge detection
 	if (encoderButtonFlag && (PIND & (1 << PIND4)) != 0) {
+		a.props.lastInteraction = millis();
 		a.encoderPush();
 		encoderButtonFlag = false;
 	}
+	a.props.checkSleepTimer();
 }
 
 

@@ -25,9 +25,10 @@ public:
 	Position centralPosition;
 
 	bool alarmActive = false;
+	unsigned long lastInteraction = millis();
 	unsigned char alarmRadius = 25;
 	unsigned char displayBrightness = 255;
-	unsigned char displayTimeout = 0;
+	unsigned char displayTimeout = 60;
 	uint8_t *eepromBrightness = nullptr;
 
 	static void setDisplayBrightness(unsigned char brightness) {
@@ -36,6 +37,14 @@ public:
 
 	void setDisplayTimeout(unsigned char timeout) {
 		// No timer available, search for another solution
+	}
+
+	void checkSleepTimer() const {
+		if (lastInteraction - millis() > displayTimeout * 1000) {
+			setDisplayBrightness(0);
+		} else {
+			setDisplayBrightness(displayBrightness);
+		}
 	}
 
 	void readBrightnessFromEEPROM() {
