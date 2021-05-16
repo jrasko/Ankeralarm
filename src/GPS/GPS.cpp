@@ -48,11 +48,12 @@ bool GPS::update(const gpsData &data) {
  */
 unsigned char GPS::getGPSQuality() const {
 	const unsigned long maxFixAge = 30 * 1000; //30 secs
-	if (lastInputTime == 0) {
-		// No valid data available from the beginning
+	const unsigned long currentFixAge = millis() - lastInputTime;
+
+	if (lastInputTime == 0 || currentFixAge >= 120 * 1000) {
+		// No valid data available from the beginning or 2 mins no Fix
 		return 0;
 	}
-	unsigned long currentFixAge = millis() - lastInputTime;
 	if (gpsStatus == 0 || currentFixAge >= maxFixAge) {
 		// No valid data available for some time, loss of the fix
 		return 1;

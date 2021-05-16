@@ -134,7 +134,7 @@ void loop() {
 	if (a.props.alarmActive) {
 		double distance = a.props.centralPosition.distanceTo(a.props.myGPS.getCurrentPosition());
 		bool alarmIsLow = true;
-		while (distance > a.props.alarmRadius) {
+		while (distance > a.props.alarmRadius ||a.props.myGPS.getGPSQuality() == 0) {
 			if (alarmIsLow) {
 				// activate Alarm
 				alarmIsLow = false;
