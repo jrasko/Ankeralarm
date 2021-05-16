@@ -25,11 +25,11 @@ void Alarm::getLCDOutput() {
 // FindPosition
 
 void FindPosition::getLCDOutput() {
-	display->print2Lines("Please wait  0/4", "Find Position");
-	const unsigned char size = 8;
+	display->print2Lines("Please wait  0/3", "Find Position");
+	const unsigned char size = 2*3;
 	Position ary[size];
 	Vector<Position> posCollection(ary);
-	for (unsigned char i = 0; i < 8; ++i) {
+	for (unsigned char i = 0; i < 2*3; ++i) {
 		// wait for updated GPS Data
 		bool update;
 		do {
@@ -37,7 +37,7 @@ void FindPosition::getLCDOutput() {
 		} while (!update);
 		posCollection[i] = display->props.myGPS.getCurrentPosition();
 		char buff[17];
-		sprintf(buff, "Please wait  %u/4", (i + 1) / 2);
+		sprintf(buff, "Please wait  %u/3", (i + 1) / 2);
 		display->print2Lines(buff, "Find Position");
 	}
 	display->props.centralPosition = getMedian(posCollection, size);
