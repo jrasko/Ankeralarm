@@ -102,6 +102,7 @@ void setup() {
 	lcd.begin(16, 2);
 	lcd.display();
 	lcd.write("Ankeralarm V3");
+	lcd.setCursor(0,1);
 	lcd.write("Zwiener & Raskob");
 	_delay_ms(1000);
 	interrupt_init();
@@ -274,7 +275,7 @@ ISR(INT0_vect) {
 	// If interrupts come faster than 5ms, assume it's a bounce and ignore
 	if (interruptTime - lastInterruptTime > 1) {
 
-		messungPin1 = ((PIND & (1 << encoder_a)) == 0) ? 0 : 1;
+		messungPin1 = ((PIND & (1 << encoder_a)) != 0);
 		if ((messungPin1 == HIGH) && (messungPin1Alt == LOW)) {
 			if ((PIND & (1 << PIND3)) != 0) {
 				encoderSpinFlag--;
@@ -327,6 +328,7 @@ ISR(TIMER1_OVF_vect) {
 			//Green
 			PORTB |= (1 << LED_GREEN); //LED_GREEN HIGH
 			PORTB &= ~(1 << LED_RED); //LED_RED LOWbreak;
+			break;
 
 		case 4:
 			//Green Blinking
