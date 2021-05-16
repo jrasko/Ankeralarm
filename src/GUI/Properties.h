@@ -25,6 +25,7 @@ public:
 	Position centralPosition;
 
 	bool alarmActive = false;
+	bool timeoutActive = false; //FIXME eventuell redundant
 	unsigned long lastInteraction = millis();
 	unsigned char alarmRadius = 25;
 	unsigned char displayBrightness = 255;
@@ -35,10 +36,16 @@ public:
 		analogWrite(lcd_beleuchtung, brightness);
 	}
 
-	void checkSleepTimer() const {
-		if (lastInteraction - millis() > displayTimeout * 1000) {
+	void checkSleepTimer() {
+		// Activate Timeout
+		if (millis() - lastInteraction > displayTimeout * 1000 && !timeoutActive) {
 			setDisplayBrightness(0);
-		} else {
+			timeoutActive = true;
+			return;
+		}
+		// Deactivate Timeout
+		if(millis() - lastInteraction <= displayTimeout * 1000 && timeoutActive){
+			timeoutActive = false;
 			setDisplayBrightness(displayBrightness);
 		}
 	}
