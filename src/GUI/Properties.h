@@ -35,10 +35,6 @@ public:
 		analogWrite(lcd_beleuchtung, brightness);
 	}
 
-	void setDisplayTimeout(unsigned char timeout) {
-		// No timer available, search for another solution
-	}
-
 	void checkSleepTimer() const {
 		if (lastInteraction - millis() > displayTimeout * 1000) {
 			setDisplayBrightness(0);
