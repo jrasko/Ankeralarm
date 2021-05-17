@@ -112,6 +112,7 @@ void Timeout::buttonReturn() {
 void ChangeTimeout::encoderPush() {
 	// Save Timeout
 	this->display->props.displayTimeout = timeout;
+	this->display->setZustand(new Timeout);
 }
 
 void ChangeTimeout::getLCDOutput() {
@@ -145,7 +146,6 @@ void ChangeTimeout::buttonReturn() {
 ChangeTimeout::ChangeTimeout() {
 	timeout = display->props.displayTimeout;
 }
-
 
 // UTC/Local Time
 void UTCFactor::encoderPush() {

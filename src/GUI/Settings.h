@@ -13,8 +13,6 @@ public:
 
 	void encoderRight() override;
 
-	void buttonReturn() override;
-
 	void getLCDOutput() override;
 };
 

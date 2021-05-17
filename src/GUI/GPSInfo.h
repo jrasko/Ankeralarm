@@ -20,8 +20,6 @@ public:
 
 class Coordinates : public State {
 public:
-	void encoderPush() override;
-
 	void encoderRight() override;
 
 	void buttonReturn() override;
