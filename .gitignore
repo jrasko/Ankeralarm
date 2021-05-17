@@ -1,7 +1,10 @@
 .pio
 .vscode
+.idea
 include/README
 lib/README
 test/README
 src/Ressources/testString.txt
 /cmake-build-debug/
+/CMakeLists.txt
+/CMakeListsPrivate.txt
