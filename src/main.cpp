@@ -141,11 +141,18 @@ void loop() {
 				Properties::setDisplayBrightness(255);
 				a.lcd.clear();
 				a.print2Lines("     ALARM!     ", "");
+				a.lcd.setCursor(0, 1);
+				a.lcd.print(distance);
 				PORTB |= (1 << PORTB4);
 			}
-			a.props.updateGPSData();
-			a.lcd.setCursor(0, 1);
-			a.lcd.print(a.props.centralPosition.distanceTo(a.props.myGPS.getCurrentPosition()));
+			if(a.props.updateGPSData()){
+				a.lcd.clear();
+				a.lcd.setCursor(0,0);
+				a.lcd.write("     ALARM!     ");
+				a.lcd.setCursor(0, 1);
+				a.lcd.print(a.props.centralPosition.distanceTo(a.props.myGPS.getCurrentPosition()));
+			}
+
 			if ((PIND & (1 << PIND6)) == 0) {
 				// deactivate alarm
 				PORTB &= ~(1 << PORTB4);
