@@ -37,13 +37,20 @@ public:
 	}
 
 	void checkSleepTimer() {
+		if (displayTimeout == 0){
+			if (timeoutActive){
+				setDisplayBrightness(displayBrightness);
+				timeoutActive = false;
+			}
+			return;
+		}
 		// Activate Timeout
 		if (millis() - lastInteraction > displayTimeout * 1000 && !timeoutActive) {
 			setDisplayBrightness(0);
 			timeoutActive = true;
 		}
 		// Deactivate Timeout
-		if(millis() - lastInteraction <= displayTimeout * 1000 && timeoutActive){
+		if(millis() - lastInteraction < displayTimeout * 1000 && timeoutActive){
 			setDisplayBrightness(displayBrightness);
 			timeoutActive = false;
 		}

@@ -13,15 +13,13 @@ void Settings::encoderRight() {
 	this->display->setZustand(new Alarm);
 }
 
-void Settings::buttonReturn() {}
-
 void Settings::getLCDOutput() {
 	display->lcd.print("Settings");
 }
 
 // Brightness
 void DisplayBrightness::encoderPush() {
-	this->display->setZustand(new ChangeDisplayBrightness);
+	this->display->setZustand(new ChangeDisplayBrightness());
 }
 
 void DisplayBrightness::getLCDOutput() {
@@ -92,7 +90,7 @@ ChangeDisplayBrightness::ChangeDisplayBrightness() {
 
 // Timeout
 void Timeout::encoderPush() {
-	this->display->setZustand(new ChangeTimeout);
+	this->display->setZustand(new ChangeTimeout());
 }
 
 void Timeout::getLCDOutput() {
@@ -123,8 +121,8 @@ void ChangeTimeout::getLCDOutput() {
 }
 
 void ChangeTimeout::encoderLeft() {
-	if (timeout < 10) {
-		timeout = 10;
+	if (timeout < 5) {
+		timeout = 5;
 	}
 	timeout -= 5;
 	display->lcd.clear();
@@ -151,7 +149,7 @@ ChangeTimeout::ChangeTimeout() {
 
 // UTC/Local Time
 void UTCFactor::encoderPush() {
-	this->display->setZustand(new ChangeUTCFactor);
+	this->display->setZustand(new ChangeUTCFactor());
 }
 
 void UTCFactor::getLCDOutput() {
@@ -212,7 +210,7 @@ ChangeUTCFactor::ChangeUTCFactor() {
 }
 
 void AlarmRadius::encoderPush() {
-	this->display->setZustand(new ChangeAlarmRadius);
+	this->display->setZustand(new ChangeAlarmRadius());
 }
 
 void AlarmRadius::encoderLeft() {

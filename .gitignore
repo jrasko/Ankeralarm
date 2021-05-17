@@ -8,3 +8,4 @@ src/Ressources/testString.txt
 /cmake-build-debug/
 /CMakeLists.txt
 /CMakeListsPrivate.txt
+/cmake-build-nanoatmega328/

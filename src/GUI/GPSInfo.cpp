@@ -19,10 +19,6 @@ void GPSInfo::getLCDOutput() {
 }
 
 // Coordinates
-void Coordinates::encoderPush() {
-	this->display->setZustand(new GPSInfo);
-}
-
 void Coordinates::encoderRight() {
 	this->display->setZustand(new Satellites);
 }
