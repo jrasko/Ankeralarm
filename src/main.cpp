@@ -134,6 +134,7 @@ void loop() {
 	if (a.props.alarmActive) {
 		double distance = a.props.centralPosition.distanceTo(a.props.myGPS.getCurrentPosition());
 		bool alarmIsLow = true;
+		bool snooze = false;
 		while (distance > a.props.alarmRadius || a.props.myGPS.getGPSQuality() == 0) {
 			if (alarmIsLow) {
 				// activate Alarm
@@ -145,17 +146,21 @@ void loop() {
 				a.lcd.print(distance);
 				PORTB |= (1 << PORTB4);
 			}
-			if(a.props.updateGPSData()){
+			if (a.props.updateGPSData()) {
 				a.lcd.clear();
-				a.lcd.setCursor(0,0);
+				a.lcd.setCursor(0, 0);
 				a.lcd.write("     ALARM!     ");
 				a.lcd.setCursor(0, 1);
 				a.lcd.print(a.props.centralPosition.distanceTo(a.props.myGPS.getCurrentPosition()));
 			}
-
 			if ((PIND & (1 << PIND6)) == 0) {
-				// deactivate alarm
-				PORTB &= ~(1 << PORTB4);
+				if (!snooze) {
+					// Mute
+					snooze = true;
+					PORTB &= ~(1 << PORTB4);
+					continue;
+				}
+				// Finish
 				a.props.alarmActive = false;
 				Properties::setDisplayBrightness(a.props.displayBrightness);
 				a.setZustand(new GPSInfo);
