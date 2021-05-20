@@ -45,12 +45,12 @@ public:
 			return;
 		}
 		// Activate Timeout
-		if (millis() - lastInteraction > displayTimeout * 1000 && !timeoutActive) {
+		if (millis() - lastInteraction > ((unsigned long) displayTimeout) * 1000 && !timeoutActive) {
 			setDisplayBrightness(0);
 			timeoutActive = true;
 		}
 		// Deactivate Timeout
-		if(millis() - lastInteraction < displayTimeout * 1000 && timeoutActive){
+		if(millis() - lastInteraction < ((unsigned long) displayTimeout) * 1000 && timeoutActive){
 			setDisplayBrightness(displayBrightness);
 			timeoutActive = false;
 		}
