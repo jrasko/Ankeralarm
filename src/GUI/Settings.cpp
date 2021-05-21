@@ -51,9 +51,7 @@ void ChangeDisplayBrightness::encoderPush() {
 }
 
 void ChangeDisplayBrightness::getLCDOutput() {
-	char buf[16];
-	sprintf(buf, "%u", brightness);
-	display->print2Lines("ChangeBrightness", buf);
+	display->print2Lines("ChangeBrightness", brightness);
 }
 
 void ChangeDisplayBrightness::encoderLeft() {
@@ -116,9 +114,7 @@ void ChangeTimeout::encoderPush() {
 }
 
 void ChangeTimeout::getLCDOutput() {
-	char buf[16];
-	sprintf(buf, "%u", timeout);
-	display->print2Lines("ChangeTimeout", buf);
+	display->print2Lines("ChangeTimeout", timeout);
 }
 
 void ChangeTimeout::encoderLeft() {
@@ -257,9 +253,7 @@ void ChangeAlarmRadius::buttonReturn() {
 }
 
 void ChangeAlarmRadius::getLCDOutput() {
-	char buff[16];
-	sprintf(buff, "%u", radius);
-	display->print2Lines("ChangeAlarmRadius", buff);
+	display->print2Lines("ChangeAlarmRadius", radius);
 }
 
 ChangeAlarmRadius::ChangeAlarmRadius() {

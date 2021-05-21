@@ -73,9 +73,7 @@ void SetRadius::buttonReturn() {
 }
 
 void SetRadius::getLCDOutput() {
-	char buff[16];
-	sprintf(buff, "%u", radius);
-	display->print2Lines("Setze den Radius", buff);
+	display->print2Lines("Setze den Radius", radius);
 }
 
 

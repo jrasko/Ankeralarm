@@ -19,7 +19,6 @@
 
 #include <Arduino.h>
 #include <LiquidCrystal.h>
-#include <SoftwareSerial.h>
 
 #include "GPS/GPS.h"
 #include "GPS/gpsData.h"
@@ -29,7 +28,6 @@
 #include <avr/interrupt.h>
 #include <avr/eeprom.h>
 #include <avr/io.h>
-#include <avr/wdt.h>
 
 //---defines--------------------------------------------------
 

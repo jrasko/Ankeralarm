@@ -71,7 +71,22 @@ public:
 		lcd.setCursor(0, 1);
 		lcd.write(l2);
 	}
+
 	void print2Lines(const char *l1, double l2) {
+		lcd.setCursor(0, 0);
+		lcd.write(l1);
+		lcd.setCursor(0, 1);
+		lcd.print(l2);
+	}
+
+	void print2Lines(const char *l1, unsigned char l2) {
+		lcd.setCursor(0, 0);
+		lcd.write(l1);
+		lcd.setCursor(0, 1);
+		lcd.print(l2);
+	}
+
+	void print2Lines(const char *l1, unsigned long l2) {
 		lcd.setCursor(0, 0);
 		lcd.write(l1);
 		lcd.setCursor(0, 1);

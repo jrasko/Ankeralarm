@@ -56,9 +56,7 @@ void Satellites::encoderLeft() {
 }
 
 void Satellites::getLCDOutput() {
-	char buf[16];
-	sprintf(buf, "%u", display->props.myGPS.getSatellitesAvailable());
-	display->print2Lines("Satteliten", buf);
+	display->print2Lines("Satteliten", display->props.myGPS.getSatellitesAvailable());
 }
 
 //FixAge
@@ -75,9 +73,7 @@ void FixAge::encoderLeft() {
 }
 
 void FixAge::getLCDOutput() {
-	char buf[16];
-	sprintf(buf, "%lu", display->props.myGPS.getFixAge());
-	display->print2Lines("Fix Age:", buf);
+	display->print2Lines("Fix Age:", display->props.myGPS.getFixAge());
 }
 
 //HDOP
@@ -95,9 +91,7 @@ void HDOP::encoderLeft() {
 }
 
 void HDOP::getLCDOutput() {
-	char buf[16];
-	dtostrf(display->props.myGPS.getHDOP(), 4, 1, buf);
-	display->print2Lines("HDOP", buf);
+	display->print2Lines("HDOP", display->props.myGPS.getHDOP());
 }
 
 // Time
@@ -137,10 +131,10 @@ void Radius::encoderLeft() {
 
 void Radius::getLCDOutput() {
 	char buff[16];
-	char buff1[16];
-	char buff2[16];
+	char buff1[17];
+	char buff2[17];
 	dtostrf(display->props.centralPosition.distanceTo(display->props.myGPS.getCurrentPosition()), 6, 1, buff);
 	sprintf(buff1, "Distance: %s", buff);
-	sprintf(buff2, "max Radius: %3u", display->props.alarmRadius);
+	sprintf(buff2, "max Radius:  %3u", display->props.alarmRadius);
 	display->print2Lines(buff1, buff2);
 }
