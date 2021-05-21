@@ -158,6 +158,7 @@ void loop() {
 					// Mute
 					snooze = true;
 					PORTB &= ~(1 << PORTB4);
+					delay(500);
 					continue;
 				}
 				// Finish
