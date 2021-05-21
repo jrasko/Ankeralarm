@@ -132,41 +132,39 @@ void loop() {
 	}
 
 	if (a.props.alarmActive) {
-		double distance = a.props.centralPosition.distanceTo(a.props.myGPS.getCurrentPosition());
-		bool alarmIsLow = true;
-		bool snooze = false;
-		while (distance > a.props.alarmRadius || a.props.myGPS.getGPSQuality() == 0) {
-			if (alarmIsLow) {
-				// activate Alarm
-				alarmIsLow = false;
-				Properties::setDisplayBrightness(255);
-				a.lcd.clear();
-				a.print2Lines("     ALARM!     ", "");
-				a.lcd.setCursor(0, 1);
-				a.lcd.print(distance);
-				PORTB |= (1 << PORTB4);
-			}
-			if (a.props.updateGPSData()) {
-				a.lcd.clear();
-				a.lcd.setCursor(0, 0);
-				a.lcd.write("     ALARM!     ");
-				a.lcd.setCursor(0, 1);
-				a.lcd.print(a.props.centralPosition.distanceTo(a.props.myGPS.getCurrentPosition()));
-			}
-			if ((PIND & (1 << PIND6)) == 0) {
-				if (!snooze) {
-					// Mute
-					snooze = true;
-					PORTB &= ~(1 << PORTB4);
-					delay(500);
-					continue;
+		bool distanceAlarm =
+				a.props.centralPosition.distanceTo(a.props.myGPS.getCurrentPosition()) > a.props.alarmRadius;
+		bool qualityAlarm = a.props.myGPS.getGPSQuality() == 0;
+
+		if (distanceAlarm || qualityAlarm) {
+			const char *currentAlarmString = distanceAlarm ? " DISTANCE-ALARM " : " QUALITY-ALARM! ";
+			bool snooze = false;
+			Properties::setDisplayBrightness(255);
+			a.lcd.clear();
+			a.print2Lines(currentAlarmString, a.props.centralPosition.distanceTo(a.props.myGPS.getCurrentPosition()));
+			// Start Alarm
+			PORTB |= (1 << PORTB4);
+			while (true) {
+				if (a.props.updateGPSData()) {
+					a.lcd.clear();
+					a.print2Lines(currentAlarmString,
+								  a.props.centralPosition.distanceTo(a.props.myGPS.getCurrentPosition()));
 				}
-				// Finish
-				a.props.alarmActive = false;
-				Properties::setDisplayBrightness(a.props.displayBrightness);
-				a.setZustand(new GPSInfo);
-				break;
+				//Escape Button
+				if ((PIND & (1 << PIND6)) == 0) {
+					if (!snooze) {
+						// Mute
+						snooze = true;
+						PORTB &= ~(1 << PORTB4);
+						delay(500);
+						continue;
+					}
+					break;
+				}
 			}
+			a.props.alarmActive = false;
+			Properties::setDisplayBrightness(a.props.displayBrightness);
+			a.setZustand(new GPSInfo);
 		}
 	}
 
@@ -286,18 +284,22 @@ ISR(INT0_vect) {
 	//---------------Encoder-------------------------------------------
 	static unsigned long lastInterruptTime = buttonDebounceTime;
 	unsigned long interruptTime = millis();
-	bool messungPin1;
+	bool messungPin1, messungPin1Alt = false;
 	// If interrupts come faster than 5ms, assume it's a bounce and ignore
 	if (interruptTime - lastInterruptTime > 1) {
 
 		messungPin1 = ((PIND & (1 << encoder_a)) != 0);
-		if (messungPin1 == HIGH) {
+		if ((messungPin1 == HIGH) && (messungPin1Alt == LOW)) {
 			if ((PIND & (1 << PIND3)) != 0) {
 				encoderSpinFlag--;
 			} else {
 				encoderSpinFlag++;
 			}
 		}
+		messungPin1Alt = messungPin1;
+
+		//Restrict value from 0 to +200
+		//radius = min(200, max(0,radius));
 	}
 	// Keep track of when we were here last (no more than every 5ms)
 	lastInterruptTime = interruptTime;
