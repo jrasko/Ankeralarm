@@ -285,22 +285,18 @@ ISR(INT0_vect) {
 	//---------------Encoder-------------------------------------------
 	static unsigned long lastInterruptTime = buttonDebounceTime;
 	unsigned long interruptTime = millis();
-	bool messungPin1, messungPin1Alt = false;
+	bool messungPin1;
 	// If interrupts come faster than 5ms, assume it's a bounce and ignore
 	if (interruptTime - lastInterruptTime > 1) {
 
 		messungPin1 = ((PIND & (1 << encoder_a)) != 0);
-		if ((messungPin1 == HIGH) && (messungPin1Alt == LOW)) {
+		if (messungPin1 == HIGH) {
 			if ((PIND & (1 << PIND3)) != 0) {
 				encoderSpinFlag--;
 			} else {
 				encoderSpinFlag++;
 			}
 		}
-		messungPin1Alt = messungPin1;
-
-		//Restrict value from 0 to +200
-		//radius = min(200, max(0,radius));
 	}
 	// Keep track of when we were here last (no more than every 5ms)
 	lastInterruptTime = interruptTime;
