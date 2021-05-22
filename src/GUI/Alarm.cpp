@@ -19,7 +19,7 @@ void Alarm::encoderRight() {
 }
 
 void Alarm::getLCDOutput() {
-	display->lcd.print("Alarm");
+	display->print2Lines("Alarm");
 }
 
 // FindPosition
@@ -50,7 +50,6 @@ void SetRadius::encoderLeft() {
 		radius = 5;
 	}
 	radius -= 5;
-	display->lcd.clear();
 	getLCDOutput();
 }
 
@@ -64,7 +63,6 @@ void SetRadius::encoderRight() {
 		radius = 250;
 	}
 	radius += 5;
-	display->lcd.clear();
 	getLCDOutput();
 }
 
@@ -88,7 +86,7 @@ void AreUSure::buttonReturn() {
 }
 
 void AreUSure::getLCDOutput() {
-	display->print2Lines("Bist du sicher?", "");
+	display->print2Lines("Bist du sicher?");
 }
 
 

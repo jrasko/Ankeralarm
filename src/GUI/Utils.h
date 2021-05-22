@@ -65,7 +65,8 @@ public:
 		this->state->getLCDOutput();
 	}
 
-	void print2Lines(const char *l1, const char *l2) {
+	void print2Lines(const char *l1, const char *l2 = "") {
+		lcd.clear();
 		lcd.setCursor(0, 0);
 		lcd.write(l1);
 		lcd.setCursor(0, 1);
@@ -73,6 +74,7 @@ public:
 	}
 
 	void print2Lines(const char *l1, double l2) {
+		lcd.clear();
 		lcd.setCursor(0, 0);
 		lcd.write(l1);
 		lcd.setCursor(0, 1);
@@ -80,6 +82,7 @@ public:
 	}
 
 	void print2Lines(const char *l1, unsigned char l2) {
+		lcd.clear();
 		lcd.setCursor(0, 0);
 		lcd.write(l1);
 		lcd.setCursor(0, 1);
@@ -87,6 +90,7 @@ public:
 	}
 
 	void print2Lines(const char *l1, unsigned long l2) {
+		lcd.clear();
 		lcd.setCursor(0, 0);
 		lcd.write(l1);
 		lcd.setCursor(0, 1);
@@ -97,7 +101,6 @@ public:
 		delete this->state;
 		this->state = z;
 		this->state->setAnzeige(this);
-		lcd.clear();
 		this->state->getLCDOutput();
 	}
 };

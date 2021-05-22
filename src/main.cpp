@@ -125,7 +125,6 @@ void setup() {
 
 void loop() {
 	if (a.props.updateGPSData()) {
-		a.lcd.clear();
 		a.getLCDOutput();
 	}
 
@@ -138,13 +137,11 @@ void loop() {
 			const char *currentAlarmString = distanceAlarm ? " DISTANCE-ALARM " : " QUALITY-ALARM! ";
 			bool snooze = false;
 			Properties::setDisplayBrightness(255);
-			a.lcd.clear();
 			a.print2Lines(currentAlarmString, a.props.centralPosition.distanceTo(a.props.myGPS.getCurrentPosition()));
 			// Start Alarm
 			PORTB |= (1 << PORTB4);
 			while (true) {
 				if (a.props.updateGPSData()) {
-					a.lcd.clear();
 					a.print2Lines(currentAlarmString,
 								  a.props.centralPosition.distanceTo(a.props.myGPS.getCurrentPosition()));
 				}

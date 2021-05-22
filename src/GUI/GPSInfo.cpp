@@ -15,7 +15,7 @@ void GPSInfo::encoderLeft() {
 }
 
 void GPSInfo::getLCDOutput() {
-	display->lcd.print("GPSInfo");
+	display->print2Lines("GPSInfo");
 }
 
 // Coordinates

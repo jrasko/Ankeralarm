@@ -14,7 +14,7 @@ void Settings::encoderRight() {
 }
 
 void Settings::getLCDOutput() {
-	display->lcd.print("Settings");
+	display->print2Lines("Settings");
 }
 
 // Brightness
@@ -23,7 +23,7 @@ void DisplayBrightness::encoderPush() {
 }
 
 void DisplayBrightness::getLCDOutput() {
-	display->lcd.print("Brightness");
+	display->print2Lines("Brightness");
 }
 
 void DisplayBrightness::encoderLeft() {
@@ -60,7 +60,6 @@ void ChangeDisplayBrightness::encoderLeft() {
 	}
 	brightness -= 5;
 	Properties::setDisplayBrightness(brightness);
-	display->lcd.clear();
 	this->getLCDOutput();
 }
 
@@ -70,7 +69,6 @@ void ChangeDisplayBrightness::encoderRight() {
 	}
 	brightness += 5;
 	Properties::setDisplayBrightness(brightness);
-	display->lcd.clear();
 	this->getLCDOutput();
 }
 
@@ -92,7 +90,7 @@ void Timeout::encoderPush() {
 }
 
 void Timeout::getLCDOutput() {
-	display->lcd.print("Timeout");
+	display->print2Lines("Timeout");
 }
 
 void Timeout::encoderLeft() {
@@ -122,7 +120,6 @@ void ChangeTimeout::encoderLeft() {
 		timeout = 5;
 	}
 	timeout -= 5;
-	display->lcd.clear();
 	this->getLCDOutput();
 }
 
@@ -131,7 +128,6 @@ void ChangeTimeout::encoderRight() {
 		timeout = 250;
 	}
 	timeout += 5;
-	display->lcd.clear();
 	this->getLCDOutput();
 }
 
@@ -149,7 +145,7 @@ void UTCFactor::encoderPush() {
 }
 
 void UTCFactor::getLCDOutput() {
-	display->lcd.print("UTC/Local");
+	display->print2Lines("UTC/Local");
 }
 
 void UTCFactor::encoderLeft() {
@@ -184,7 +180,6 @@ void ChangeUTCFactor::encoderLeft() {
 	if (factor < -12) {
 		factor = 12;
 	}
-	display->lcd.clear();
 	this->getLCDOutput();
 }
 
@@ -193,7 +188,6 @@ void ChangeUTCFactor::encoderRight() {
 	if (factor > 12) {
 		factor = -12;
 	}
-	display->lcd.clear();
 	this->getLCDOutput();
 }
 
@@ -222,7 +216,7 @@ void AlarmRadius::buttonReturn() {
 }
 
 void AlarmRadius::getLCDOutput() {
-	display->print2Lines("Set Alarm Radius", "");
+	display->print2Lines("Set Alarm Radius");
 }
 
 void ChangeAlarmRadius::encoderLeft() {
@@ -230,7 +224,6 @@ void ChangeAlarmRadius::encoderLeft() {
 		radius = 5;
 	}
 	radius -= 5;
-	display->lcd.clear();
 	getLCDOutput();
 }
 
@@ -244,7 +237,6 @@ void ChangeAlarmRadius::encoderRight() {
 		radius = 250;
 	}
 	radius += 5;
-	display->lcd.clear();
 	getLCDOutput();
 }
 
