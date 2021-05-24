@@ -80,7 +80,7 @@ void ChangeDisplayBrightness::buttonReturn() {
 
 }
 
-ChangeDisplayBrightness::ChangeDisplayBrightness() {
+void ChangeDisplayBrightness::init() {
 	brightness = display->props.displayBrightness;
 }
 
@@ -135,7 +135,7 @@ void ChangeTimeout::buttonReturn() {
 	this->display->setZustand(new Timeout);
 }
 
-ChangeTimeout::ChangeTimeout() {
+void ChangeTimeout::init() {
 	timeout = display->props.displayTimeout;
 }
 
@@ -195,7 +195,7 @@ void ChangeUTCFactor::buttonReturn() {
 	this->display->setZustand(new UTCFactor);
 }
 
-ChangeUTCFactor::ChangeUTCFactor() {
+void ChangeUTCFactor::init() {
 	factor = display->props.myGPS.getLastTimeStamp().getUTCFactor();
 }
 
@@ -248,6 +248,6 @@ void ChangeAlarmRadius::getLCDOutput() {
 	display->print2Lines("ChangeAlarmRadius", radius);
 }
 
-ChangeAlarmRadius::ChangeAlarmRadius() {
+void ChangeAlarmRadius::init() {
 	this->radius = display->props.alarmRadius;
 }

@@ -25,6 +25,8 @@ public:
 
 	virtual void buttonReturn() {};
 
+	virtual void init() {};
+
 	virtual void getLCDOutput() = 0;
 };
 
@@ -101,6 +103,7 @@ public:
 		delete this->state;
 		this->state = z;
 		this->state->setAnzeige(this);
+		this->state->init();
 		this->state->getLCDOutput();
 	}
 };

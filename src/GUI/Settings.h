@@ -33,8 +33,6 @@ class ChangeDisplayBrightness : public State {
 private:
 	unsigned char brightness = 255;
 public:
-	ChangeDisplayBrightness();
-
 	void encoderPush() override;
 
 	void encoderLeft() override;
@@ -44,6 +42,8 @@ public:
 	void buttonReturn() override;
 
 	void getLCDOutput() override;
+
+	void init() override;
 };
 
 class Timeout : public State {
@@ -63,8 +63,6 @@ class ChangeTimeout : public State {
 private:
 	unsigned char timeout = 60;
 public:
-	ChangeTimeout();
-
 	void encoderPush() override;
 
 	void encoderLeft() override;
@@ -74,6 +72,8 @@ public:
 	void buttonReturn() override;
 
 	void getLCDOutput() override;
+
+	void init() override;
 };
 
 class UTCFactor : public State {
@@ -93,8 +93,6 @@ class ChangeUTCFactor : public State {
 private:
 	char factor = 0;
 public:
-	ChangeUTCFactor();
-
 	void encoderPush() override;
 
 	void encoderLeft() override;
@@ -104,6 +102,8 @@ public:
 	void buttonReturn() override;
 
 	void getLCDOutput() override;
+
+	void init() override;
 };
 
 
@@ -124,7 +124,6 @@ class ChangeAlarmRadius : public State {
 private:
 	unsigned char radius = 0;
 public:
-	ChangeAlarmRadius();
 
 	void encoderPush() override;
 
@@ -135,6 +134,8 @@ public:
 	void buttonReturn() override;
 
 	void getLCDOutput() override;
+
+	void init() override;
 };
 
 #endif //ANKERALARM_SETTINGS_H
