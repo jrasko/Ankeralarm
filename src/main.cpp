@@ -80,8 +80,8 @@ volatile bool returnButtonFlag = false;
 volatile char encoderSpinFlag = 0;
 
 uint8_t brightness EEMEM = 150; //EEPROM variable
-//uint8_t timeout EEMEM = 160; //EEPROM variable TODO
-//uint8_t utcFactor EEMEM = 170; //EEPROM variable TODO
+uint8_t timeout EEMEM = 151; //EEPROM variable
+uint8_t utcFactor EEMEM = 152; //EEPROM variable
 
 
 //----Function Header---------------------------------------
