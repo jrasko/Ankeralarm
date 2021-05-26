@@ -10,6 +10,7 @@
 #include "../GPS/GPS.h"
 #include <Arduino.h>
 #include "NMEARead.h"
+#include "EEPROM.h"
 
 // Singleton
 class Properties {
@@ -20,17 +21,21 @@ private:
 	Properties() = default;
 
 public:
+	Properties(const Properties &) = delete;
+	Properties &operator=(const Properties &) = delete;
+
 	GPS myGPS;
 	NMEARead gpsdata;
 	Position centralPosition;
+	EEPROM eeprom;
 
 	bool alarmActive = false;
-	bool timeoutActive = false; //FIXME eventuell redundant
+	bool timeoutActive = false;
 	unsigned long lastInteraction = millis();
 	unsigned char alarmRadius = 25;
 	unsigned char displayBrightness = 255;
 	unsigned char displayTimeout = 60;
-	uint8_t *eepromBrightness = nullptr;
+
 
 	static void setDisplayBrightness(unsigned char brightness) {
 		analogWrite(lcd_beleuchtung, brightness);
@@ -56,14 +61,12 @@ public:
 		}
 	}
 
-	void readBrightnessFromEEPROM() {
-		unsigned char brightness = eeprom_read_byte(eepromBrightness);
-		displayBrightness = brightness;
-		setDisplayBrightness(brightness);
-	}
+	void initFromEEPROM() {
+		displayBrightness = eeprom.readFromEEPROM(eeprom.BRIGHTNESS);
+		setDisplayBrightness(displayBrightness);
 
-	void writeBrightnessInEEPROM() const {
-		eeprom_write_byte(eepromBrightness, displayBrightness);
+		displayTimeout = eeprom.readFromEEPROM(eeprom.TIMEOUT);
+		myGPS.getLastTimeStamp().setUTCFactor((char) eeprom.readFromEEPROM(eeprom.UTCFACTOR));
 	}
 
 	bool updateGPSData() {
@@ -74,11 +77,6 @@ public:
 		}
 		return false;
 	}
-
-	// Singleton: Avoid Copies of Object
-	Properties(const Properties &) = delete;
-
-	Properties &operator=(const Properties &) = delete;
 
 	// Get singleton
 	static Properties &getInstance() {

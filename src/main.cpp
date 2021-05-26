@@ -80,6 +80,8 @@ volatile bool returnButtonFlag = false;
 volatile char encoderSpinFlag = 0;
 
 uint8_t brightness EEMEM = 150; //EEPROM variable
+//uint8_t timeout EEMEM = 160; //EEPROM variable TODO
+//uint8_t utcFactor EEMEM = 170; //EEPROM variable TODO
 
 
 //----Function Header---------------------------------------
@@ -95,8 +97,6 @@ Display a(lcd);
 unsigned char debug = 0;
 
 void setup() {
-	a.props.eepromBrightness = &brightness;
-	a.props.readBrightnessFromEEPROM();
 	lcd.begin(16, 2);
 	lcd.display();
 	lcd.write("Ankeralarm V3");
@@ -106,6 +106,8 @@ void setup() {
 	interrupt_init();
 
 	a.props.gpsdata.init(&serialReadPos, &serialWritePos, &rxReadPos, &rxWritePos, serialBuffer, rxBuffer);
+	a.props.eeprom.init(&brightness, &timeout, &utcFactor);
+	a.props.initFromEEPROM();
 
 	//Output Config
 	DDRB |= (1 << DDB0) | (1 << DDB1) | (1 << DDB2) | (1 << DDB3) |

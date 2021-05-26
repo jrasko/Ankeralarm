@@ -2,7 +2,7 @@
 #define ANKERALARM_UTILS_H
 
 #include "LiquidCrystal.h"
-#include "Properties.h"
+#include "Controlling/Properties.h"
 
 class Display;
 

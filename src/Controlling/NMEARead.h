@@ -5,7 +5,6 @@
 #include <Arduino.h>
 
 #define RX_Buffer_SIZE 128 //einstellung der Größe des empfangs Buffers
-
 #define TX_Buffer_SIZE 128 //einstellung der größe des sende Buffers;
 
 class NMEARead {
