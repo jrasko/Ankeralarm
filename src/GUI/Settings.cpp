@@ -108,6 +108,7 @@ void Timeout::buttonReturn() {
 void ChangeTimeout::encoderPush() {
 	// Save Timeout
 	this->display->props.displayTimeout = timeout;
+	this->display->props.eeprom.writeInEEPROM(display->props.eeprom.TIMEOUT, display->props.displayTimeout);
 	this->display->setZustand(new Timeout);
 }
 
@@ -166,6 +167,8 @@ void UTCFactor::buttonReturn() {
 
 void ChangeUTCFactor::encoderPush() {
 	display->props.myGPS.getLastTimeStamp().setUTCFactor(factor);
+	display->props.eeprom.writeInEEPROM(display->props.eeprom.UTCFACTOR,
+										(unsigned char) (display->props.myGPS.getLastTimeStamp().getUTCFactor()));
 	this->display->setZustand(new UTCFactor);
 }
 
