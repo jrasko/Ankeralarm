@@ -22,6 +22,7 @@ private:
 
 public:
 	Properties(const Properties &) = delete;
+
 	Properties &operator=(const Properties &) = delete;
 
 	GPS myGPS;
