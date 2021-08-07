@@ -8,13 +8,13 @@ class LatitudeDegree {
 public:
 	explicit LatitudeDegree(const String &koordString, char direction);
 
-	explicit LatitudeDegree(double deg);
+	explicit LatitudeDegree(long deg);
 
 	LatitudeDegree(const LatitudeDegree &d) {
 		degrees = d.degrees;
 	}
 
-	double getDegrees() const {
+	long getDegrees() const {
 		return degrees;
 	}
 
@@ -24,7 +24,7 @@ public:
 	double toMeters() const;
 
 private:
-	double degrees;
+	long degrees;
 };
 
 

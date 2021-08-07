@@ -5,7 +5,7 @@ LatitudeDegree::LatitudeDegree(const String &koordString, char direction) {
 	unsigned char deg = koordString.substring(0, 2).toInt();
 	double min = koordString.substring(2).toDouble();
 
-	double jdeg = min / 60.0 + deg;
+	long jdeg = deg * 60 * 100000 + (long) (min * 100000);
 	if (direction == 'S') {
 		jdeg = -jdeg;
 	}
@@ -20,11 +20,11 @@ LatitudeDegree operator-(const LatitudeDegree &dg1, const LatitudeDegree &dg2) {
 //Returns Distance to Point Zero
 double LatitudeDegree::toMeters() const {
 	const double mile = degrees < 0 ? -1852.216 : 1852.216;
-	return degrees * 60 * mile;
+	return mile * ((double) degrees / 100000);
 }
 
 
-LatitudeDegree::LatitudeDegree(double deg) {
+LatitudeDegree::LatitudeDegree(long deg) {
 	degrees = deg;
 }
 

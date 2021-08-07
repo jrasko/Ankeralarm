@@ -11,8 +11,9 @@ double Position::distanceTo(const Position &p) const {
 	LatitudeDegree dlat = latitude - p.latitude;
 	LongitudeDegree dlong = longitude - p.longitude;
 
-	double avgDeg = (latitude.getDegrees() + p.latitude.getDegrees()) / 2;
-	return sqrt(dlat.toMeters() * dlat.toMeters() + dlong.toMeters(avgDeg) * dlong.toMeters(avgDeg));
+	long avgDeg = (latitude.getDegrees() + p.latitude.getDegrees()) / 2;
+	return sqrt(dlat.toMeters() * dlat.toMeters() +
+				dlong.toMeters((double) avgDeg / 6000000.) * dlong.toMeters((double) avgDeg / 6000000.));
 }
 
 /**
@@ -22,8 +23,8 @@ double Position::distanceTo(const Position &p) const {
  * @return the center coordinate
  */
 Position getMedian(const Vector<Position> &p, unsigned char size) {
-	double latDeg = 0;
-	double lonDeg = 0;
+	long latDeg = 0;
+	long lonDeg = 0;
 
 	for (unsigned char i = 0; i < size; ++i) {
 		latDeg += p[i].latitude.getDegrees();
@@ -40,28 +41,28 @@ Position getMedian(const Vector<Position> &p, unsigned char size) {
  * @return
  */
 const char *Position::toString() const {
-	double lat = latitude.getDegrees();
-	double lon = longitude.getDegrees();
+	long lat = latitude.getDegrees();
+	long lon = longitude.getDegrees();
 	unsigned char latDegree, latMinutes, latSeconds, lonDegree, lonMinutes, lonSeconds;
 	char latDir = (lat >= 0) ? 'N' : 'S';
 	char lonDir = (lon >= 0) ? 'E' : 'W';
 	if (lat < 0) {
 		lat = -lat;
 	}
-	latDegree = (unsigned char) lat;
-	lat = 60.0 * (lat - latDegree);
-	latMinutes = (unsigned char) lat;
-	lat = 60.0 * (lat - latMinutes);
-	latSeconds = (unsigned char) (0.5001 + lat);
+	latDegree = (unsigned char) (lat / 6000000);
+	lat -= 6000000 * latDegree;
+	latMinutes = (unsigned char) (lat / 100000);
+	lat -= 100000 * latMinutes;
+	latSeconds = (unsigned char) ((double) lat * 60.0 / 100000 + 0.5001);
 
 	if (lon < 0) {
 		lon = -lon;
 	}
-	lonDegree = (unsigned char) lon;
-	lon = 60.0 * (lon - lonDegree);
-	lonMinutes = (unsigned char) lon;
-	lon = 60.0 * (lon - lonMinutes);
-	lonSeconds = (unsigned char) (0.5001 + lon);
+	lonDegree = (unsigned char) (lon / 6000000);
+	lon -= 6000000 * lonDegree;
+	lonMinutes = (unsigned char) (lon / 100000);
+	lon -= 100000 * lonMinutes;
+	lonSeconds = (unsigned char) ((double) lon * 60.0 / 100000 + 0.5001);
 
 	char *ary = new char[34];
 

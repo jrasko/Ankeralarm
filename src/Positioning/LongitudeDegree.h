@@ -10,13 +10,13 @@ class LongitudeDegree {
 public:
 	explicit LongitudeDegree(const String &koordString, char direction);
 
-	explicit LongitudeDegree(double deg);
+	explicit LongitudeDegree(long deg);
 
 	LongitudeDegree(const LongitudeDegree &d) {
 		degrees = d.degrees;
 	}
 
-	double getDegrees() const {
+	long getDegrees() const {
 		return degrees;
 	}
 
@@ -25,7 +25,7 @@ public:
 	double toMeters(double latdeg) const;
 
 private:
-	double degrees;
+	long degrees;
 };
 
 
