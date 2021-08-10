@@ -23,8 +23,8 @@ double Position::distanceTo(const Position &p) const {
  * @return the center coordinate
  */
 Position getMedian(const Vector<Position> &p, unsigned char size) {
-	long latDeg = 0;
-	long lonDeg = 0;
+	long long latDeg = 0;
+	long long lonDeg = 0;
 
 	for (unsigned char i = 0; i < size; ++i) {
 		latDeg += p[i].latitude.getDegrees();
