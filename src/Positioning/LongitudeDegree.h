@@ -10,14 +10,16 @@ class LongitudeDegree {
 public:
 	explicit LongitudeDegree(const String &koordString, char direction);
 
-	explicit LongitudeDegree(long deg);
+	explicit LongitudeDegree(long deg){
+		this->degrees = deg;
+	}
 
 	LongitudeDegree(const LongitudeDegree &d) {
-		degrees = d.degrees;
+		this->degrees = d.degrees;
 	}
 
 	long getDegrees() const {
-		return degrees;
+		return this->degrees;
 	}
 
 	friend LongitudeDegree operator-(const LongitudeDegree &dg1, const LongitudeDegree &dg2);

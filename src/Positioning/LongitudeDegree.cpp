@@ -10,7 +10,7 @@ LongitudeDegree::LongitudeDegree(const String &koordString, char direction) {
 	if (direction == 'W') {
 		jdeg = -jdeg;
 	}
-	degrees = jdeg;
+	this->degrees = jdeg;
 }
 
 LongitudeDegree operator-(const LongitudeDegree &dg1, const LongitudeDegree &dg2) {
@@ -19,9 +19,6 @@ LongitudeDegree operator-(const LongitudeDegree &dg1, const LongitudeDegree &dg2
 
 double LongitudeDegree::toMeters(double latdeg = 0) const {
 	const double mile = degrees < 0 ? -1852.216 : 1852.216;
-	return ((double) degrees / 100000) * mile * cos(latdeg * toDEG);
+	return ((double) this->degrees / 100000) * mile * cos(latdeg * toDEG);
 }
 
-LongitudeDegree::LongitudeDegree(long deg) {
-	degrees = deg;
-}

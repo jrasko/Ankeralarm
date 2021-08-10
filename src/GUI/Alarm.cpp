@@ -27,9 +27,8 @@ void Alarm::getLCDOutput() {
 void FindPosition::getLCDOutput() {
 	display->print2Lines("Please wait  0/3", "Find Position");
 	const unsigned char size = 2 * 3;
-	Position ary[size];
-	Vector<Position> posCollection(ary);
-	for (unsigned char i = 0; i < 2 * 3; ++i) {
+	Position posCollection[size];
+	for (unsigned char i = 0; i < size; ++i) {
 		// wait for updated GPS Data
 		bool update;
 		do {

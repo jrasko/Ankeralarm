@@ -22,7 +22,7 @@ double Position::distanceTo(const Position &p) const {
  * @param size of the list (p.size() returns always 0)
  * @return the center coordinate
  */
-Position getMedian(const Vector<Position> &p, unsigned char size) {
+Position getMedian(const Position p[], unsigned char size) {
 	long long latDeg = 0;
 	long long lonDeg = 0;
 
