@@ -67,7 +67,7 @@ const char *DateTime::toString() const {
 	}
 	char *buff = new char[5];
 	char *ary = new char[34];
-	dtostrf(seconds, 5, 2, buff);
+	dtostrf(seconds, 2, 0, buff);
 	if (buff[0] == ' ') {
 		buff[0] = '0';
 	}

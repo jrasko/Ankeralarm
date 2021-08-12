@@ -97,17 +97,18 @@ Display a(lcd);
 unsigned char debug = 0;
 
 void setup() {
+	interrupt_init();
+
+	a.props.gpsdata.init(&serialReadPos, &serialWritePos, &rxReadPos, &rxWritePos, serialBuffer, rxBuffer);
+	a.props.eeprom.init(&brightness, &timeout, &utcFactor);
+	a.props.initFromEEPROM();
+
 	lcd.begin(16, 2);
 	lcd.display();
 	lcd.write("Ankeralarm V3");
 	lcd.setCursor(0, 1);
 	lcd.write("Zwiener & Raskob");
 	_delay_ms(1000);
-	interrupt_init();
-
-	a.props.gpsdata.init(&serialReadPos, &serialWritePos, &rxReadPos, &rxWritePos, serialBuffer, rxBuffer);
-	a.props.eeprom.init(&brightness, &timeout, &utcFactor);
-	a.props.initFromEEPROM();
 
 	//Output Config
 	DDRB |= (1 << DDB0) | (1 << DDB1) | (1 << DDB2) | (1 << DDB3) |
