@@ -25,18 +25,28 @@ public:
 
 	Properties &operator=(const Properties &) = delete;
 
+	// Generals
 	GPS myGPS;
 	NMEARead gpsdata;
 	Position centralPosition;
 	EEPROM eeprom;
 
-	bool alarmActive = false;
+	// Timeout
 	bool timeoutActive = false;
-	bool ringerActive = false;
 	unsigned long lastInteraction = millis();
+
+	// Alarm
+	bool alarmActive = false;
 	unsigned char alarmRadius = 25;
+
+	// Display Props
 	unsigned char displayBrightness = 255;
 	unsigned char displayTimeout = 60;
+
+	// Ringer
+	bool ringerActive = false;
+	unsigned char ringerHours;
+	unsigned char ringerMinutes;
 
 
 	static void setDisplayBrightness(unsigned char brightness) {

@@ -2,15 +2,21 @@
 
 void Ringer::encoderPush() {
 	// Ringer aktiviert?
-	this->display->setZustand(new SetHour);
+	if (display->props.ringerActive){
+		display->setZustand(new AbortRinger);
+		return;
+	}
+	display->props.ringerHours = 10;
+	display->props.ringerMinutes = 0;
+	display->setZustand(new SetHour);
 }
 
 void Ringer::encoderLeft() {
-	this->display->setZustand(new Settings);
+	display->setZustand(new Settings);
 }
 
 void Ringer::encoderRight() {
-	this->display->setZustand(new Alarm);
+	display->setZustand(new Alarm);
 }
 
 void Ringer::getLCDOutput() {
@@ -18,7 +24,8 @@ void Ringer::getLCDOutput() {
 }
 
 void SetHour::encoderPush() {
-	display->print2Lines("Minuten");
+	display->props.ringerHours = hour;
+	display->setZustand(new SetMinute);
 }
 
 void SetHour::encoderLeft() {
@@ -46,6 +53,7 @@ void SetHour::getLCDOutput() {
 }
 
 void SetMinute::encoderPush() {
+	display->props.ringerMinutes = minute;
 	display->setZustand(new AreUSureRinger);
 }
 
@@ -84,4 +92,17 @@ void AreUSureRinger::buttonReturn() {
 
 void AreUSureRinger::getLCDOutput() {
 	display->print2Lines("Are you sure?");
+}
+
+void AbortRinger::encoderPush() {
+	display->props.ringerActive = false;
+	display->setZustand(new GPSInfo);
+}
+
+void AbortRinger::buttonReturn() {
+	display->setZustand(new GPSInfo);
+}
+
+void AbortRinger::getLCDOutput() {
+	display->print2Lines("Stop Ringer", "Are you sure?");
 }

@@ -47,6 +47,16 @@ public:
 };
 
 class AreUSureRinger: public State{
+public:
+	void encoderPush() override;
+
+	void buttonReturn() override;
+
+	void getLCDOutput() override;
+};
+
+class AbortRinger : public State{
+public:
 	void encoderPush() override;
 
 	void buttonReturn() override;

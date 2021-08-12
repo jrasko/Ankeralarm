@@ -1,5 +1,6 @@
 
 #include "Settings.h"
+#include "Ringer.h"
 
 void Settings::encoderPush() {
 	this->display->setZustand(new DisplayBrightness);
@@ -10,7 +11,7 @@ void Settings::encoderLeft() {
 }
 
 void Settings::encoderRight() {
-	this->display->setZustand(new Alarm);
+	this->display->setZustand(new Ringer);
 }
 
 void Settings::getLCDOutput() {
