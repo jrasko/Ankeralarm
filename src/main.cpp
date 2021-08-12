@@ -144,8 +144,9 @@ void loop() {
 			PORTB |= (1 << PORTB4);
 			while (true) {
 				if (a.props.updateGPSData()) {
-					a.print2Lines(currentAlarmString,
-								  a.props.centralPosition.distanceTo(a.props.myGPS.getCurrentPosition()));
+					//a.print2Lines(currentAlarmString,a.props.centralPosition.distanceTo(a.props.myGPS.getCurrentPosition()));
+					const char *lines = a.props.centralPosition.toString();
+					a.print2Lines(lines, &lines[17]);
 				}
 				//Escape Button
 				if ((PIND & (1 << PIND6)) == 0) {

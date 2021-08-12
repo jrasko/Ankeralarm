@@ -32,6 +32,7 @@ public:
 
 	bool alarmActive = false;
 	bool timeoutActive = false;
+	bool ringerActive = false;
 	unsigned long lastInteraction = millis();
 	unsigned char alarmRadius = 25;
 	unsigned char displayBrightness = 255;
