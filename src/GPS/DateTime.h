@@ -18,6 +18,8 @@ public:
 
 	char getUTCFactor() const;
 
+	bool hasReached(unsigned char hour, unsigned char minute) const;
+
 private:
 	static inline bool isLeapYear(unsigned char y) {
 		return (y % 4 == 0 && y != 0);

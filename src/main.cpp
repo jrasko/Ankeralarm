@@ -145,8 +145,9 @@ void loop() {
 			PORTB |= (1 << PORTB4);
 			while (true) {
 				if (a.props.updateGPSData()) {
-					a.print2Lines(currentAlarmString,
-								  a.props.centralPosition.distanceTo(a.props.myGPS.getCurrentPosition()));
+					//a.print2Lines(currentAlarmString,a.props.centralPosition.distanceTo(a.props.myGPS.getCurrentPosition()));
+					const char *lines = a.props.centralPosition.toString();
+					a.print2Lines(lines, &lines[17]);
 				}
 				//Escape Button
 				if ((PIND & (1 << PIND6)) == 0) {
@@ -161,6 +162,25 @@ void loop() {
 				}
 			}
 			a.props.alarmActive = false;
+			Properties::setDisplayBrightness(a.props.displayBrightness);
+			a.setZustand(new GPSInfo);
+		}
+	}
+	if (a.props.ringerActive) {
+		if (a.props.myGPS.getLastTimeStamp().hasReached(a.props.ringerHours, a.props.ringerMinutes)) {
+			// Start Ringer
+			Properties::setDisplayBrightness(255);
+			a.print2Lines("Wakey Wakey", "Ringer activated");
+			PORTB |= (1 << PORTB4);
+			while (true) {
+				//Escape Button
+				if ((PIND & (1 << PIND6)) == 0) {
+					PORTB &= ~(1 << PORTB4);
+					delay(500);
+					break;
+				}
+			}
+			a.props.ringerActive = false;
 			Properties::setDisplayBrightness(a.props.displayBrightness);
 			a.setZustand(new GPSInfo);
 		}

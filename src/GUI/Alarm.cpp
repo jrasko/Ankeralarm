@@ -1,21 +1,22 @@
 
 #include "Alarm.h"
+#include "Ringer.h"
 
 // Alarm
 void Alarm::encoderLeft() {
-	this->display->setZustand(new Settings);
+	display->setZustand(new Ringer);
 }
 
 void Alarm::encoderPush() {
-	if (!this->display->props.alarmActive) {
-		this->display->setZustand(new FindPosition);
-	} else {
-		this->display->setZustand(new AbortAlarm);
+	if (display->props.alarmActive) {
+		display->setZustand(new AbortAlarm);
+		return;
 	}
+	display->setZustand(new FindPosition);
 }
 
 void Alarm::encoderRight() {
-	this->display->setZustand(new GPSInfo);
+	display->setZustand(new GPSInfo);
 }
 
 void Alarm::getLCDOutput() {
@@ -44,8 +45,8 @@ void FindPosition::getLCDOutput() {
 		sprintf(buff, "Please wait  %u/%u", (i + 1) / 2, size / 2);
 		display->print2Lines(buff, "Find Position");
 	}
-	latDeg /= size/2;
-	lonDeg /= size/2;
+	latDeg /= size / 2;
+	lonDeg /= size / 2;
 
 	display->props.centralPosition = Position(LatitudeDegree(latDeg), LongitudeDegree(lonDeg));
 	display->setZustand(new SetRadius);
@@ -61,8 +62,8 @@ void SetRadius::encoderLeft() {
 }
 
 void SetRadius::encoderPush() {
-	this->display->props.alarmRadius = radius;
-	this->display->setZustand(new AreUSure);
+	display->props.alarmRadius = radius;
+	display->setZustand(new AreUSure);
 }
 
 void SetRadius::encoderRight() {
@@ -74,7 +75,7 @@ void SetRadius::encoderRight() {
 }
 
 void SetRadius::buttonReturn() {
-	this->display->setZustand(new GPSInfo);
+	display->setZustand(new GPSInfo);
 }
 
 void SetRadius::getLCDOutput() {
@@ -84,12 +85,12 @@ void SetRadius::getLCDOutput() {
 
 // AreUSure
 void AreUSure::encoderPush() {
-	this->display->props.alarmActive = true;
-	this->display->setZustand(new GPSInfo);
+	display->props.alarmActive = true;
+	display->setZustand(new GPSInfo);
 }
 
 void AreUSure::buttonReturn() {
-	this->display->setZustand(new GPSInfo);
+	display->setZustand(new GPSInfo);
 }
 
 void AreUSure::getLCDOutput() {
@@ -98,14 +99,14 @@ void AreUSure::getLCDOutput() {
 
 
 void AbortAlarm::encoderPush() {
-	this->display->props.alarmActive = false;
-	this->display->setZustand(new GPSInfo);
+	display->props.alarmActive = false;
+	display->setZustand(new GPSInfo);
 }
 
 void AbortAlarm::buttonReturn() {
-	this->display->setZustand(new GPSInfo);
+	display->setZustand(new GPSInfo);
 }
 
 void AbortAlarm::getLCDOutput() {
-	this->display->print2Lines("Alarm beenden", "Bist du sicher?");
+	display->print2Lines("Alarm beenden", "Bist du sicher?");
 }
