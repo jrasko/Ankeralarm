@@ -27,19 +27,27 @@ void Alarm::getLCDOutput() {
 void FindPosition::getLCDOutput() {
 	display->print2Lines("Please wait  0/3", "Find Position");
 	const unsigned char size = 2 * 3;
-	Position posCollection[size];
+	long long latDeg = 0;
+	long long lonDeg = 0;
+
 	for (unsigned char i = 0; i < size; ++i) {
 		// wait for updated GPS Data
 		bool update;
 		do {
 			update = display->props.updateGPSData();
 		} while (!update);
-		posCollection[i] = display->props.myGPS.getCurrentPosition();
+		if (i % 2 == 0) {
+			latDeg += display->props.myGPS.getCurrentPosition().getLatitude().getDegrees();
+			lonDeg += display->props.myGPS.getCurrentPosition().getLongitude().getDegrees();
+		}
 		char buff[17];
 		sprintf(buff, "Please wait  %u/%u", (i + 1) / 2, size / 2);
 		display->print2Lines(buff, "Find Position");
 	}
-	display->props.centralPosition = getMedian(posCollection, size);
+	latDeg /= size/2;
+	lonDeg /= size/2;
+
+	display->props.centralPosition = Position(LatitudeDegree(latDeg), LongitudeDegree(lonDeg));
 	display->setZustand(new SetRadius);
 }
 

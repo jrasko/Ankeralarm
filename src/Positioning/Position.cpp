@@ -17,26 +17,6 @@ double Position::distanceTo(const Position &p) const {
 }
 
 /**
- * Calculates the centre from a list of coordinates
- * @param p list of coordinates
- * @param size of the list (p.size() returns always 0)
- * @return the center coordinate
- */
-Position getMedian(const Position p[], unsigned char size) {
-	long long latDeg = 0;
-	long long lonDeg = 0;
-
-	for (unsigned char i = 0; i < size; ++i) {
-		latDeg += p[i].latitude.getDegrees();
-		lonDeg += p[i].longitude.getDegrees();
-	}
-	latDeg /= size;
-	lonDeg /= size;
-
-	return {LatitudeDegree(latDeg), LongitudeDegree(lonDeg)};
-}
-
-/**
  * returns a dynamic char[34] representation of the position
  * @return
  */

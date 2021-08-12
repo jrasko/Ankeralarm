@@ -16,8 +16,6 @@ public:
 	Position(const LatitudeDegree &latitude, const LongitudeDegree &longitude) : latitude(latitude),
 																				 longitude(longitude) {}
 
-	friend Position getMedian(const Position p[], unsigned char size);
-
 	double distanceTo(const Position &p) const;
 
 	const LatitudeDegree &getLatitude() const;
