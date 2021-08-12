@@ -165,6 +165,25 @@ void loop() {
 			a.setZustand(new GPSInfo);
 		}
 	}
+	if (a.props.ringerActive) {
+		if (a.props.myGPS.getLastTimeStamp().hasReached(a.props.ringerHours, a.props.ringerMinutes)) {
+			// Start Ringer
+			Properties::setDisplayBrightness(255);
+			a.print2Lines("Wakey Wakey", "Ringer activated");
+			PORTB |= (1 << PORTB4);
+			while (true) {
+				//Escape Button
+				if ((PIND & (1 << PIND6)) == 0) {
+					PORTB &= ~(1 << PORTB4);
+					delay(500);
+					break;
+				}
+			}
+			a.props.ringerActive = false;
+			Properties::setDisplayBrightness(a.props.displayBrightness);
+			a.setZustand(new GPSInfo);
+		}
+	}
 
 	while (encoderSpinFlag > 0) {
 		a.props.lastInteraction = millis();

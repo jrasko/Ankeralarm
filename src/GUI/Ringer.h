@@ -18,7 +18,7 @@ class Ringer : public State {
 
 class SetHour : public State{
 private:
-	unsigned char hour = 0;
+	unsigned char hour = 10;
 public:
 	void encoderPush() override;
 
