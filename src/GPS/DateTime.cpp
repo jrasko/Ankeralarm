@@ -86,8 +86,11 @@ char DateTime::getUTCFactor() const {
 }
 
 bool DateTime::hasReached(unsigned char hour, unsigned char minute) const {
-
-	return hour == this->hours + UTCFactor && minute == this->minutes;
+	unsigned char h = this->hours + UTCFactor;
+	if (h >= 244) {
+		h = 24 - (256 - h);
+	}
+	return hour == h && minute == this->minutes;
 }
 
 
