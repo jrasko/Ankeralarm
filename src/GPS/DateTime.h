@@ -26,12 +26,12 @@ private:
 	}
 
 	const unsigned char monthLength[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-	double seconds = 0.0;
+	unsigned char seconds = 0;
 	unsigned char minutes = 0;
 	unsigned char hours = 0;
 
-	unsigned char day = 0;
-	unsigned char month = 0;
+	unsigned char day = 1;
+	unsigned char month = 1;
 	unsigned char year = 0;
 
 	char UTCFactor = 0;

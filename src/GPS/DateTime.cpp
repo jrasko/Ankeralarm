@@ -15,7 +15,7 @@ void DateTime::updateDate(const String &dateString) {
 void DateTime::updateTime(const String &timeString) {
 	unsigned char h = timeString.substring(0, 2).toInt();
 	unsigned char min = timeString.substring(2, 4).toInt();
-	double sec = timeString.substring(4, 9).toDouble();
+	unsigned char sec = timeString.substring(4, 6).toInt();
 
 	hours = h;
 	minutes = min;
@@ -66,7 +66,7 @@ const char *DateTime::toString() const {
 		}
 	}
 	char *ary = new char[34];
-	sprintf(ary, "%02u.%02u.%02u         %02u:%02u:%02u", d, m, y, h, minutes, (unsigned char) seconds);
+	sprintf(ary, "%02u.%02u.%02u         %02u:%02u:%02u", d, m, y, h, minutes, seconds);
 	ary[16] = '\0';
 	return ary;
 }
