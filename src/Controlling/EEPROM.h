@@ -40,6 +40,8 @@ public:
 				return eeprom_read_byte(eepromTimeout);
 			case UTCFACTOR:
 				return eeprom_read_byte(eepromUTCFactor);
+			default:
+				return 0;
 		}
 	}
 };
