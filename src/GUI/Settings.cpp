@@ -304,8 +304,8 @@ void ChangeAlarmCenterDist::getLCDOutput() {
 }
 
 void ChangeAlarmCenterDeg::encoderPush() {
-	long lat = (long) (54 * dist * cos(deg));
-	long lon = (long) (54 * dist * sin(deg));
+	long lat = (long) (54 * dist * cos(deg * toDEG));
+	long lon = (long) (54 * dist * sin(deg * toDEG));
 
 	display->props.centralPosition.getWorkLatitude() += lat;
 	display->props.centralPosition.getWorkLongitude() += lon;
