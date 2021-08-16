@@ -44,8 +44,8 @@ void FindPosition::getLCDOutput() {
 		sprintf(buff, "Please wait  %u/%u", (i + 1) / 2, size / 2);
 		display->print2Lines(buff, "Find Position");
 	}
-	latDeg /= size/2;
-	lonDeg /= size/2;
+	latDeg /= size / 2;
+	lonDeg /= size / 2;
 
 	display->props.centralPosition = Position(LatitudeDegree(latDeg), LongitudeDegree(lonDeg));
 	display->setZustand(new SetRadius);
