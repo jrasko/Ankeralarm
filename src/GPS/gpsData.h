@@ -9,7 +9,7 @@
  */
 class gpsData {
 private:
-	String data[20];
+	String data[15];
 	bool dirty = false;
 public:
 	const String *getData() const {

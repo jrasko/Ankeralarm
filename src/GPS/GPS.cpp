@@ -2,7 +2,7 @@
 
 /**
  * Updates the Attributes of the GPS Object
- * @param data includes a vector of strings which is build from the raw GPS Data
+ * @param data includes an array of strings which is build from the raw GPS Data
  */
 bool GPS::update(const gpsData &data) {
 	const String *v = data.getData();
