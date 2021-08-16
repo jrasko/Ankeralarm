@@ -30,7 +30,7 @@ void DisplayBrightness::getLCDOutput() {
 
 void DisplayBrightness::encoderLeft() {
 	if (display->props.alarmActive) {
-		this->display->setZustand(new AlarmRadius);
+		this->display->setZustand(new ChangeAlarmCenter);
 	} else {
 		this->display->setZustand(new UTCFactor);
 	}
@@ -213,7 +213,7 @@ void AlarmRadius::encoderLeft() {
 }
 
 void AlarmRadius::encoderRight() {
-	this->display->setZustand(new DisplayBrightness);
+	this->display->setZustand(new ChangeAlarmCenter);
 }
 
 void AlarmRadius::buttonReturn() {
@@ -262,7 +262,7 @@ void ChangeAlarmCenter::encoderPush() {
 }
 
 void ChangeAlarmCenter::encoderLeft() {
-	display->setZustand(new ChangeAlarmRadius);
+	display->setZustand(new AlarmRadius);
 }
 
 void ChangeAlarmCenter::encoderRight() {
@@ -271,6 +271,10 @@ void ChangeAlarmCenter::encoderRight() {
 
 void ChangeAlarmCenter::getLCDOutput() {
 	display->print2Lines("Set Alarm Center");
+}
+
+void ChangeAlarmCenter::buttonReturn() {
+	display->setZustand(new Settings);
 }
 
 void ChangeAlarmCenterDist::encoderPush() {
@@ -305,6 +309,7 @@ void ChangeAlarmCenterDeg::encoderPush() {
 
 	display->props.centralPosition.getWorkLatitude() += lat;
 	display->props.centralPosition.getWorkLongitude() += lon;
+	display->setZustand(new ChangeAlarmCenter);
 }
 
 void ChangeAlarmCenterDeg::encoderLeft() {

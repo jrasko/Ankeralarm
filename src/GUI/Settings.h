@@ -144,6 +144,8 @@ public:
 
 	void encoderLeft() override;
 
+	void buttonReturn() override;
+
 	void encoderRight() override;
 
 	void getLCDOutput() override;
