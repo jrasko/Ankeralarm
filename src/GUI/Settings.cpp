@@ -2,6 +2,8 @@
 #include "Settings.h"
 #include "Ringer.h"
 
+#define toDEG (3.14159265/180)
+
 void Settings::encoderPush() {
 	this->display->setZustand(new DisplayBrightness);
 }
@@ -29,7 +31,7 @@ void DisplayBrightness::getLCDOutput() {
 
 void DisplayBrightness::encoderLeft() {
 	if (display->props.alarmActive) {
-		this->display->setZustand(new AlarmRadius);
+		this->display->setZustand(new ChangeAlarmCenter);
 	} else {
 		this->display->setZustand(new UTCFactor);
 	}
@@ -212,7 +214,7 @@ void AlarmRadius::encoderLeft() {
 }
 
 void AlarmRadius::encoderRight() {
-	this->display->setZustand(new DisplayBrightness);
+	this->display->setZustand(new ChangeAlarmCenter);
 }
 
 void AlarmRadius::buttonReturn() {
@@ -249,9 +251,86 @@ void ChangeAlarmRadius::buttonReturn() {
 }
 
 void ChangeAlarmRadius::getLCDOutput() {
-	display->print2Lines("ChangeAlarmRadius", radius);
+	display->print2Lines("Set Alarm Radius", radius);
 }
 
 void ChangeAlarmRadius::init() {
 	this->radius = display->props.alarmRadius;
+}
+
+void ChangeAlarmCenter::encoderPush() {
+	display->setZustand(new ChangeAlarmCenterDist);
+}
+
+void ChangeAlarmCenter::encoderLeft() {
+	display->setZustand(new AlarmRadius);
+}
+
+void ChangeAlarmCenter::encoderRight() {
+	display->setZustand(new DisplayBrightness);
+}
+
+void ChangeAlarmCenter::getLCDOutput() {
+	display->print2Lines("Set Alarm Center");
+}
+
+void ChangeAlarmCenter::buttonReturn() {
+	display->setZustand(new Settings);
+}
+
+void ChangeAlarmCenterDist::encoderPush() {
+	display->setZustand(new ChangeAlarmCenterDeg(dist));
+}
+
+void ChangeAlarmCenterDist::encoderLeft() {
+	if (dist < 10) {
+		dist = 10;
+	}
+	dist -= 5;
+}
+
+void ChangeAlarmCenterDist::encoderRight() {
+	if (dist > 250) {
+		dist = 250;
+	}
+	dist += 5;
+}
+
+void ChangeAlarmCenterDist::buttonReturn() {
+	display->setZustand(new ChangeAlarmCenter);
+}
+
+void ChangeAlarmCenterDist::getLCDOutput() {
+	display->print2Lines("Set Distance", dist);
+}
+
+void ChangeAlarmCenterDeg::encoderPush() {
+	long lat = (long) (54 * dist * cos(deg * toDEG));
+	long lon = (long) (54 * dist * sin(deg * toDEG));
+
+	display->props.centralPosition.getWorkLatitude() += lat;
+	display->props.centralPosition.getWorkLongitude() += lon;
+	display->setZustand(new ChangeAlarmCenter);
+}
+
+void ChangeAlarmCenterDeg::encoderLeft() {
+	if (deg < 5) {
+		deg = 5;
+	}
+	deg -= 5;
+}
+
+void ChangeAlarmCenterDeg::encoderRight() {
+	if (deg > 355) {
+		deg = 355;
+	}
+	deg += 5;
+}
+
+void ChangeAlarmCenterDeg::buttonReturn() {
+	display->setZustand(new ChangeAlarmCenterDist);
+}
+
+void ChangeAlarmCenterDeg::getLCDOutput() {
+	display->print2Lines("Set Degrees", deg);
 }

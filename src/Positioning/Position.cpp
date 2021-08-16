@@ -60,4 +60,12 @@ const LongitudeDegree &Position::getLongitude() const {
 	return longitude;
 }
 
+LatitudeDegree &Position::getWorkLatitude() {
+	return latitude;
+}
+
+LongitudeDegree &Position::getWorkLongitude() {
+	return longitude;
+}
+
 

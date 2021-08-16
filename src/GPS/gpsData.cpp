@@ -20,8 +20,6 @@ bool gpsChecksumOk(const char *gpsMessage) {
 }
 
 bool validateGPSString(const char *proofIt) {
-	String ary[2];
-	Vector<String> v(ary);
 	unsigned char k = 0;
 	while (true) {
 		String currentString;
@@ -29,7 +27,6 @@ bool validateGPSString(const char *proofIt) {
 			currentString.concat(proofIt[k]);
 			k++;
 		}
-		v.push_back(currentString);
 		if (proofIt[k] == '\0') {
 			break;
 		}

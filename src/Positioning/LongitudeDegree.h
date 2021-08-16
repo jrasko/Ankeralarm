@@ -3,14 +3,13 @@
 #define ANKERALARM_LONGITUDEDEGREE_H
 
 #include <Arduino.h>
-#include "math.h"
 
 class LongitudeDegree {
 
 public:
 	explicit LongitudeDegree(const String &koordString, char direction);
 
-	explicit LongitudeDegree(long deg){
+	explicit LongitudeDegree(long deg) {
 		this->degrees = deg;
 	}
 
@@ -23,6 +22,8 @@ public:
 	}
 
 	friend LongitudeDegree operator-(const LongitudeDegree &dg1, const LongitudeDegree &dg2);
+
+	friend void operator+=(LongitudeDegree &dg, long degrees);
 
 	double toMeters(double latdeg) const;
 
