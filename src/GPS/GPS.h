@@ -3,7 +3,6 @@
 #define ANKERALARM_2_GPS_H
 
 #include <Arduino.h>
-#include <Vector.h>
 #include "gpsData.h"
 #include "../Positioning/Position.h"
 #include "DateTime.h"

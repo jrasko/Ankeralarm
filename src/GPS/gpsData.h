@@ -3,7 +3,6 @@
 #define ANKERALARM_2_GPSDATA_H
 
 #include <Arduino.h>
-#include <Vector.h>
 
 /**
  * Splits the gps data string into a string array and sets the dirty flag, if the checksum is not valid
