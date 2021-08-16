@@ -7,7 +7,6 @@
 #include "LongitudeDegree.h"
 #include <Arduino.h>
 #include <Vector.h>
-#include <math.h>
 
 class Position {
 public:
@@ -21,6 +20,11 @@ public:
 	const LatitudeDegree &getLatitude() const;
 
 	const LongitudeDegree &getLongitude() const;
+
+	LatitudeDegree &getWorkLatitude();
+
+	LongitudeDegree &getWorkLongitude();
+
 
 	const char *toString() const;
 

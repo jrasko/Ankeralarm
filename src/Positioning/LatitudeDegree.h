@@ -8,7 +8,7 @@ class LatitudeDegree {
 public:
 	explicit LatitudeDegree(const String &koordString, char direction);
 
-	explicit LatitudeDegree(long deg){
+	explicit LatitudeDegree(long deg) {
 		degrees = deg;
 	}
 
@@ -22,6 +22,7 @@ public:
 
 	friend LatitudeDegree operator-(const LatitudeDegree &dg1, const LatitudeDegree &dg2);
 
+	friend void operator+=(LatitudeDegree &dg, long degrees);
 
 	double toMeters() const;
 

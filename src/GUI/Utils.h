@@ -98,6 +98,13 @@ public:
 		lcd.setCursor(0, 1);
 		lcd.print(l2);
 	}
+	void print2Lines(const char *l1, unsigned short l2) {
+		lcd.clear();
+		lcd.setCursor(0, 0);
+		lcd.write(l1);
+		lcd.setCursor(0, 1);
+		lcd.print(l2);
+	}
 
 	void print2Lines(const char *l1, unsigned long l2) {
 		lcd.clear();

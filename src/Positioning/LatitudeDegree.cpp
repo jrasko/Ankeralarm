@@ -23,5 +23,9 @@ double LatitudeDegree::toMeters() const {
 	return mile * ((double) this->degrees / 100000);
 }
 
+void operator+=(LatitudeDegree &dg, const long degrees) {
+	dg.degrees += degrees;
+}
+
 
 
