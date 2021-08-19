@@ -108,7 +108,7 @@ void setup() {
 	lcd.write("Ankeralarm V3");
 	lcd.setCursor(0, 1);
 	lcd.write("Zwiener & Raskob");
-	_delay_ms(1000);
+	_delay_ms(2000);
 
 	//Output Config
 	DDRB |= (1 << DDB0) | (1 << DDB1) | (1 << DDB2) | (1 << DDB3) |

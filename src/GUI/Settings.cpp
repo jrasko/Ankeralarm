@@ -286,6 +286,7 @@ void ChangeAlarmCenterDist::encoderLeft() {
 		dist = 10;
 	}
 	dist -= 5;
+	getLCDOutput();
 }
 
 void ChangeAlarmCenterDist::encoderRight() {
@@ -293,6 +294,7 @@ void ChangeAlarmCenterDist::encoderRight() {
 		dist = 250;
 	}
 	dist += 5;
+	getLCDOutput();
 }
 
 void ChangeAlarmCenterDist::buttonReturn() {
@@ -317,6 +319,7 @@ void ChangeAlarmCenterDeg::encoderLeft() {
 		deg = 5;
 	}
 	deg -= 5;
+	getLCDOutput();
 }
 
 void ChangeAlarmCenterDeg::encoderRight() {
@@ -324,6 +327,7 @@ void ChangeAlarmCenterDeg::encoderRight() {
 		deg = 355;
 	}
 	deg += 5;
+	getLCDOutput();
 }
 
 void ChangeAlarmCenterDeg::buttonReturn() {
